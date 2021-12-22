@@ -9,6 +9,7 @@ include_directories(libs/spdlog/include)
 add_subdirectory(libs/spdlog)
 
 add_executable(untitled
+        utils/addressing.cpp
         emulator/emulator.cpp
         core/memoryView.cpp
         core/memoryRef.cpp
