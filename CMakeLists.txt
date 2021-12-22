@@ -14,4 +14,4 @@ add_executable(untitled
         core/memoryRef.cpp
         core/pipeline.cpp
         main.cpp)
-# target_link_libraries(untitled spdlog)
+target_link_libraries(untitled spdlog)
