@@ -32,6 +32,10 @@ class UnaryInstruction : public Instruction {
       case UnaryInstructionOpcode::RRC: return value >> 1;
       case UnaryInstructionOpcode::RRA: return value >> 1;
       case UnaryInstructionOpcode::SWPB: return ((value & 0xFF) << 8) | ((value & 0xFF00) >> 8);
+      case UnaryInstructionOpcode::SXT: return value;
+      case UnaryInstructionOpcode::PUSH: return value;
+      case UnaryInstructionOpcode::CALL: return value;
+      case UnaryInstructionOpcode::RETI: return value;
       default: assert(false);
     }
   }

@@ -63,7 +63,8 @@ public:
             SourceAddressing(ref_type), reg{reg}, delta{delta} { }
 
     core::MemoryRef get_ref(core::MemoryRef &pc, core::MemoryView &regs, core::MemoryView &ram) const override {
-        const auto address = regs.get_word(reg).get_and_increment(delta);
+//        const auto address = regs.get_word(reg).get_and_increment(delta);
+        const auto address = regs.get_word(reg).get();
         switch (ref_type) {
             case core::MemoryRefType::BYTE: return ram.get_byte(address);
             case core::MemoryRefType::WORD: return ram.get_word(address);
