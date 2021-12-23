@@ -23,6 +23,12 @@ class Emulator {
  public:
   Emulator(): ram(0x10000), regs(0x10), pipeline(regs, ram), tick_controller(1000000) { }
 
+  void load_from_buffer(const unsigned char* data, std::size_t count) {
+      for (auto i = 0; i < count; i++) {
+          ram.get_byte(i).set(data[i]);
+      }
+  }
+
   [[noreturn]] void run() {
     while (true) {
       pipeline.step();

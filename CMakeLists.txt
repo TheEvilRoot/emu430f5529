@@ -8,11 +8,15 @@ include_directories(.)
 include_directories(libs/spdlog/include)
 add_subdirectory(libs/spdlog)
 
-add_executable(untitled
+set(COMMON_SRC
         utils/addressing.cpp
         emulator/emulator.cpp
         core/memoryView.cpp
         core/memoryRef.cpp
-        core/pipeline.cpp
-        main.cpp)
+        core/pipeline.cpp)
+
+add_executable(untitled main.cpp ${COMMON_SRC})
+add_executable(test test.cpp ${COMMON_SRC})
+add_executable(test_endian test_endian.cpp ${COMMON_SRC})
+
 target_link_libraries(untitled spdlog)

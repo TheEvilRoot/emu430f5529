@@ -28,6 +28,14 @@ class MemoryView {
     return { data, virt_ptr, MemoryRefType::WORD };
   }
 
+  void dump(std::size_t ptr, std::size_t count) const {
+      for (auto i = ptr; i < ptr + count && i < size; i++) {
+          fprintf(stderr, "%02x ", data.get()[i]);
+          if (i > 0 && i % 0x10 == 0) fprintf(stderr, "\n");
+      }
+      fprintf(stderr, "\n");
+  }
+
 };
 
 }

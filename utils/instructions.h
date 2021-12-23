@@ -40,8 +40,9 @@ class UnaryInstruction : public Instruction {
     auto source_ref = addressing->get_ref(pc, regs, ram);
     const auto source_value = source_ref.get();
     const auto res_value = UnaryInstruction::calculate(opcode, source_value);
-    if (res_value != source_value)
-      source_ref.set(res_value);
+    if (res_value != source_value) {
+        // source_ref.set(res_value);
+    }
   }
 };
 

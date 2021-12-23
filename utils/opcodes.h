@@ -29,6 +29,8 @@ class InstructionFormat {
 
   static InstructionFormat from_value(std::uint16_t value) {
     switch (value) {
+      case 0:
+        assert(false);
       case 1:
         return Value::UNARY_OP;
       case 2:
