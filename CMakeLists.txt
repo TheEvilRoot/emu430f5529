@@ -16,7 +16,7 @@ set(COMMON_SRC
         core/pipeline.cpp)
 
 add_executable(untitled main.cpp ${COMMON_SRC})
-add_executable(test test.cpp ${COMMON_SRC})
+add_executable(test test.cpp ${COMMON_SRC} core/memoryRegion.h)
 add_executable(test_endian test_endian.cpp ${COMMON_SRC})
 
 target_link_libraries(untitled spdlog)
