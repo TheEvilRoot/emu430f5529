@@ -64,6 +64,8 @@ class Pipeline {
                                                                             byte_word_mode))
         };
       }
+      case InstructionFormat::UNIMPL_OP:
+          return nullptr;
     }
   }
 
@@ -71,7 +73,20 @@ class Pipeline {
     const auto pc_val = pc.get_and_increment(0x2);
     const auto instruction_word = ram.get_word(pc_val).get();
     const auto instruction = std::shared_ptr<Instruction>(decode(instruction_word));
-    instruction->execute(pc, regs, ram);
+
+    fprintf(stderr, "%04x instruction %04x => %s %s\n",
+            pc_val, instruction_word, InstructionFormat::to_string(instruction->format).c_str(),
+            instruction->to_string().c_str());
+
+#ifdef DRY
+    assert(instruction != nullptr);
+#endif
+
+    if (instruction != nullptr) {
+#ifndef DRY
+        instruction->execute(pc, regs, ram);
+#endif
+    }
   }
 };
 

@@ -7,7 +7,6 @@
 
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/mman.h>
 
 struct Program {
     const std::string file_name;
@@ -36,7 +35,7 @@ auto load_file(const std::string& file_name) {
 
 int main() {
   emu::Emulator emulator;
-  Program prog = load_file("../out/code0.dat");
+  Program prog = load_file("../out/shellcode");
   std::cout << "Program " << prog.file_name << " size:" << prog.size << "\n";
   emulator.load_from_buffer(prog.data.get(), prog.size);
   emulator.run();
