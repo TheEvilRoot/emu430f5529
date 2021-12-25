@@ -23,8 +23,10 @@ class TickController {
   void tick_control_sleep() {
     const auto n = std::chrono::steady_clock::now();
     const auto delta = (n - tick_state) / 1us;
+    fprintf(stderr, "%08ld\n", delta);
     if (delta < tick_us)
       usleep(tick_us - delta);
+    tick_state = n;
   }
 };
 

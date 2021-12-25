@@ -14,8 +14,8 @@ for line in X:
     for x, _ in Y:
         x = x.strip('\n ') 
         x = x.split(' ') 
-        if len(x) != 2:
-            print(x)
+        if len(x) not in [2, 4]:
+            print('wrong', x)
         else:
             x = [struct.pack('B', int(i, 16)) for i in x] 
             x = b''.join(x) 

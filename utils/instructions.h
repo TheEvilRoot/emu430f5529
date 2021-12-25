@@ -99,7 +99,8 @@ class BinaryInstruction : public Instruction {
    Instruction(InstructionFormat::BINARY_OP), opcode{opcode}, source_addressing{std::move(source)}, destination_addressing{std::move(destination)} { }
 
   void execute(core::MemoryRef &pc, core::MemoryView &regs, core::MemoryView &ram) override {
-
+      const auto source_ref = source_addressing->get_ref(pc, regs, ram);
+      const auto dst_ref = destination_addressing->get_ref(pc, regs, ram);
   }
 
   [[nodiscard]] std::string to_string() const override {

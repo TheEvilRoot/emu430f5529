@@ -74,15 +74,14 @@ class Pipeline {
     const auto instruction_word = ram.get_word(pc_val).get();
     const auto instruction = std::shared_ptr<Instruction>(decode(instruction_word));
 
-    fprintf(stderr, "%04x instruction %04x => %s %s\n",
-            pc_val, instruction_word, InstructionFormat::to_string(instruction->format).c_str(),
-            instruction->to_string().c_str());
-
 #ifdef DRY
     assert(instruction != nullptr);
 #endif
 
     if (instruction != nullptr) {
+        fprintf(stderr, "%04x instruction %04x => %s %s\n",
+                pc_val, instruction_word, InstructionFormat::to_string(instruction->format).c_str(),
+                instruction->to_string().c_str());
 #ifndef DRY
         instruction->execute(pc, regs, ram);
 #endif
