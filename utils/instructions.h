@@ -11,11 +11,11 @@ class Instruction {
  public:
   const InstructionFormat format;
  protected:
-
   explicit Instruction(InstructionFormat fmt): format(fmt) { }
  public:
-
   virtual void execute(core::MemoryRef &pc, core::MemoryView &regs, core::MemoryView &ram) = 0;
+
+  [[nodiscard]] virtual std::string to_string() const = 0;
 };
 
 class UnaryInstruction : public Instruction {
@@ -32,6 +32,10 @@ class UnaryInstruction : public Instruction {
       case UnaryInstructionOpcode::RRC: return value >> 1;
       case UnaryInstructionOpcode::RRA: return value >> 1;
       case UnaryInstructionOpcode::SWPB: return ((value & 0xFF) << 8) | ((value & 0xFF00) >> 8);
+      case UnaryInstructionOpcode::SXT: return value;
+      case UnaryInstructionOpcode::PUSH: return value;
+      case UnaryInstructionOpcode::CALL: return value;
+      case UnaryInstructionOpcode::RETI: return value;
       default: assert(false);
     }
   }
@@ -40,8 +44,13 @@ class UnaryInstruction : public Instruction {
     auto source_ref = addressing->get_ref(pc, regs, ram);
     const auto source_value = source_ref.get();
     const auto res_value = UnaryInstruction::calculate(opcode, source_value);
-    if (res_value != source_value)
+    if (res_value != source_value) {
       source_ref.set(res_value);
+    }
+  }
+
+  [[nodiscard]] std::string to_string() const override {
+      return UnaryInstructionOpcode::to_string(opcode) + " " + addressing->to_string();
   }
 };
 
@@ -60,6 +69,10 @@ class JumpInstruction : public Instruction {
     if (JumpInstruction::check_condition(condition, regs)) {
       pc.set(JumpInstruction::calculate(pc.get(), signed_offset));
     }
+  }
+
+  [[nodiscard]] std::string to_string() const override {
+      return JumpInstructionOpcode::to_string(condition) + " " + std::to_string(signed_offset);
   }
 
   static std::uint16_t calculate(std::uint16_t pc, std::uint16_t signed_offset) {
@@ -86,7 +99,13 @@ class BinaryInstruction : public Instruction {
    Instruction(InstructionFormat::BINARY_OP), opcode{opcode}, source_addressing{std::move(source)}, destination_addressing{std::move(destination)} { }
 
   void execute(core::MemoryRef &pc, core::MemoryView &regs, core::MemoryView &ram) override {
+      const auto source_ref = source_addressing->get_ref(pc, regs, ram);
+      const auto dst_ref = destination_addressing->get_ref(pc, regs, ram);
+  }
 
+  [[nodiscard]] std::string to_string() const override {
+      return BinaryInstructionOpcode::to_string(opcode) + " " +
+        source_addressing->to_string() + " " + destination_addressing->to_string();
   }
 };
 

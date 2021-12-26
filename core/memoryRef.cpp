@@ -33,6 +33,7 @@ void MemoryRef::set(std::uint16_t val) {
 
 std::uint16_t MemoryRef::get_and_increment(std::uint16_t delta) {
   const auto value = get();
-  set(value + delta);
+  if (delta > 0)
+    set(value + delta);
   return value;
 }

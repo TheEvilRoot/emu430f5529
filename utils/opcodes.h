@@ -10,7 +10,7 @@
 
 class InstructionFormat {
  public:
-  enum Value { UNARY_OP, BINARY_OP, JUMP_OP };
+  enum Value { UNARY_OP, BINARY_OP, JUMP_OP, UNIMPL_OP };
 
   Value value;
 
@@ -24,11 +24,15 @@ class InstructionFormat {
         return "Binary";
       case JUMP_OP:
         return "Jump";
+    case UNIMPL_OP:
+        return "Unimplemented operation";
     }
   }
 
   static InstructionFormat from_value(std::uint16_t value) {
     switch (value) {
+      case 0:
+          return Value::UNIMPL_OP;
       case 1:
         return Value::UNARY_OP;
       case 2:

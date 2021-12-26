@@ -1,0 +1,3854 @@
+[0-9a-zA-Z]{2}
+
+30-39,41-5a,61-7a
+
+a:61 z:7a A:41 Z:5a 0:30 9:39
+
+MSP430 alphanumeric shellcode is hard. There's no way to write to memory, 
+no word-sized reg-reg operations, and all we have is add/sub/mov and a few conditional jumps.
+
+
+33 50 41 41          add #0x4141,CG
+30 50 41 41          add #0x4141,PC
+34 50 41 41          add #0x4141,R4
+35 50 41 41          add #0x4141,R5
+36 50 41 41          add #0x4141,R6
+37 50 41 41          add #0x4141,R7
+38 50 41 41          add #0x4141,R8
+39 50 41 41          add #0x4141,R9
+31 50 41 41          add #0x4141,SP
+32 50 41 41          add #0x4141,SR
+33 53                add -1,CG
+30 53                add -1,PC
+34 53                add -1,R4
+35 53                add -1,R5
+36 53                add -1,R6
+37 53                add -1,R7
+38 53                add -1,R8
+39 53                add -1,R9
+31 53                add -1,SP
+32 53                add -1,SR
+33 52                add 8,CG
+30 52                add 8,PC
+34 52                add 8,R4
+35 52                add 8,R5
+36 52                add 8,R6
+37 52                add 8,R7
+38 52                add 8,R8
+39 52                add 8,R9
+31 52                add 8,SP
+32 52                add 8,SR
+33 5a                add @R10+,CG
+30 5a                add @R10+,PC
+34 5a                add @R10+,R4
+35 5a                add @R10+,R5
+36 5a                add @R10+,R6
+37 5a                add @R10+,R7
+38 5a                add @R10+,R8
+39 5a                add @R10+,R9
+31 5a                add @R10+,SP
+32 5a                add @R10+,SR
+33 54                add @R4+,CG
+30 54                add @R4+,PC
+34 54                add @R4+,R4
+35 54                add @R4+,R5
+36 54                add @R4+,R6
+37 54                add @R4+,R7
+38 54                add @R4+,R8
+39 54                add @R4+,R9
+31 54                add @R4+,SP
+32 54                add @R4+,SR
+33 55                add @R5+,CG
+30 55                add @R5+,PC
+34 55                add @R5+,R4
+35 55                add @R5+,R5
+36 55                add @R5+,R6
+37 55                add @R5+,R7
+38 55                add @R5+,R8
+39 55                add @R5+,R9
+31 55                add @R5+,SP
+32 55                add @R5+,SR
+33 56                add @R6+,CG
+30 56                add @R6+,PC
+34 56                add @R6+,R4
+35 56                add @R6+,R5
+36 56                add @R6+,R6
+37 56                add @R6+,R7
+38 56                add @R6+,R8
+39 56                add @R6+,R9
+31 56                add @R6+,SP
+32 56                add @R6+,SR
+33 57                add @R7+,CG
+30 57                add @R7+,PC
+34 57                add @R7+,R4
+35 57                add @R7+,R5
+36 57                add @R7+,R6
+37 57                add @R7+,R7
+38 57                add @R7+,R8
+39 57                add @R7+,R9
+31 57                add @R7+,SP
+32 57                add @R7+,SR
+33 58                add @R8+,CG
+30 58                add @R8+,PC
+34 58                add @R8+,R4
+35 58                add @R8+,R5
+36 58                add @R8+,R6
+37 58                add @R8+,R7
+38 58                add @R8+,R8
+39 58                add @R8+,R9
+31 58                add @R8+,SP
+32 58                add @R8+,SR
+33 59                add @R9+,CG
+30 59                add @R9+,PC
+34 59                add @R9+,R4
+35 59                add @R9+,R5
+36 59                add @R9+,R6
+37 59                add @R9+,R7
+38 59                add @R9+,R8
+39 59                add @R9+,R9
+31 59                add @R9+,SP
+32 59                add @R9+,SR
+33 51                add @SP+,CG
+30 51                add @SP+,PC
+34 51                add @SP+,R4
+35 51                add @SP+,R5
+36 51                add @SP+,R6
+37 51                add @SP+,R7
+38 51                add @SP+,R8
+39 51                add @SP+,R9
+31 51                add @SP+,SP
+32 51                add @SP+,SR
+73 50 41 41          add.b #0x4141,CG
+70 50 41 41          add.b #0x4141,PC
+7a 50 41 41          add.b #0x4141,R10
+74 50 41 41          add.b #0x4141,R4
+75 50 41 41          add.b #0x4141,R5
+76 50 41 41          add.b #0x4141,R6
+77 50 41 41          add.b #0x4141,R7
+78 50 41 41          add.b #0x4141,R8
+79 50 41 41          add.b #0x4141,R9
+71 50 41 41          add.b #0x4141,SP
+72 50 41 41          add.b #0x4141,SR
+53 52                add.b (0),CG
+50 52                add.b (0),PC
+5a 52                add.b (0),R10
+54 52                add.b (0),R4
+55 52                add.b (0),R5
+56 52                add.b (0),R6
+57 52                add.b (0),R7
+58 52                add.b (0),R8
+59 52                add.b (0),R9
+51 52                add.b (0),SP
+52 52                add.b (0),SR
+73 53                add.b -1,CG
+70 53                add.b -1,PC
+7a 53                add.b -1,R10
+74 53                add.b -1,R4
+75 53                add.b -1,R5
+76 53                add.b -1,R6
+77 53                add.b -1,R7
+78 53                add.b -1,R8
+79 53                add.b -1,R9
+71 53                add.b -1,SP
+72 53                add.b -1,SR
+43 53                add.b 0,CG
+4a 53                add.b 0,R10
+4b 53                add.b 0,R11
+4c 53                add.b 0,R12
+4d 53                add.b 0,R13
+4e 53                add.b 0,R14
+4f 53                add.b 0,R15
+44 53                add.b 0,R4
+45 53                add.b 0,R5
+46 53                add.b 0,R6
+47 53                add.b 0,R7
+48 53                add.b 0,R8
+49 53                add.b 0,R9
+41 53                add.b 0,SP
+42 53                add.b 0,SR
+53 5a 41 41          add.b 0x4141(R10),CG
+50 5a 41 41          add.b 0x4141(R10),PC
+5a 5a 41 41          add.b 0x4141(R10),R10
+54 5a 41 41          add.b 0x4141(R10),R4
+55 5a 41 41          add.b 0x4141(R10),R5
+56 5a 41 41          add.b 0x4141(R10),R6
+57 5a 41 41          add.b 0x4141(R10),R7
+58 5a 41 41          add.b 0x4141(R10),R8
+59 5a 41 41          add.b 0x4141(R10),R9
+51 5a 41 41          add.b 0x4141(R10),SP
+52 5a 41 41          add.b 0x4141(R10),SR
+53 54 41 41          add.b 0x4141(R4),CG
+50 54 41 41          add.b 0x4141(R4),PC
+5a 54 41 41          add.b 0x4141(R4),R10
+54 54 41 41          add.b 0x4141(R4),R4
+55 54 41 41          add.b 0x4141(R4),R5
+56 54 41 41          add.b 0x4141(R4),R6
+57 54 41 41          add.b 0x4141(R4),R7
+58 54 41 41          add.b 0x4141(R4),R8
+59 54 41 41          add.b 0x4141(R4),R9
+51 54 41 41          add.b 0x4141(R4),SP
+52 54 41 41          add.b 0x4141(R4),SR
+53 55 41 41          add.b 0x4141(R5),CG
+50 55 41 41          add.b 0x4141(R5),PC
+5a 55 41 41          add.b 0x4141(R5),R10
+54 55 41 41          add.b 0x4141(R5),R4
+55 55 41 41          add.b 0x4141(R5),R5
+56 55 41 41          add.b 0x4141(R5),R6
+57 55 41 41          add.b 0x4141(R5),R7
+58 55 41 41          add.b 0x4141(R5),R8
+59 55 41 41          add.b 0x4141(R5),R9
+51 55 41 41          add.b 0x4141(R5),SP
+52 55 41 41          add.b 0x4141(R5),SR
+53 56 41 41          add.b 0x4141(R6),CG
+50 56 41 41          add.b 0x4141(R6),PC
+5a 56 41 41          add.b 0x4141(R6),R10
+54 56 41 41          add.b 0x4141(R6),R4
+55 56 41 41          add.b 0x4141(R6),R5
+56 56 41 41          add.b 0x4141(R6),R6
+57 56 41 41          add.b 0x4141(R6),R7
+58 56 41 41          add.b 0x4141(R6),R8
+59 56 41 41          add.b 0x4141(R6),R9
+51 56 41 41          add.b 0x4141(R6),SP
+52 56 41 41          add.b 0x4141(R6),SR
+53 57 41 41          add.b 0x4141(R7),CG
+50 57 41 41          add.b 0x4141(R7),PC
+5a 57 41 41          add.b 0x4141(R7),R10
+54 57 41 41          add.b 0x4141(R7),R4
+55 57 41 41          add.b 0x4141(R7),R5
+56 57 41 41          add.b 0x4141(R7),R6
+57 57 41 41          add.b 0x4141(R7),R7
+58 57 41 41          add.b 0x4141(R7),R8
+59 57 41 41          add.b 0x4141(R7),R9
+51 57 41 41          add.b 0x4141(R7),SP
+52 57 41 41          add.b 0x4141(R7),SR
+53 58 41 41          add.b 0x4141(R8),CG
+50 58 41 41          add.b 0x4141(R8),PC
+5a 58 41 41          add.b 0x4141(R8),R10
+54 58 41 41          add.b 0x4141(R8),R4
+55 58 41 41          add.b 0x4141(R8),R5
+56 58 41 41          add.b 0x4141(R8),R6
+57 58 41 41          add.b 0x4141(R8),R7
+58 58 41 41          add.b 0x4141(R8),R8
+59 58 41 41          add.b 0x4141(R8),R9
+51 58 41 41          add.b 0x4141(R8),SP
+52 58 41 41          add.b 0x4141(R8),SR
+53 59 41 41          add.b 0x4141(R9),CG
+50 59 41 41          add.b 0x4141(R9),PC
+5a 59 41 41          add.b 0x4141(R9),R10
+54 59 41 41          add.b 0x4141(R9),R4
+55 59 41 41          add.b 0x4141(R9),R5
+56 59 41 41          add.b 0x4141(R9),R6
+57 59 41 41          add.b 0x4141(R9),R7
+58 59 41 41          add.b 0x4141(R9),R8
+59 59 41 41          add.b 0x4141(R9),R9
+51 59 41 41          add.b 0x4141(R9),SP
+52 59 41 41          add.b 0x4141(R9),SR
+53 51 41 41          add.b 0x4141(SP),CG
+50 51 41 41          add.b 0x4141(SP),PC
+5a 51 41 41          add.b 0x4141(SP),R10
+54 51 41 41          add.b 0x4141(SP),R4
+55 51 41 41          add.b 0x4141(SP),R5
+56 51 41 41          add.b 0x4141(SP),R6
+57 51 41 41          add.b 0x4141(SP),R7
+58 51 41 41          add.b 0x4141(SP),R8
+59 51 41 41          add.b 0x4141(SP),R9
+51 51 41 41          add.b 0x4141(SP),SP
+52 51 41 41          add.b 0x4141(SP),SR
+53 50 41 41          add.b 0x4141,CG
+50 50 41 41          add.b 0x4141,PC
+5a 50 41 41          add.b 0x4141,R10
+54 50 41 41          add.b 0x4141,R4
+55 50 41 41          add.b 0x4141,R5
+56 50 41 41          add.b 0x4141,R6
+57 50 41 41          add.b 0x4141,R7
+58 50 41 41          add.b 0x4141,R8
+59 50 41 41          add.b 0x4141,R9
+51 50 41 41          add.b 0x4141,SP
+52 50 41 41          add.b 0x4141,SR
+53 53                add.b 1,CG
+50 53                add.b 1,PC
+5a 53                add.b 1,R10
+54 53                add.b 1,R4
+55 53                add.b 1,R5
+56 53                add.b 1,R6
+57 53                add.b 1,R7
+58 53                add.b 1,R8
+59 53                add.b 1,R9
+51 53                add.b 1,SP
+52 53                add.b 1,SR
+63 53                add.b 2,CG
+6a 53                add.b 2,R10
+6b 53                add.b 2,R11
+6c 53                add.b 2,R12
+6d 53                add.b 2,R13
+6e 53                add.b 2,R14
+6f 53                add.b 2,R15
+64 53                add.b 2,R4
+65 53                add.b 2,R5
+66 53                add.b 2,R6
+67 53                add.b 2,R7
+68 53                add.b 2,R8
+69 53                add.b 2,R9
+61 53                add.b 2,SP
+62 53                add.b 2,SR
+63 52                add.b 4,CG
+6a 52                add.b 4,R10
+6b 52                add.b 4,R11
+6c 52                add.b 4,R12
+6d 52                add.b 4,R13
+6e 52                add.b 4,R14
+6f 52                add.b 4,R15
+64 52                add.b 4,R4
+65 52                add.b 4,R5
+66 52                add.b 4,R6
+67 52                add.b 4,R7
+68 52                add.b 4,R8
+69 52                add.b 4,R9
+61 52                add.b 4,SP
+62 52                add.b 4,SR
+73 52                add.b 8,CG
+70 52                add.b 8,PC
+7a 52                add.b 8,R10
+74 52                add.b 8,R4
+75 52                add.b 8,R5
+76 52                add.b 8,R6
+77 52                add.b 8,R7
+78 52                add.b 8,R8
+79 52                add.b 8,R9
+71 52                add.b 8,SP
+72 52                add.b 8,SR
+63 50                add.b @PC,CG
+6a 50                add.b @PC,R10
+6b 50                add.b @PC,R11
+6c 50                add.b @PC,R12
+6d 50                add.b @PC,R13
+6e 50                add.b @PC,R14
+6f 50                add.b @PC,R15
+64 50                add.b @PC,R4
+65 50                add.b @PC,R5
+66 50                add.b @PC,R6
+67 50                add.b @PC,R7
+68 50                add.b @PC,R8
+69 50                add.b @PC,R9
+61 50                add.b @PC,SP
+62 50                add.b @PC,SR
+73 5a                add.b @R10+,CG
+70 5a                add.b @R10+,PC
+7a 5a                add.b @R10+,R10
+74 5a                add.b @R10+,R4
+75 5a                add.b @R10+,R5
+76 5a                add.b @R10+,R6
+77 5a                add.b @R10+,R7
+78 5a                add.b @R10+,R8
+79 5a                add.b @R10+,R9
+71 5a                add.b @R10+,SP
+72 5a                add.b @R10+,SR
+63 5a                add.b @R10,CG
+6a 5a                add.b @R10,R10
+6b 5a                add.b @R10,R11
+6c 5a                add.b @R10,R12
+6d 5a                add.b @R10,R13
+6e 5a                add.b @R10,R14
+6f 5a                add.b @R10,R15
+64 5a                add.b @R10,R4
+65 5a                add.b @R10,R5
+66 5a                add.b @R10,R6
+67 5a                add.b @R10,R7
+68 5a                add.b @R10,R8
+69 5a                add.b @R10,R9
+61 5a                add.b @R10,SP
+62 5a                add.b @R10,SR
+73 54                add.b @R4+,CG
+70 54                add.b @R4+,PC
+7a 54                add.b @R4+,R10
+74 54                add.b @R4+,R4
+75 54                add.b @R4+,R5
+76 54                add.b @R4+,R6
+77 54                add.b @R4+,R7
+78 54                add.b @R4+,R8
+79 54                add.b @R4+,R9
+71 54                add.b @R4+,SP
+72 54                add.b @R4+,SR
+63 54                add.b @R4,CG
+6a 54                add.b @R4,R10
+6b 54                add.b @R4,R11
+6c 54                add.b @R4,R12
+6d 54                add.b @R4,R13
+6e 54                add.b @R4,R14
+6f 54                add.b @R4,R15
+64 54                add.b @R4,R4
+65 54                add.b @R4,R5
+66 54                add.b @R4,R6
+67 54                add.b @R4,R7
+68 54                add.b @R4,R8
+69 54                add.b @R4,R9
+61 54                add.b @R4,SP
+62 54                add.b @R4,SR
+73 55                add.b @R5+,CG
+70 55                add.b @R5+,PC
+7a 55                add.b @R5+,R10
+74 55                add.b @R5+,R4
+75 55                add.b @R5+,R5
+76 55                add.b @R5+,R6
+77 55                add.b @R5+,R7
+78 55                add.b @R5+,R8
+79 55                add.b @R5+,R9
+71 55                add.b @R5+,SP
+72 55                add.b @R5+,SR
+63 55                add.b @R5,CG
+6a 55                add.b @R5,R10
+6b 55                add.b @R5,R11
+6c 55                add.b @R5,R12
+6d 55                add.b @R5,R13
+6e 55                add.b @R5,R14
+6f 55                add.b @R5,R15
+64 55                add.b @R5,R4
+65 55                add.b @R5,R5
+66 55                add.b @R5,R6
+67 55                add.b @R5,R7
+68 55                add.b @R5,R8
+69 55                add.b @R5,R9
+61 55                add.b @R5,SP
+62 55                add.b @R5,SR
+73 56                add.b @R6+,CG
+70 56                add.b @R6+,PC
+7a 56                add.b @R6+,R10
+74 56                add.b @R6+,R4
+75 56                add.b @R6+,R5
+76 56                add.b @R6+,R6
+77 56                add.b @R6+,R7
+78 56                add.b @R6+,R8
+79 56                add.b @R6+,R9
+71 56                add.b @R6+,SP
+72 56                add.b @R6+,SR
+63 56                add.b @R6,CG
+6a 56                add.b @R6,R10
+6b 56                add.b @R6,R11
+6c 56                add.b @R6,R12
+6d 56                add.b @R6,R13
+6e 56                add.b @R6,R14
+6f 56                add.b @R6,R15
+64 56                add.b @R6,R4
+65 56                add.b @R6,R5
+66 56                add.b @R6,R6
+67 56                add.b @R6,R7
+68 56                add.b @R6,R8
+69 56                add.b @R6,R9
+61 56                add.b @R6,SP
+62 56                add.b @R6,SR
+73 57                add.b @R7+,CG
+70 57                add.b @R7+,PC
+7a 57                add.b @R7+,R10
+74 57                add.b @R7+,R4
+75 57                add.b @R7+,R5
+76 57                add.b @R7+,R6
+77 57                add.b @R7+,R7
+78 57                add.b @R7+,R8
+79 57                add.b @R7+,R9
+71 57                add.b @R7+,SP
+72 57                add.b @R7+,SR
+63 57                add.b @R7,CG
+6a 57                add.b @R7,R10
+6b 57                add.b @R7,R11
+6c 57                add.b @R7,R12
+6d 57                add.b @R7,R13
+6e 57                add.b @R7,R14
+6f 57                add.b @R7,R15
+64 57                add.b @R7,R4
+65 57                add.b @R7,R5
+66 57                add.b @R7,R6
+67 57                add.b @R7,R7
+68 57                add.b @R7,R8
+69 57                add.b @R7,R9
+61 57                add.b @R7,SP
+62 57                add.b @R7,SR
+73 58                add.b @R8+,CG
+70 58                add.b @R8+,PC
+7a 58                add.b @R8+,R10
+74 58                add.b @R8+,R4
+75 58                add.b @R8+,R5
+76 58                add.b @R8+,R6
+77 58                add.b @R8+,R7
+78 58                add.b @R8+,R8
+79 58                add.b @R8+,R9
+71 58                add.b @R8+,SP
+72 58                add.b @R8+,SR
+63 58                add.b @R8,CG
+6a 58                add.b @R8,R10
+6b 58                add.b @R8,R11
+6c 58                add.b @R8,R12
+6d 58                add.b @R8,R13
+6e 58                add.b @R8,R14
+6f 58                add.b @R8,R15
+64 58                add.b @R8,R4
+65 58                add.b @R8,R5
+66 58                add.b @R8,R6
+67 58                add.b @R8,R7
+68 58                add.b @R8,R8
+69 58                add.b @R8,R9
+61 58                add.b @R8,SP
+62 58                add.b @R8,SR
+73 59                add.b @R9+,CG
+70 59                add.b @R9+,PC
+7a 59                add.b @R9+,R10
+74 59                add.b @R9+,R4
+75 59                add.b @R9+,R5
+76 59                add.b @R9+,R6
+77 59                add.b @R9+,R7
+78 59                add.b @R9+,R8
+79 59                add.b @R9+,R9
+71 59                add.b @R9+,SP
+72 59                add.b @R9+,SR
+63 59                add.b @R9,CG
+6a 59                add.b @R9,R10
+6b 59                add.b @R9,R11
+6c 59                add.b @R9,R12
+6d 59                add.b @R9,R13
+6e 59                add.b @R9,R14
+6f 59                add.b @R9,R15
+64 59                add.b @R9,R4
+65 59                add.b @R9,R5
+66 59                add.b @R9,R6
+67 59                add.b @R9,R7
+68 59                add.b @R9,R8
+69 59                add.b @R9,R9
+61 59                add.b @R9,SP
+62 59                add.b @R9,SR
+73 51                add.b @SP+,CG
+70 51                add.b @SP+,PC
+7a 51                add.b @SP+,R10
+74 51                add.b @SP+,R4
+75 51                add.b @SP+,R5
+76 51                add.b @SP+,R6
+77 51                add.b @SP+,R7
+78 51                add.b @SP+,R8
+79 51                add.b @SP+,R9
+71 51                add.b @SP+,SP
+72 51                add.b @SP+,SR
+63 51                add.b @SP,CG
+6a 51                add.b @SP,R10
+6b 51                add.b @SP,R11
+6c 51                add.b @SP,R12
+6d 51                add.b @SP,R13
+6e 51                add.b @SP,R14
+6f 51                add.b @SP,R15
+64 51                add.b @SP,R4
+65 51                add.b @SP,R5
+66 51                add.b @SP,R6
+67 51                add.b @SP,R7
+68 51                add.b @SP,R8
+69 51                add.b @SP,R9
+61 51                add.b @SP,SP
+62 51                add.b @SP,SR
+43 50                add.b PC,CG
+4a 50                add.b PC,R10
+4b 50                add.b PC,R11
+4c 50                add.b PC,R12
+4d 50                add.b PC,R13
+4e 50                add.b PC,R14
+4f 50                add.b PC,R15
+44 50                add.b PC,R4
+45 50                add.b PC,R5
+46 50                add.b PC,R6
+47 50                add.b PC,R7
+48 50                add.b PC,R8
+49 50                add.b PC,R9
+41 50                add.b PC,SP
+42 50                add.b PC,SR
+43 5a                add.b R10,CG
+4a 5a                add.b R10,R10
+4b 5a                add.b R10,R11
+4c 5a                add.b R10,R12
+4d 5a                add.b R10,R13
+4e 5a                add.b R10,R14
+4f 5a                add.b R10,R15
+44 5a                add.b R10,R4
+45 5a                add.b R10,R5
+46 5a                add.b R10,R6
+47 5a                add.b R10,R7
+48 5a                add.b R10,R8
+49 5a                add.b R10,R9
+41 5a                add.b R10,SP
+42 5a                add.b R10,SR
+43 54                add.b R4,CG
+4a 54                add.b R4,R10
+4b 54                add.b R4,R11
+4c 54                add.b R4,R12
+4d 54                add.b R4,R13
+4e 54                add.b R4,R14
+4f 54                add.b R4,R15
+44 54                add.b R4,R4
+45 54                add.b R4,R5
+46 54                add.b R4,R6
+47 54                add.b R4,R7
+48 54                add.b R4,R8
+49 54                add.b R4,R9
+41 54                add.b R4,SP
+42 54                add.b R4,SR
+43 55                add.b R5,CG
+4a 55                add.b R5,R10
+4b 55                add.b R5,R11
+4c 55                add.b R5,R12
+4d 55                add.b R5,R13
+4e 55                add.b R5,R14
+4f 55                add.b R5,R15
+44 55                add.b R5,R4
+45 55                add.b R5,R5
+46 55                add.b R5,R6
+47 55                add.b R5,R7
+48 55                add.b R5,R8
+49 55                add.b R5,R9
+41 55                add.b R5,SP
+42 55                add.b R5,SR
+43 56                add.b R6,CG
+4a 56                add.b R6,R10
+4b 56                add.b R6,R11
+4c 56                add.b R6,R12
+4d 56                add.b R6,R13
+4e 56                add.b R6,R14
+4f 56                add.b R6,R15
+44 56                add.b R6,R4
+45 56                add.b R6,R5
+46 56                add.b R6,R6
+47 56                add.b R6,R7
+48 56                add.b R6,R8
+49 56                add.b R6,R9
+41 56                add.b R6,SP
+42 56                add.b R6,SR
+43 57                add.b R7,CG
+4a 57                add.b R7,R10
+4b 57                add.b R7,R11
+4c 57                add.b R7,R12
+4d 57                add.b R7,R13
+4e 57                add.b R7,R14
+4f 57                add.b R7,R15
+44 57                add.b R7,R4
+45 57                add.b R7,R5
+46 57                add.b R7,R6
+47 57                add.b R7,R7
+48 57                add.b R7,R8
+49 57                add.b R7,R9
+41 57                add.b R7,SP
+42 57                add.b R7,SR
+43 58                add.b R8,CG
+4a 58                add.b R8,R10
+4b 58                add.b R8,R11
+4c 58                add.b R8,R12
+4d 58                add.b R8,R13
+4e 58                add.b R8,R14
+4f 58                add.b R8,R15
+44 58                add.b R8,R4
+45 58                add.b R8,R5
+46 58                add.b R8,R6
+47 58                add.b R8,R7
+48 58                add.b R8,R8
+49 58                add.b R8,R9
+41 58                add.b R8,SP
+42 58                add.b R8,SR
+43 59                add.b R9,CG
+4a 59                add.b R9,R10
+4b 59                add.b R9,R11
+4c 59                add.b R9,R12
+4d 59                add.b R9,R13
+4e 59                add.b R9,R14
+4f 59                add.b R9,R15
+44 59                add.b R9,R4
+45 59                add.b R9,R5
+46 59                add.b R9,R6
+47 59                add.b R9,R7
+48 59                add.b R9,R8
+49 59                add.b R9,R9
+41 59                add.b R9,SP
+42 59                add.b R9,SR
+43 51                add.b SP,CG
+4a 51                add.b SP,R10
+4b 51                add.b SP,R11
+4c 51                add.b SP,R12
+4d 51                add.b SP,R13
+4e 51                add.b SP,R14
+4f 51                add.b SP,R15
+44 51                add.b SP,R4
+45 51                add.b SP,R5
+46 51                add.b SP,R6
+47 51                add.b SP,R7
+48 51                add.b SP,R8
+49 51                add.b SP,R9
+41 51                add.b SP,SP
+42 51                add.b SP,SR
+43 52                add.b SR,CG
+4a 52                add.b SR,R10
+4b 52                add.b SR,R11
+4c 52                add.b SR,R12
+4d 52                add.b SR,R13
+4e 52                add.b SR,R14
+4f 52                add.b SR,R15
+44 52                add.b SR,R4
+45 52                add.b SR,R5
+46 52                add.b SR,R6
+47 52                add.b SR,R7
+48 52                add.b SR,R8
+49 52                add.b SR,R9
+41 52                add.b SR,SP
+42 52                add.b SR,SR
+33 63                addc -1,CG
+30 63                addc -1,PC
+34 63                addc -1,R4
+35 63                addc -1,R5
+36 63                addc -1,R6
+37 63                addc -1,R7
+38 63                addc -1,R8
+39 63                addc -1,R9
+31 63                addc -1,SP
+32 63                addc -1,SR
+33 62                addc 8,CG
+30 62                addc 8,PC
+34 62                addc 8,R4
+35 62                addc 8,R5
+36 62                addc 8,R6
+37 62                addc 8,R7
+38 62                addc 8,R8
+39 62                addc 8,R9
+31 62                addc 8,SP
+32 62                addc 8,SR
+33 6a                addc @R10+,CG
+30 6a                addc @R10+,PC
+34 6a                addc @R10+,R4
+35 6a                addc @R10+,R5
+36 6a                addc @R10+,R6
+37 6a                addc @R10+,R7
+38 6a                addc @R10+,R8
+39 6a                addc @R10+,R9
+31 6a                addc @R10+,SP
+32 6a                addc @R10+,SR
+33 6b                addc @R11+,CG
+30 6b                addc @R11+,PC
+34 6b                addc @R11+,R4
+35 6b                addc @R11+,R5
+36 6b                addc @R11+,R6
+37 6b                addc @R11+,R7
+38 6b                addc @R11+,R8
+39 6b                addc @R11+,R9
+31 6b                addc @R11+,SP
+32 6b                addc @R11+,SR
+33 6c                addc @R12+,CG
+30 6c                addc @R12+,PC
+34 6c                addc @R12+,R4
+35 6c                addc @R12+,R5
+36 6c                addc @R12+,R6
+37 6c                addc @R12+,R7
+38 6c                addc @R12+,R8
+39 6c                addc @R12+,R9
+31 6c                addc @R12+,SP
+32 6c                addc @R12+,SR
+33 6d                addc @R13+,CG
+30 6d                addc @R13+,PC
+34 6d                addc @R13+,R4
+35 6d                addc @R13+,R5
+36 6d                addc @R13+,R6
+37 6d                addc @R13+,R7
+38 6d                addc @R13+,R8
+39 6d                addc @R13+,R9
+31 6d                addc @R13+,SP
+32 6d                addc @R13+,SR
+33 6e                addc @R14+,CG
+30 6e                addc @R14+,PC
+34 6e                addc @R14+,R4
+35 6e                addc @R14+,R5
+36 6e                addc @R14+,R6
+37 6e                addc @R14+,R7
+38 6e                addc @R14+,R8
+39 6e                addc @R14+,R9
+31 6e                addc @R14+,SP
+32 6e                addc @R14+,SR
+33 6f                addc @R15+,CG
+30 6f                addc @R15+,PC
+34 6f                addc @R15+,R4
+35 6f                addc @R15+,R5
+36 6f                addc @R15+,R6
+37 6f                addc @R15+,R7
+38 6f                addc @R15+,R8
+39 6f                addc @R15+,R9
+31 6f                addc @R15+,SP
+32 6f                addc @R15+,SR
+33 64                addc @R4+,CG
+30 64                addc @R4+,PC
+34 64                addc @R4+,R4
+35 64                addc @R4+,R5
+36 64                addc @R4+,R6
+37 64                addc @R4+,R7
+38 64                addc @R4+,R8
+39 64                addc @R4+,R9
+31 64                addc @R4+,SP
+32 64                addc @R4+,SR
+33 65                addc @R5+,CG
+30 65                addc @R5+,PC
+34 65                addc @R5+,R4
+35 65                addc @R5+,R5
+36 65                addc @R5+,R6
+37 65                addc @R5+,R7
+38 65                addc @R5+,R8
+39 65                addc @R5+,R9
+31 65                addc @R5+,SP
+32 65                addc @R5+,SR
+33 66                addc @R6+,CG
+30 66                addc @R6+,PC
+34 66                addc @R6+,R4
+35 66                addc @R6+,R5
+36 66                addc @R6+,R6
+37 66                addc @R6+,R7
+38 66                addc @R6+,R8
+39 66                addc @R6+,R9
+31 66                addc @R6+,SP
+32 66                addc @R6+,SR
+33 67                addc @R7+,CG
+30 67                addc @R7+,PC
+34 67                addc @R7+,R4
+35 67                addc @R7+,R5
+36 67                addc @R7+,R6
+37 67                addc @R7+,R7
+38 67                addc @R7+,R8
+39 67                addc @R7+,R9
+31 67                addc @R7+,SP
+32 67                addc @R7+,SR
+33 68                addc @R8+,CG
+30 68                addc @R8+,PC
+34 68                addc @R8+,R4
+35 68                addc @R8+,R5
+36 68                addc @R8+,R6
+37 68                addc @R8+,R7
+38 68                addc @R8+,R8
+39 68                addc @R8+,R9
+31 68                addc @R8+,SP
+32 68                addc @R8+,SR
+33 69                addc @R9+,CG
+30 69                addc @R9+,PC
+34 69                addc @R9+,R4
+35 69                addc @R9+,R5
+36 69                addc @R9+,R6
+37 69                addc @R9+,R7
+38 69                addc @R9+,R8
+39 69                addc @R9+,R9
+31 69                addc @R9+,SP
+32 69                addc @R9+,SR
+33 61                addc @SP+,CG
+30 61                addc @SP+,PC
+34 61                addc @SP+,R4
+35 61                addc @SP+,R5
+36 61                addc @SP+,R6
+37 61                addc @SP+,R7
+38 61                addc @SP+,R8
+39 61                addc @SP+,R9
+31 61                addc @SP+,SP
+32 61                addc @SP+,SR
+53 62                addc.b (0),CG
+50 62                addc.b (0),PC
+5a 62                addc.b (0),R10
+54 62                addc.b (0),R4
+55 62                addc.b (0),R5
+56 62                addc.b (0),R6
+57 62                addc.b (0),R7
+58 62                addc.b (0),R8
+59 62                addc.b (0),R9
+51 62                addc.b (0),SP
+52 62                addc.b (0),SR
+73 63                addc.b -1,CG
+70 63                addc.b -1,PC
+7a 63                addc.b -1,R10
+74 63                addc.b -1,R4
+75 63                addc.b -1,R5
+76 63                addc.b -1,R6
+77 63                addc.b -1,R7
+78 63                addc.b -1,R8
+79 63                addc.b -1,R9
+71 63                addc.b -1,SP
+72 63                addc.b -1,SR
+43 63                addc.b 0,CG
+4a 63                addc.b 0,R10
+4b 63                addc.b 0,R11
+4c 63                addc.b 0,R12
+4d 63                addc.b 0,R13
+4e 63                addc.b 0,R14
+4f 63                addc.b 0,R15
+44 63                addc.b 0,R4
+45 63                addc.b 0,R5
+46 63                addc.b 0,R6
+47 63                addc.b 0,R7
+48 63                addc.b 0,R8
+49 63                addc.b 0,R9
+41 63                addc.b 0,SP
+42 63                addc.b 0,SR
+53 6a 41 41          addc.b 0x4141(R10),CG
+50 6a 41 41          addc.b 0x4141(R10),PC
+5a 6a 41 41          addc.b 0x4141(R10),R10
+54 6a 41 41          addc.b 0x4141(R10),R4
+55 6a 41 41          addc.b 0x4141(R10),R5
+56 6a 41 41          addc.b 0x4141(R10),R6
+57 6a 41 41          addc.b 0x4141(R10),R7
+58 6a 41 41          addc.b 0x4141(R10),R8
+59 6a 41 41          addc.b 0x4141(R10),R9
+51 6a 41 41          addc.b 0x4141(R10),SP
+52 6a 41 41          addc.b 0x4141(R10),SR
+53 6b 41 41          addc.b 0x4141(R11),CG
+50 6b 41 41          addc.b 0x4141(R11),PC
+5a 6b 41 41          addc.b 0x4141(R11),R10
+54 6b 41 41          addc.b 0x4141(R11),R4
+55 6b 41 41          addc.b 0x4141(R11),R5
+56 6b 41 41          addc.b 0x4141(R11),R6
+57 6b 41 41          addc.b 0x4141(R11),R7
+58 6b 41 41          addc.b 0x4141(R11),R8
+59 6b 41 41          addc.b 0x4141(R11),R9
+51 6b 41 41          addc.b 0x4141(R11),SP
+52 6b 41 41          addc.b 0x4141(R11),SR
+53 6c 41 41          addc.b 0x4141(R12),CG
+50 6c 41 41          addc.b 0x4141(R12),PC
+5a 6c 41 41          addc.b 0x4141(R12),R10
+54 6c 41 41          addc.b 0x4141(R12),R4
+55 6c 41 41          addc.b 0x4141(R12),R5
+56 6c 41 41          addc.b 0x4141(R12),R6
+57 6c 41 41          addc.b 0x4141(R12),R7
+58 6c 41 41          addc.b 0x4141(R12),R8
+59 6c 41 41          addc.b 0x4141(R12),R9
+51 6c 41 41          addc.b 0x4141(R12),SP
+52 6c 41 41          addc.b 0x4141(R12),SR
+53 6d 41 41          addc.b 0x4141(R13),CG
+50 6d 41 41          addc.b 0x4141(R13),PC
+5a 6d 41 41          addc.b 0x4141(R13),R10
+54 6d 41 41          addc.b 0x4141(R13),R4
+55 6d 41 41          addc.b 0x4141(R13),R5
+56 6d 41 41          addc.b 0x4141(R13),R6
+57 6d 41 41          addc.b 0x4141(R13),R7
+58 6d 41 41          addc.b 0x4141(R13),R8
+59 6d 41 41          addc.b 0x4141(R13),R9
+51 6d 41 41          addc.b 0x4141(R13),SP
+52 6d 41 41          addc.b 0x4141(R13),SR
+53 6e 41 41          addc.b 0x4141(R14),CG
+50 6e 41 41          addc.b 0x4141(R14),PC
+5a 6e 41 41          addc.b 0x4141(R14),R10
+54 6e 41 41          addc.b 0x4141(R14),R4
+55 6e 41 41          addc.b 0x4141(R14),R5
+56 6e 41 41          addc.b 0x4141(R14),R6
+57 6e 41 41          addc.b 0x4141(R14),R7
+58 6e 41 41          addc.b 0x4141(R14),R8
+59 6e 41 41          addc.b 0x4141(R14),R9
+51 6e 41 41          addc.b 0x4141(R14),SP
+52 6e 41 41          addc.b 0x4141(R14),SR
+53 6f 41 41          addc.b 0x4141(R15),CG
+50 6f 41 41          addc.b 0x4141(R15),PC
+5a 6f 41 41          addc.b 0x4141(R15),R10
+54 6f 41 41          addc.b 0x4141(R15),R4
+55 6f 41 41          addc.b 0x4141(R15),R5
+56 6f 41 41          addc.b 0x4141(R15),R6
+57 6f 41 41          addc.b 0x4141(R15),R7
+58 6f 41 41          addc.b 0x4141(R15),R8
+59 6f 41 41          addc.b 0x4141(R15),R9
+51 6f 41 41          addc.b 0x4141(R15),SP
+52 6f 41 41          addc.b 0x4141(R15),SR
+53 64 41 41          addc.b 0x4141(R4),CG
+50 64 41 41          addc.b 0x4141(R4),PC
+5a 64 41 41          addc.b 0x4141(R4),R10
+54 64 41 41          addc.b 0x4141(R4),R4
+55 64 41 41          addc.b 0x4141(R4),R5
+56 64 41 41          addc.b 0x4141(R4),R6
+57 64 41 41          addc.b 0x4141(R4),R7
+58 64 41 41          addc.b 0x4141(R4),R8
+59 64 41 41          addc.b 0x4141(R4),R9
+51 64 41 41          addc.b 0x4141(R4),SP
+52 64 41 41          addc.b 0x4141(R4),SR
+53 65 41 41          addc.b 0x4141(R5),CG
+50 65 41 41          addc.b 0x4141(R5),PC
+5a 65 41 41          addc.b 0x4141(R5),R10
+54 65 41 41          addc.b 0x4141(R5),R4
+55 65 41 41          addc.b 0x4141(R5),R5
+56 65 41 41          addc.b 0x4141(R5),R6
+57 65 41 41          addc.b 0x4141(R5),R7
+58 65 41 41          addc.b 0x4141(R5),R8
+59 65 41 41          addc.b 0x4141(R5),R9
+51 65 41 41          addc.b 0x4141(R5),SP
+52 65 41 41          addc.b 0x4141(R5),SR
+53 66 41 41          addc.b 0x4141(R6),CG
+50 66 41 41          addc.b 0x4141(R6),PC
+5a 66 41 41          addc.b 0x4141(R6),R10
+54 66 41 41          addc.b 0x4141(R6),R4
+55 66 41 41          addc.b 0x4141(R6),R5
+56 66 41 41          addc.b 0x4141(R6),R6
+57 66 41 41          addc.b 0x4141(R6),R7
+58 66 41 41          addc.b 0x4141(R6),R8
+59 66 41 41          addc.b 0x4141(R6),R9
+51 66 41 41          addc.b 0x4141(R6),SP
+52 66 41 41          addc.b 0x4141(R6),SR
+53 67 41 41          addc.b 0x4141(R7),CG
+50 67 41 41          addc.b 0x4141(R7),PC
+5a 67 41 41          addc.b 0x4141(R7),R10
+54 67 41 41          addc.b 0x4141(R7),R4
+55 67 41 41          addc.b 0x4141(R7),R5
+56 67 41 41          addc.b 0x4141(R7),R6
+57 67 41 41          addc.b 0x4141(R7),R7
+58 67 41 41          addc.b 0x4141(R7),R8
+59 67 41 41          addc.b 0x4141(R7),R9
+51 67 41 41          addc.b 0x4141(R7),SP
+52 67 41 41          addc.b 0x4141(R7),SR
+53 68 41 41          addc.b 0x4141(R8),CG
+50 68 41 41          addc.b 0x4141(R8),PC
+5a 68 41 41          addc.b 0x4141(R8),R10
+54 68 41 41          addc.b 0x4141(R8),R4
+55 68 41 41          addc.b 0x4141(R8),R5
+56 68 41 41          addc.b 0x4141(R8),R6
+57 68 41 41          addc.b 0x4141(R8),R7
+58 68 41 41          addc.b 0x4141(R8),R8
+59 68 41 41          addc.b 0x4141(R8),R9
+51 68 41 41          addc.b 0x4141(R8),SP
+52 68 41 41          addc.b 0x4141(R8),SR
+53 69 41 41          addc.b 0x4141(R9),CG
+50 69 41 41          addc.b 0x4141(R9),PC
+5a 69 41 41          addc.b 0x4141(R9),R10
+54 69 41 41          addc.b 0x4141(R9),R4
+55 69 41 41          addc.b 0x4141(R9),R5
+56 69 41 41          addc.b 0x4141(R9),R6
+57 69 41 41          addc.b 0x4141(R9),R7
+58 69 41 41          addc.b 0x4141(R9),R8
+59 69 41 41          addc.b 0x4141(R9),R9
+51 69 41 41          addc.b 0x4141(R9),SP
+52 69 41 41          addc.b 0x4141(R9),SR
+53 61 41 41          addc.b 0x4141(SP),CG
+50 61 41 41          addc.b 0x4141(SP),PC
+5a 61 41 41          addc.b 0x4141(SP),R10
+54 61 41 41          addc.b 0x4141(SP),R4
+55 61 41 41          addc.b 0x4141(SP),R5
+56 61 41 41          addc.b 0x4141(SP),R6
+57 61 41 41          addc.b 0x4141(SP),R7
+58 61 41 41          addc.b 0x4141(SP),R8
+59 61 41 41          addc.b 0x4141(SP),R9
+51 61 41 41          addc.b 0x4141(SP),SP
+52 61 41 41          addc.b 0x4141(SP),SR
+53 63                addc.b 1,CG
+50 63                addc.b 1,PC
+5a 63                addc.b 1,R10
+54 63                addc.b 1,R4
+55 63                addc.b 1,R5
+56 63                addc.b 1,R6
+57 63                addc.b 1,R7
+58 63                addc.b 1,R8
+59 63                addc.b 1,R9
+51 63                addc.b 1,SP
+52 63                addc.b 1,SR
+63 63                addc.b 2,CG
+6a 63                addc.b 2,R10
+6b 63                addc.b 2,R11
+6c 63                addc.b 2,R12
+6d 63                addc.b 2,R13
+6e 63                addc.b 2,R14
+6f 63                addc.b 2,R15
+64 63                addc.b 2,R4
+65 63                addc.b 2,R5
+66 63                addc.b 2,R6
+67 63                addc.b 2,R7
+68 63                addc.b 2,R8
+69 63                addc.b 2,R9
+61 63                addc.b 2,SP
+62 63                addc.b 2,SR
+63 62                addc.b 4,CG
+6a 62                addc.b 4,R10
+6b 62                addc.b 4,R11
+6c 62                addc.b 4,R12
+6d 62                addc.b 4,R13
+6e 62                addc.b 4,R14
+6f 62                addc.b 4,R15
+64 62                addc.b 4,R4
+65 62                addc.b 4,R5
+66 62                addc.b 4,R6
+67 62                addc.b 4,R7
+68 62                addc.b 4,R8
+69 62                addc.b 4,R9
+61 62                addc.b 4,SP
+62 62                addc.b 4,SR
+73 62                addc.b 8,CG
+70 62                addc.b 8,PC
+7a 62                addc.b 8,R10
+74 62                addc.b 8,R4
+75 62                addc.b 8,R5
+76 62                addc.b 8,R6
+77 62                addc.b 8,R7
+78 62                addc.b 8,R8
+79 62                addc.b 8,R9
+71 62                addc.b 8,SP
+72 62                addc.b 8,SR
+73 6a                addc.b @R10+,CG
+70 6a                addc.b @R10+,PC
+7a 6a                addc.b @R10+,R10
+74 6a                addc.b @R10+,R4
+75 6a                addc.b @R10+,R5
+76 6a                addc.b @R10+,R6
+77 6a                addc.b @R10+,R7
+78 6a                addc.b @R10+,R8
+79 6a                addc.b @R10+,R9
+71 6a                addc.b @R10+,SP
+72 6a                addc.b @R10+,SR
+63 6a                addc.b @R10,CG
+6a 6a                addc.b @R10,R10
+6b 6a                addc.b @R10,R11
+6c 6a                addc.b @R10,R12
+6d 6a                addc.b @R10,R13
+6e 6a                addc.b @R10,R14
+6f 6a                addc.b @R10,R15
+64 6a                addc.b @R10,R4
+65 6a                addc.b @R10,R5
+66 6a                addc.b @R10,R6
+67 6a                addc.b @R10,R7
+68 6a                addc.b @R10,R8
+69 6a                addc.b @R10,R9
+61 6a                addc.b @R10,SP
+62 6a                addc.b @R10,SR
+73 6b                addc.b @R11+,CG
+70 6b                addc.b @R11+,PC
+7a 6b                addc.b @R11+,R10
+74 6b                addc.b @R11+,R4
+75 6b                addc.b @R11+,R5
+76 6b                addc.b @R11+,R6
+77 6b                addc.b @R11+,R7
+78 6b                addc.b @R11+,R8
+79 6b                addc.b @R11+,R9
+71 6b                addc.b @R11+,SP
+72 6b                addc.b @R11+,SR
+63 6b                addc.b @R11,CG
+6a 6b                addc.b @R11,R10
+6b 6b                addc.b @R11,R11
+6c 6b                addc.b @R11,R12
+6d 6b                addc.b @R11,R13
+6e 6b                addc.b @R11,R14
+6f 6b                addc.b @R11,R15
+64 6b                addc.b @R11,R4
+65 6b                addc.b @R11,R5
+66 6b                addc.b @R11,R6
+67 6b                addc.b @R11,R7
+68 6b                addc.b @R11,R8
+69 6b                addc.b @R11,R9
+61 6b                addc.b @R11,SP
+62 6b                addc.b @R11,SR
+73 6c                addc.b @R12+,CG
+70 6c                addc.b @R12+,PC
+7a 6c                addc.b @R12+,R10
+74 6c                addc.b @R12+,R4
+75 6c                addc.b @R12+,R5
+76 6c                addc.b @R12+,R6
+77 6c                addc.b @R12+,R7
+78 6c                addc.b @R12+,R8
+79 6c                addc.b @R12+,R9
+71 6c                addc.b @R12+,SP
+72 6c                addc.b @R12+,SR
+63 6c                addc.b @R12,CG
+6a 6c                addc.b @R12,R10
+6b 6c                addc.b @R12,R11
+6c 6c                addc.b @R12,R12
+6d 6c                addc.b @R12,R13
+6e 6c                addc.b @R12,R14
+6f 6c                addc.b @R12,R15
+64 6c                addc.b @R12,R4
+65 6c                addc.b @R12,R5
+66 6c                addc.b @R12,R6
+67 6c                addc.b @R12,R7
+68 6c                addc.b @R12,R8
+69 6c                addc.b @R12,R9
+61 6c                addc.b @R12,SP
+62 6c                addc.b @R12,SR
+73 6d                addc.b @R13+,CG
+70 6d                addc.b @R13+,PC
+7a 6d                addc.b @R13+,R10
+74 6d                addc.b @R13+,R4
+75 6d                addc.b @R13+,R5
+76 6d                addc.b @R13+,R6
+77 6d                addc.b @R13+,R7
+78 6d                addc.b @R13+,R8
+79 6d                addc.b @R13+,R9
+71 6d                addc.b @R13+,SP
+72 6d                addc.b @R13+,SR
+63 6d                addc.b @R13,CG
+6a 6d                addc.b @R13,R10
+6b 6d                addc.b @R13,R11
+6c 6d                addc.b @R13,R12
+6d 6d                addc.b @R13,R13
+6e 6d                addc.b @R13,R14
+6f 6d                addc.b @R13,R15
+64 6d                addc.b @R13,R4
+65 6d                addc.b @R13,R5
+66 6d                addc.b @R13,R6
+67 6d                addc.b @R13,R7
+68 6d                addc.b @R13,R8
+69 6d                addc.b @R13,R9
+61 6d                addc.b @R13,SP
+62 6d                addc.b @R13,SR
+73 6e                addc.b @R14+,CG
+70 6e                addc.b @R14+,PC
+7a 6e                addc.b @R14+,R10
+74 6e                addc.b @R14+,R4
+75 6e                addc.b @R14+,R5
+76 6e                addc.b @R14+,R6
+77 6e                addc.b @R14+,R7
+78 6e                addc.b @R14+,R8
+79 6e                addc.b @R14+,R9
+71 6e                addc.b @R14+,SP
+72 6e                addc.b @R14+,SR
+63 6e                addc.b @R14,CG
+6a 6e                addc.b @R14,R10
+6b 6e                addc.b @R14,R11
+6c 6e                addc.b @R14,R12
+6d 6e                addc.b @R14,R13
+6e 6e                addc.b @R14,R14
+6f 6e                addc.b @R14,R15
+64 6e                addc.b @R14,R4
+65 6e                addc.b @R14,R5
+66 6e                addc.b @R14,R6
+67 6e                addc.b @R14,R7
+68 6e                addc.b @R14,R8
+69 6e                addc.b @R14,R9
+61 6e                addc.b @R14,SP
+62 6e                addc.b @R14,SR
+73 6f                addc.b @R15+,CG
+70 6f                addc.b @R15+,PC
+7a 6f                addc.b @R15+,R10
+74 6f                addc.b @R15+,R4
+75 6f                addc.b @R15+,R5
+76 6f                addc.b @R15+,R6
+77 6f                addc.b @R15+,R7
+78 6f                addc.b @R15+,R8
+79 6f                addc.b @R15+,R9
+71 6f                addc.b @R15+,SP
+72 6f                addc.b @R15+,SR
+63 6f                addc.b @R15,CG
+6a 6f                addc.b @R15,R10
+6b 6f                addc.b @R15,R11
+6c 6f                addc.b @R15,R12
+6d 6f                addc.b @R15,R13
+6e 6f                addc.b @R15,R14
+6f 6f                addc.b @R15,R15
+64 6f                addc.b @R15,R4
+65 6f                addc.b @R15,R5
+66 6f                addc.b @R15,R6
+67 6f                addc.b @R15,R7
+68 6f                addc.b @R15,R8
+69 6f                addc.b @R15,R9
+61 6f                addc.b @R15,SP
+62 6f                addc.b @R15,SR
+73 64                addc.b @R4+,CG
+70 64                addc.b @R4+,PC
+7a 64                addc.b @R4+,R10
+74 64                addc.b @R4+,R4
+75 64                addc.b @R4+,R5
+76 64                addc.b @R4+,R6
+77 64                addc.b @R4+,R7
+78 64                addc.b @R4+,R8
+79 64                addc.b @R4+,R9
+71 64                addc.b @R4+,SP
+72 64                addc.b @R4+,SR
+63 64                addc.b @R4,CG
+6a 64                addc.b @R4,R10
+6b 64                addc.b @R4,R11
+6c 64                addc.b @R4,R12
+6d 64                addc.b @R4,R13
+6e 64                addc.b @R4,R14
+6f 64                addc.b @R4,R15
+64 64                addc.b @R4,R4
+65 64                addc.b @R4,R5
+66 64                addc.b @R4,R6
+67 64                addc.b @R4,R7
+68 64                addc.b @R4,R8
+69 64                addc.b @R4,R9
+61 64                addc.b @R4,SP
+62 64                addc.b @R4,SR
+73 65                addc.b @R5+,CG
+70 65                addc.b @R5+,PC
+7a 65                addc.b @R5+,R10
+74 65                addc.b @R5+,R4
+75 65                addc.b @R5+,R5
+76 65                addc.b @R5+,R6
+77 65                addc.b @R5+,R7
+78 65                addc.b @R5+,R8
+79 65                addc.b @R5+,R9
+71 65                addc.b @R5+,SP
+72 65                addc.b @R5+,SR
+63 65                addc.b @R5,CG
+6a 65                addc.b @R5,R10
+6b 65                addc.b @R5,R11
+6c 65                addc.b @R5,R12
+6d 65                addc.b @R5,R13
+6e 65                addc.b @R5,R14
+6f 65                addc.b @R5,R15
+64 65                addc.b @R5,R4
+65 65                addc.b @R5,R5
+66 65                addc.b @R5,R6
+67 65                addc.b @R5,R7
+68 65                addc.b @R5,R8
+69 65                addc.b @R5,R9
+61 65                addc.b @R5,SP
+62 65                addc.b @R5,SR
+73 66                addc.b @R6+,CG
+70 66                addc.b @R6+,PC
+7a 66                addc.b @R6+,R10
+74 66                addc.b @R6+,R4
+75 66                addc.b @R6+,R5
+76 66                addc.b @R6+,R6
+77 66                addc.b @R6+,R7
+78 66                addc.b @R6+,R8
+79 66                addc.b @R6+,R9
+71 66                addc.b @R6+,SP
+72 66                addc.b @R6+,SR
+63 66                addc.b @R6,CG
+6a 66                addc.b @R6,R10
+6b 66                addc.b @R6,R11
+6c 66                addc.b @R6,R12
+6d 66                addc.b @R6,R13
+6e 66                addc.b @R6,R14
+6f 66                addc.b @R6,R15
+64 66                addc.b @R6,R4
+65 66                addc.b @R6,R5
+66 66                addc.b @R6,R6
+67 66                addc.b @R6,R7
+68 66                addc.b @R6,R8
+69 66                addc.b @R6,R9
+61 66                addc.b @R6,SP
+62 66                addc.b @R6,SR
+73 67                addc.b @R7+,CG
+70 67                addc.b @R7+,PC
+7a 67                addc.b @R7+,R10
+74 67                addc.b @R7+,R4
+75 67                addc.b @R7+,R5
+76 67                addc.b @R7+,R6
+77 67                addc.b @R7+,R7
+78 67                addc.b @R7+,R8
+79 67                addc.b @R7+,R9
+71 67                addc.b @R7+,SP
+72 67                addc.b @R7+,SR
+63 67                addc.b @R7,CG
+6a 67                addc.b @R7,R10
+6b 67                addc.b @R7,R11
+6c 67                addc.b @R7,R12
+6d 67                addc.b @R7,R13
+6e 67                addc.b @R7,R14
+6f 67                addc.b @R7,R15
+64 67                addc.b @R7,R4
+65 67                addc.b @R7,R5
+66 67                addc.b @R7,R6
+67 67                addc.b @R7,R7
+68 67                addc.b @R7,R8
+69 67                addc.b @R7,R9
+61 67                addc.b @R7,SP
+62 67                addc.b @R7,SR
+73 68                addc.b @R8+,CG
+70 68                addc.b @R8+,PC
+7a 68                addc.b @R8+,R10
+74 68                addc.b @R8+,R4
+75 68                addc.b @R8+,R5
+76 68                addc.b @R8+,R6
+77 68                addc.b @R8+,R7
+78 68                addc.b @R8+,R8
+79 68                addc.b @R8+,R9
+71 68                addc.b @R8+,SP
+72 68                addc.b @R8+,SR
+63 68                addc.b @R8,CG
+6a 68                addc.b @R8,R10
+6b 68                addc.b @R8,R11
+6c 68                addc.b @R8,R12
+6d 68                addc.b @R8,R13
+6e 68                addc.b @R8,R14
+6f 68                addc.b @R8,R15
+64 68                addc.b @R8,R4
+65 68                addc.b @R8,R5
+66 68                addc.b @R8,R6
+67 68                addc.b @R8,R7
+68 68                addc.b @R8,R8
+69 68                addc.b @R8,R9
+61 68                addc.b @R8,SP
+62 68                addc.b @R8,SR
+73 69                addc.b @R9+,CG
+70 69                addc.b @R9+,PC
+7a 69                addc.b @R9+,R10
+74 69                addc.b @R9+,R4
+75 69                addc.b @R9+,R5
+76 69                addc.b @R9+,R6
+77 69                addc.b @R9+,R7
+78 69                addc.b @R9+,R8
+79 69                addc.b @R9+,R9
+71 69                addc.b @R9+,SP
+72 69                addc.b @R9+,SR
+63 69                addc.b @R9,CG
+6a 69                addc.b @R9,R10
+6b 69                addc.b @R9,R11
+6c 69                addc.b @R9,R12
+6d 69                addc.b @R9,R13
+6e 69                addc.b @R9,R14
+6f 69                addc.b @R9,R15
+64 69                addc.b @R9,R4
+65 69                addc.b @R9,R5
+66 69                addc.b @R9,R6
+67 69                addc.b @R9,R7
+68 69                addc.b @R9,R8
+69 69                addc.b @R9,R9
+61 69                addc.b @R9,SP
+62 69                addc.b @R9,SR
+73 61                addc.b @SP+,CG
+70 61                addc.b @SP+,PC
+7a 61                addc.b @SP+,R10
+74 61                addc.b @SP+,R4
+75 61                addc.b @SP+,R5
+76 61                addc.b @SP+,R6
+77 61                addc.b @SP+,R7
+78 61                addc.b @SP+,R8
+79 61                addc.b @SP+,R9
+71 61                addc.b @SP+,SP
+72 61                addc.b @SP+,SR
+63 61                addc.b @SP,CG
+6a 61                addc.b @SP,R10
+6b 61                addc.b @SP,R11
+6c 61                addc.b @SP,R12
+6d 61                addc.b @SP,R13
+6e 61                addc.b @SP,R14
+6f 61                addc.b @SP,R15
+64 61                addc.b @SP,R4
+65 61                addc.b @SP,R5
+66 61                addc.b @SP,R6
+67 61                addc.b @SP,R7
+68 61                addc.b @SP,R8
+69 61                addc.b @SP,R9
+61 61                addc.b @SP,SP
+62 61                addc.b @SP,SR
+43 6a                addc.b R10,CG
+4a 6a                addc.b R10,R10
+4b 6a                addc.b R10,R11
+4c 6a                addc.b R10,R12
+4d 6a                addc.b R10,R13
+4e 6a                addc.b R10,R14
+4f 6a                addc.b R10,R15
+44 6a                addc.b R10,R4
+45 6a                addc.b R10,R5
+46 6a                addc.b R10,R6
+47 6a                addc.b R10,R7
+48 6a                addc.b R10,R8
+49 6a                addc.b R10,R9
+41 6a                addc.b R10,SP
+42 6a                addc.b R10,SR
+43 6b                addc.b R11,CG
+4a 6b                addc.b R11,R10
+4b 6b                addc.b R11,R11
+4c 6b                addc.b R11,R12
+4d 6b                addc.b R11,R13
+4e 6b                addc.b R11,R14
+4f 6b                addc.b R11,R15
+44 6b                addc.b R11,R4
+45 6b                addc.b R11,R5
+46 6b                addc.b R11,R6
+47 6b                addc.b R11,R7
+48 6b                addc.b R11,R8
+49 6b                addc.b R11,R9
+41 6b                addc.b R11,SP
+42 6b                addc.b R11,SR
+43 6c                addc.b R12,CG
+4a 6c                addc.b R12,R10
+4b 6c                addc.b R12,R11
+4c 6c                addc.b R12,R12
+4d 6c                addc.b R12,R13
+4e 6c                addc.b R12,R14
+4f 6c                addc.b R12,R15
+44 6c                addc.b R12,R4
+45 6c                addc.b R12,R5
+46 6c                addc.b R12,R6
+47 6c                addc.b R12,R7
+48 6c                addc.b R12,R8
+49 6c                addc.b R12,R9
+41 6c                addc.b R12,SP
+42 6c                addc.b R12,SR
+43 6d                addc.b R13,CG
+4a 6d                addc.b R13,R10
+4b 6d                addc.b R13,R11
+4c 6d                addc.b R13,R12
+4d 6d                addc.b R13,R13
+4e 6d                addc.b R13,R14
+4f 6d                addc.b R13,R15
+44 6d                addc.b R13,R4
+45 6d                addc.b R13,R5
+46 6d                addc.b R13,R6
+47 6d                addc.b R13,R7
+48 6d                addc.b R13,R8
+49 6d                addc.b R13,R9
+41 6d                addc.b R13,SP
+42 6d                addc.b R13,SR
+43 6e                addc.b R14,CG
+4a 6e                addc.b R14,R10
+4b 6e                addc.b R14,R11
+4c 6e                addc.b R14,R12
+4d 6e                addc.b R14,R13
+4e 6e                addc.b R14,R14
+4f 6e                addc.b R14,R15
+44 6e                addc.b R14,R4
+45 6e                addc.b R14,R5
+46 6e                addc.b R14,R6
+47 6e                addc.b R14,R7
+48 6e                addc.b R14,R8
+49 6e                addc.b R14,R9
+41 6e                addc.b R14,SP
+42 6e                addc.b R14,SR
+43 6f                addc.b R15,CG
+4a 6f                addc.b R15,R10
+4b 6f                addc.b R15,R11
+4c 6f                addc.b R15,R12
+4d 6f                addc.b R15,R13
+4e 6f                addc.b R15,R14
+4f 6f                addc.b R15,R15
+44 6f                addc.b R15,R4
+45 6f                addc.b R15,R5
+46 6f                addc.b R15,R6
+47 6f                addc.b R15,R7
+48 6f                addc.b R15,R8
+49 6f                addc.b R15,R9
+41 6f                addc.b R15,SP
+42 6f                addc.b R15,SR
+43 64                addc.b R4,CG
+4a 64                addc.b R4,R10
+4b 64                addc.b R4,R11
+4c 64                addc.b R4,R12
+4d 64                addc.b R4,R13
+4e 64                addc.b R4,R14
+4f 64                addc.b R4,R15
+44 64                addc.b R4,R4
+45 64                addc.b R4,R5
+46 64                addc.b R4,R6
+47 64                addc.b R4,R7
+48 64                addc.b R4,R8
+49 64                addc.b R4,R9
+41 64                addc.b R4,SP
+42 64                addc.b R4,SR
+43 65                addc.b R5,CG
+4a 65                addc.b R5,R10
+4b 65                addc.b R5,R11
+4c 65                addc.b R5,R12
+4d 65                addc.b R5,R13
+4e 65                addc.b R5,R14
+4f 65                addc.b R5,R15
+44 65                addc.b R5,R4
+45 65                addc.b R5,R5
+46 65                addc.b R5,R6
+47 65                addc.b R5,R7
+48 65                addc.b R5,R8
+49 65                addc.b R5,R9
+41 65                addc.b R5,SP
+42 65                addc.b R5,SR
+43 66                addc.b R6,CG
+4a 66                addc.b R6,R10
+4b 66                addc.b R6,R11
+4c 66                addc.b R6,R12
+4d 66                addc.b R6,R13
+4e 66                addc.b R6,R14
+4f 66                addc.b R6,R15
+44 66                addc.b R6,R4
+45 66                addc.b R6,R5
+46 66                addc.b R6,R6
+47 66                addc.b R6,R7
+48 66                addc.b R6,R8
+49 66                addc.b R6,R9
+41 66                addc.b R6,SP
+42 66                addc.b R6,SR
+43 67                addc.b R7,CG
+4a 67                addc.b R7,R10
+4b 67                addc.b R7,R11
+4c 67                addc.b R7,R12
+4d 67                addc.b R7,R13
+4e 67                addc.b R7,R14
+4f 67                addc.b R7,R15
+44 67                addc.b R7,R4
+45 67                addc.b R7,R5
+46 67                addc.b R7,R6
+47 67                addc.b R7,R7
+48 67                addc.b R7,R8
+49 67                addc.b R7,R9
+41 67                addc.b R7,SP
+42 67                addc.b R7,SR
+43 68                addc.b R8,CG
+4a 68                addc.b R8,R10
+4b 68                addc.b R8,R11
+4c 68                addc.b R8,R12
+4d 68                addc.b R8,R13
+4e 68                addc.b R8,R14
+4f 68                addc.b R8,R15
+44 68                addc.b R8,R4
+45 68                addc.b R8,R5
+46 68                addc.b R8,R6
+47 68                addc.b R8,R7
+48 68                addc.b R8,R8
+49 68                addc.b R8,R9
+41 68                addc.b R8,SP
+42 68                addc.b R8,SR
+43 69                addc.b R9,CG
+4a 69                addc.b R9,R10
+4b 69                addc.b R9,R11
+4c 69                addc.b R9,R12
+4d 69                addc.b R9,R13
+4e 69                addc.b R9,R14
+4f 69                addc.b R9,R15
+44 69                addc.b R9,R4
+45 69                addc.b R9,R5
+46 69                addc.b R9,R6
+47 69                addc.b R9,R7
+48 69                addc.b R9,R8
+49 69                addc.b R9,R9
+41 69                addc.b R9,SP
+42 69                addc.b R9,SR
+43 61                addc.b SP,CG
+4a 61                addc.b SP,R10
+4b 61                addc.b SP,R11
+4c 61                addc.b SP,R12
+4d 61                addc.b SP,R13
+4e 61                addc.b SP,R14
+4f 61                addc.b SP,R15
+44 61                addc.b SP,R4
+45 61                addc.b SP,R5
+46 61                addc.b SP,R6
+47 61                addc.b SP,R7
+48 61                addc.b SP,R8
+49 61                addc.b SP,R9
+41 61                addc.b SP,SP
+42 61                addc.b SP,SR
+43 62                addc.b SR,CG
+4a 62                addc.b SR,R10
+4b 62                addc.b SR,R11
+4c 62                addc.b SR,R12
+4d 62                addc.b SR,R13
+4e 62                addc.b SR,R14
+4f 62                addc.b SR,R15
+44 62                addc.b SR,R4
+45 62                addc.b SR,R5
+46 62                addc.b SR,R6
+47 62                addc.b SR,R7
+48 62                addc.b SR,R8
+49 62                addc.b SR,R9
+41 62                addc.b SR,SP
+42 62                addc.b SR,SR
+30 34                jge 0x60
+31 34                jge 0x62
+32 34                jge 0x64
+33 34                jge 0x66
+34 34                jge 0x68
+35 34                jge 0x6a
+36 34                jge 0x6c
+37 34                jge 0x6e
+38 34                jge 0x70
+39 34                jge 0x72
+30 38                jl 0x60
+31 38                jl 0x62
+32 38                jl 0x64
+33 38                jl 0x66
+34 38                jl 0x68
+35 38                jl 0x6a
+36 38                jl 0x6c
+37 38                jl 0x6e
+38 38                jl 0x70
+39 38                jl 0x72
+30 30                jn 0x60
+30 31                jn 0x60
+30 32                jn 0x60
+30 33                jn 0x60
+30 35                jn 0x60
+30 36                jn 0x60
+30 37                jn 0x60
+30 39                jn 0x60
+31 30                jn 0x62
+31 31                jn 0x62
+31 32                jn 0x62
+31 33                jn 0x62
+31 35                jn 0x62
+31 36                jn 0x62
+31 37                jn 0x62
+31 39                jn 0x62
+32 30                jn 0x64
+32 31                jn 0x64
+32 32                jn 0x64
+32 33                jn 0x64
+32 35                jn 0x64
+32 36                jn 0x64
+32 37                jn 0x64
+32 39                jn 0x64
+33 30                jn 0x66
+33 31                jn 0x66
+33 32                jn 0x66
+33 33                jn 0x66
+33 35                jn 0x66
+33 36                jn 0x66
+33 37                jn 0x66
+33 39                jn 0x66
+34 30                jn 0x68
+34 31                jn 0x68
+34 32                jn 0x68
+34 33                jn 0x68
+34 35                jn 0x68
+34 36                jn 0x68
+34 37                jn 0x68
+34 39                jn 0x68
+35 30                jn 0x6a
+35 31                jn 0x6a
+35 32                jn 0x6a
+35 33                jn 0x6a
+35 35                jn 0x6a
+35 36                jn 0x6a
+35 37                jn 0x6a
+35 39                jn 0x6a
+36 30                jn 0x6c
+36 31                jn 0x6c
+36 32                jn 0x6c
+36 33                jn 0x6c
+36 35                jn 0x6c
+36 36                jn 0x6c
+36 37                jn 0x6c
+36 39                jn 0x6c
+37 30                jn 0x6e
+37 31                jn 0x6e
+37 32                jn 0x6e
+37 33                jn 0x6e
+37 35                jn 0x6e
+37 36                jn 0x6e
+37 37                jn 0x6e
+37 39                jn 0x6e
+38 30                jn 0x70
+38 31                jn 0x70
+38 32                jn 0x70
+38 33                jn 0x70
+38 35                jn 0x70
+38 36                jn 0x70
+38 37                jn 0x70
+38 39                jn 0x70
+39 30                jn 0x72
+39 31                jn 0x72
+39 32                jn 0x72
+39 33                jn 0x72
+39 35                jn 0x72
+39 36                jn 0x72
+39 37                jn 0x72
+39 39                jn 0x72
+41 30                jn 0x82
+41 31                jn 0x82
+41 32                jn 0x82
+41 33                jn 0x82
+41 34                jn 0x82
+41 35                jn 0x82
+41 36                jn 0x82
+41 37                jn 0x82
+41 38                jn 0x82
+41 39                jn 0x82
+42 30                jn 0x84
+42 31                jn 0x84
+42 32                jn 0x84
+42 33                jn 0x84
+42 34                jn 0x84
+42 35                jn 0x84
+42 36                jn 0x84
+42 37                jn 0x84
+42 38                jn 0x84
+42 39                jn 0x84
+43 30                jn 0x86
+43 31                jn 0x86
+43 32                jn 0x86
+43 33                jn 0x86
+43 34                jn 0x86
+43 35                jn 0x86
+43 36                jn 0x86
+43 37                jn 0x86
+43 38                jn 0x86
+43 39                jn 0x86
+44 30                jn 0x88
+44 31                jn 0x88
+44 32                jn 0x88
+44 33                jn 0x88
+44 34                jn 0x88
+44 35                jn 0x88
+44 36                jn 0x88
+44 37                jn 0x88
+44 38                jn 0x88
+44 39                jn 0x88
+45 30                jn 0x8a
+45 31                jn 0x8a
+45 32                jn 0x8a
+45 33                jn 0x8a
+45 34                jn 0x8a
+45 35                jn 0x8a
+45 36                jn 0x8a
+45 37                jn 0x8a
+45 38                jn 0x8a
+45 39                jn 0x8a
+46 30                jn 0x8c
+46 31                jn 0x8c
+46 32                jn 0x8c
+46 33                jn 0x8c
+46 34                jn 0x8c
+46 35                jn 0x8c
+46 36                jn 0x8c
+46 37                jn 0x8c
+46 38                jn 0x8c
+46 39                jn 0x8c
+47 30                jn 0x8e
+47 31                jn 0x8e
+47 32                jn 0x8e
+47 33                jn 0x8e
+47 34                jn 0x8e
+47 35                jn 0x8e
+47 36                jn 0x8e
+47 37                jn 0x8e
+47 38                jn 0x8e
+47 39                jn 0x8e
+48 30                jn 0x90
+48 31                jn 0x90
+48 32                jn 0x90
+48 33                jn 0x90
+48 34                jn 0x90
+48 35                jn 0x90
+48 36                jn 0x90
+48 37                jn 0x90
+48 38                jn 0x90
+48 39                jn 0x90
+49 30                jn 0x92
+49 31                jn 0x92
+49 32                jn 0x92
+49 33                jn 0x92
+49 34                jn 0x92
+49 35                jn 0x92
+49 36                jn 0x92
+49 37                jn 0x92
+49 38                jn 0x92
+49 39                jn 0x92
+4a 30                jn 0x94
+4a 31                jn 0x94
+4a 32                jn 0x94
+4a 33                jn 0x94
+4a 34                jn 0x94
+4a 35                jn 0x94
+4a 36                jn 0x94
+4a 37                jn 0x94
+4a 38                jn 0x94
+4a 39                jn 0x94
+4b 30                jn 0x96
+4b 31                jn 0x96
+4b 32                jn 0x96
+4b 33                jn 0x96
+4b 34                jn 0x96
+4b 35                jn 0x96
+4b 36                jn 0x96
+4b 37                jn 0x96
+4b 38                jn 0x96
+4b 39                jn 0x96
+4c 30                jn 0x98
+4c 31                jn 0x98
+4c 32                jn 0x98
+4c 33                jn 0x98
+4c 34                jn 0x98
+4c 35                jn 0x98
+4c 36                jn 0x98
+4c 37                jn 0x98
+4c 38                jn 0x98
+4c 39                jn 0x98
+4d 30                jn 0x9a
+4d 31                jn 0x9a
+4d 32                jn 0x9a
+4d 33                jn 0x9a
+4d 34                jn 0x9a
+4d 35                jn 0x9a
+4d 36                jn 0x9a
+4d 37                jn 0x9a
+4d 38                jn 0x9a
+4d 39                jn 0x9a
+4e 30                jn 0x9c
+4e 31                jn 0x9c
+4e 32                jn 0x9c
+4e 33                jn 0x9c
+4e 34                jn 0x9c
+4e 35                jn 0x9c
+4e 36                jn 0x9c
+4e 37                jn 0x9c
+4e 38                jn 0x9c
+4e 39                jn 0x9c
+4f 30                jn 0x9e
+4f 31                jn 0x9e
+4f 32                jn 0x9e
+4f 33                jn 0x9e
+4f 34                jn 0x9e
+4f 35                jn 0x9e
+4f 36                jn 0x9e
+4f 37                jn 0x9e
+4f 38                jn 0x9e
+4f 39                jn 0x9e
+50 30                jn 0xa0
+50 31                jn 0xa0
+50 32                jn 0xa0
+50 33                jn 0xa0
+50 34                jn 0xa0
+50 35                jn 0xa0
+50 36                jn 0xa0
+50 37                jn 0xa0
+50 38                jn 0xa0
+50 39                jn 0xa0
+51 30                jn 0xa2
+51 31                jn 0xa2
+51 32                jn 0xa2
+51 33                jn 0xa2
+51 34                jn 0xa2
+51 35                jn 0xa2
+51 36                jn 0xa2
+51 37                jn 0xa2
+51 38                jn 0xa2
+51 39                jn 0xa2
+52 30                jn 0xa4
+52 31                jn 0xa4
+52 32                jn 0xa4
+52 33                jn 0xa4
+52 34                jn 0xa4
+52 35                jn 0xa4
+52 36                jn 0xa4
+52 37                jn 0xa4
+52 38                jn 0xa4
+52 39                jn 0xa4
+53 30                jn 0xa6
+53 31                jn 0xa6
+53 32                jn 0xa6
+53 33                jn 0xa6
+53 34                jn 0xa6
+53 35                jn 0xa6
+53 36                jn 0xa6
+53 37                jn 0xa6
+53 38                jn 0xa6
+53 39                jn 0xa6
+54 30                jn 0xa8
+54 31                jn 0xa8
+54 32                jn 0xa8
+54 33                jn 0xa8
+54 34                jn 0xa8
+54 35                jn 0xa8
+54 36                jn 0xa8
+54 37                jn 0xa8
+54 38                jn 0xa8
+54 39                jn 0xa8
+55 30                jn 0xaa
+55 31                jn 0xaa
+55 32                jn 0xaa
+55 33                jn 0xaa
+55 34                jn 0xaa
+55 35                jn 0xaa
+55 36                jn 0xaa
+55 37                jn 0xaa
+55 38                jn 0xaa
+55 39                jn 0xaa
+56 30                jn 0xac
+56 31                jn 0xac
+56 32                jn 0xac
+56 33                jn 0xac
+56 34                jn 0xac
+56 35                jn 0xac
+56 36                jn 0xac
+56 37                jn 0xac
+56 38                jn 0xac
+56 39                jn 0xac
+57 30                jn 0xae
+57 31                jn 0xae
+57 32                jn 0xae
+57 33                jn 0xae
+57 34                jn 0xae
+57 35                jn 0xae
+57 36                jn 0xae
+57 37                jn 0xae
+57 38                jn 0xae
+57 39                jn 0xae
+58 30                jn 0xb0
+58 31                jn 0xb0
+58 32                jn 0xb0
+58 33                jn 0xb0
+58 34                jn 0xb0
+58 35                jn 0xb0
+58 36                jn 0xb0
+58 37                jn 0xb0
+58 38                jn 0xb0
+58 39                jn 0xb0
+59 30                jn 0xb2
+59 31                jn 0xb2
+59 32                jn 0xb2
+59 33                jn 0xb2
+59 34                jn 0xb2
+59 35                jn 0xb2
+59 36                jn 0xb2
+59 37                jn 0xb2
+59 38                jn 0xb2
+59 39                jn 0xb2
+5a 30                jn 0xb4
+5a 31                jn 0xb4
+5a 32                jn 0xb4
+5a 33                jn 0xb4
+5a 34                jn 0xb4
+5a 35                jn 0xb4
+5a 36                jn 0xb4
+5a 37                jn 0xb4
+5a 38                jn 0xb4
+5a 39                jn 0xb4
+61 30                jn 0xc2
+61 31                jn 0xc2
+61 32                jn 0xc2
+61 33                jn 0xc2
+61 34                jn 0xc2
+61 35                jn 0xc2
+61 36                jn 0xc2
+61 37                jn 0xc2
+61 38                jn 0xc2
+61 39                jn 0xc2
+62 30                jn 0xc4
+62 31                jn 0xc4
+62 32                jn 0xc4
+62 33                jn 0xc4
+62 34                jn 0xc4
+62 35                jn 0xc4
+62 36                jn 0xc4
+62 37                jn 0xc4
+62 38                jn 0xc4
+62 39                jn 0xc4
+63 30                jn 0xc6
+63 31                jn 0xc6
+63 32                jn 0xc6
+63 33                jn 0xc6
+63 34                jn 0xc6
+63 35                jn 0xc6
+63 36                jn 0xc6
+63 37                jn 0xc6
+63 38                jn 0xc6
+63 39                jn 0xc6
+64 30                jn 0xc8
+64 31                jn 0xc8
+64 32                jn 0xc8
+64 33                jn 0xc8
+64 34                jn 0xc8
+64 35                jn 0xc8
+64 36                jn 0xc8
+64 37                jn 0xc8
+64 38                jn 0xc8
+64 39                jn 0xc8
+65 30                jn 0xca
+65 31                jn 0xca
+65 32                jn 0xca
+65 33                jn 0xca
+65 34                jn 0xca
+65 35                jn 0xca
+65 36                jn 0xca
+65 37                jn 0xca
+65 38                jn 0xca
+65 39                jn 0xca
+66 30                jn 0xcc
+66 31                jn 0xcc
+66 32                jn 0xcc
+66 33                jn 0xcc
+66 34                jn 0xcc
+66 35                jn 0xcc
+66 36                jn 0xcc
+66 37                jn 0xcc
+66 38                jn 0xcc
+66 39                jn 0xcc
+67 30                jn 0xce
+67 31                jn 0xce
+67 32                jn 0xce
+67 33                jn 0xce
+67 34                jn 0xce
+67 35                jn 0xce
+67 36                jn 0xce
+67 37                jn 0xce
+67 38                jn 0xce
+67 39                jn 0xce
+68 30                jn 0xd0
+68 31                jn 0xd0
+68 32                jn 0xd0
+68 33                jn 0xd0
+68 34                jn 0xd0
+68 35                jn 0xd0
+68 36                jn 0xd0
+68 37                jn 0xd0
+68 38                jn 0xd0
+68 39                jn 0xd0
+69 30                jn 0xd2
+69 31                jn 0xd2
+69 32                jn 0xd2
+69 33                jn 0xd2
+69 34                jn 0xd2
+69 35                jn 0xd2
+69 36                jn 0xd2
+69 37                jn 0xd2
+69 38                jn 0xd2
+69 39                jn 0xd2
+6a 30                jn 0xd4
+6a 31                jn 0xd4
+6a 32                jn 0xd4
+6a 33                jn 0xd4
+6a 34                jn 0xd4
+6a 35                jn 0xd4
+6a 36                jn 0xd4
+6a 37                jn 0xd4
+6a 38                jn 0xd4
+6a 39                jn 0xd4
+6b 30                jn 0xd6
+6b 31                jn 0xd6
+6b 32                jn 0xd6
+6b 33                jn 0xd6
+6b 34                jn 0xd6
+6b 35                jn 0xd6
+6b 36                jn 0xd6
+6b 37                jn 0xd6
+6b 38                jn 0xd6
+6b 39                jn 0xd6
+6c 30                jn 0xd8
+6c 31                jn 0xd8
+6c 32                jn 0xd8
+6c 33                jn 0xd8
+6c 34                jn 0xd8
+6c 35                jn 0xd8
+6c 36                jn 0xd8
+6c 37                jn 0xd8
+6c 38                jn 0xd8
+6c 39                jn 0xd8
+6d 30                jn 0xda
+6d 31                jn 0xda
+6d 32                jn 0xda
+6d 33                jn 0xda
+6d 34                jn 0xda
+6d 35                jn 0xda
+6d 36                jn 0xda
+6d 37                jn 0xda
+6d 38                jn 0xda
+6d 39                jn 0xda
+6e 30                jn 0xdc
+6e 31                jn 0xdc
+6e 32                jn 0xdc
+6e 33                jn 0xdc
+6e 34                jn 0xdc
+6e 35                jn 0xdc
+6e 36                jn 0xdc
+6e 37                jn 0xdc
+6e 38                jn 0xdc
+6e 39                jn 0xdc
+6f 30                jn 0xde
+6f 31                jn 0xde
+6f 32                jn 0xde
+6f 33                jn 0xde
+6f 34                jn 0xde
+6f 35                jn 0xde
+6f 36                jn 0xde
+6f 37                jn 0xde
+6f 38                jn 0xde
+6f 39                jn 0xde
+70 30                jn 0xe0
+70 31                jn 0xe0
+70 32                jn 0xe0
+70 33                jn 0xe0
+70 34                jn 0xe0
+70 35                jn 0xe0
+70 36                jn 0xe0
+70 37                jn 0xe0
+70 38                jn 0xe0
+70 39                jn 0xe0
+71 30                jn 0xe2
+71 31                jn 0xe2
+71 32                jn 0xe2
+71 33                jn 0xe2
+71 34                jn 0xe2
+71 35                jn 0xe2
+71 36                jn 0xe2
+71 37                jn 0xe2
+71 38                jn 0xe2
+71 39                jn 0xe2
+72 30                jn 0xe4
+72 31                jn 0xe4
+72 32                jn 0xe4
+72 33                jn 0xe4
+72 34                jn 0xe4
+72 35                jn 0xe4
+72 36                jn 0xe4
+72 37                jn 0xe4
+72 38                jn 0xe4
+72 39                jn 0xe4
+73 30                jn 0xe6
+73 31                jn 0xe6
+73 32                jn 0xe6
+73 33                jn 0xe6
+73 34                jn 0xe6
+73 35                jn 0xe6
+73 36                jn 0xe6
+73 37                jn 0xe6
+73 38                jn 0xe6
+73 39                jn 0xe6
+74 30                jn 0xe8
+74 31                jn 0xe8
+74 32                jn 0xe8
+74 33                jn 0xe8
+74 34                jn 0xe8
+74 35                jn 0xe8
+74 36                jn 0xe8
+74 37                jn 0xe8
+74 38                jn 0xe8
+74 39                jn 0xe8
+75 30                jn 0xea
+75 31                jn 0xea
+75 32                jn 0xea
+75 33                jn 0xea
+75 34                jn 0xea
+75 35                jn 0xea
+75 36                jn 0xea
+75 37                jn 0xea
+75 38                jn 0xea
+75 39                jn 0xea
+76 30                jn 0xec
+76 31                jn 0xec
+76 32                jn 0xec
+76 33                jn 0xec
+76 34                jn 0xec
+76 35                jn 0xec
+76 36                jn 0xec
+76 37                jn 0xec
+76 38                jn 0xec
+76 39                jn 0xec
+77 30                jn 0xee
+77 31                jn 0xee
+77 32                jn 0xee
+77 33                jn 0xee
+77 34                jn 0xee
+77 35                jn 0xee
+77 36                jn 0xee
+77 37                jn 0xee
+77 38                jn 0xee
+77 39                jn 0xee
+78 30                jn 0xf0
+78 31                jn 0xf0
+78 32                jn 0xf0
+78 33                jn 0xf0
+78 34                jn 0xf0
+78 35                jn 0xf0
+78 36                jn 0xf0
+78 37                jn 0xf0
+78 38                jn 0xf0
+78 39                jn 0xf0
+79 30                jn 0xf2
+79 31                jn 0xf2
+79 32                jn 0xf2
+79 33                jn 0xf2
+79 34                jn 0xf2
+79 35                jn 0xf2
+79 36                jn 0xf2
+79 37                jn 0xf2
+79 38                jn 0xf2
+79 39                jn 0xf2
+7a 30                jn 0xf4
+7a 31                jn 0xf4
+7a 32                jn 0xf4
+7a 33                jn 0xf4
+7a 34                jn 0xf4
+7a 35                jn 0xf4
+7a 36                jn 0xf4
+7a 37                jn 0xf4
+7a 38                jn 0xf4
+7a 39                jn 0xf4
+33 43                mov -1,CG
+30 43                mov -1,PC
+34 43                mov -1,R4
+35 43                mov -1,R5
+36 43                mov -1,R6
+37 43                mov -1,R7
+38 43                mov -1,R8
+39 43                mov -1,R9
+31 43                mov -1,SP
+32 43                mov -1,SR
+33 42                mov 8,CG
+30 42                mov 8,PC
+34 42                mov 8,R4
+35 42                mov 8,R5
+36 42                mov 8,R6
+37 42                mov 8,R7
+38 42                mov 8,R8
+39 42                mov 8,R9
+31 42                mov 8,SP
+32 42                mov 8,SR
+33 4a                mov @R10+,CG
+30 4a                mov @R10+,PC
+34 4a                mov @R10+,R4
+35 4a                mov @R10+,R5
+36 4a                mov @R10+,R6
+37 4a                mov @R10+,R7
+38 4a                mov @R10+,R8
+39 4a                mov @R10+,R9
+31 4a                mov @R10+,SP
+32 4a                mov @R10+,SR
+33 4b                mov @R11+,CG
+30 4b                mov @R11+,PC
+34 4b                mov @R11+,R4
+35 4b                mov @R11+,R5
+36 4b                mov @R11+,R6
+37 4b                mov @R11+,R7
+38 4b                mov @R11+,R8
+39 4b                mov @R11+,R9
+31 4b                mov @R11+,SP
+32 4b                mov @R11+,SR
+33 4c                mov @R12+,CG
+30 4c                mov @R12+,PC
+34 4c                mov @R12+,R4
+35 4c                mov @R12+,R5
+36 4c                mov @R12+,R6
+37 4c                mov @R12+,R7
+38 4c                mov @R12+,R8
+39 4c                mov @R12+,R9
+31 4c                mov @R12+,SP
+32 4c                mov @R12+,SR
+33 4d                mov @R13+,CG
+30 4d                mov @R13+,PC
+34 4d                mov @R13+,R4
+35 4d                mov @R13+,R5
+36 4d                mov @R13+,R6
+37 4d                mov @R13+,R7
+38 4d                mov @R13+,R8
+39 4d                mov @R13+,R9
+31 4d                mov @R13+,SP
+32 4d                mov @R13+,SR
+33 4e                mov @R14+,CG
+30 4e                mov @R14+,PC
+34 4e                mov @R14+,R4
+35 4e                mov @R14+,R5
+36 4e                mov @R14+,R6
+37 4e                mov @R14+,R7
+38 4e                mov @R14+,R8
+39 4e                mov @R14+,R9
+31 4e                mov @R14+,SP
+32 4e                mov @R14+,SR
+33 4f                mov @R15+,CG
+30 4f                mov @R15+,PC
+34 4f                mov @R15+,R4
+35 4f                mov @R15+,R5
+36 4f                mov @R15+,R6
+37 4f                mov @R15+,R7
+38 4f                mov @R15+,R8
+39 4f                mov @R15+,R9
+31 4f                mov @R15+,SP
+32 4f                mov @R15+,SR
+33 44                mov @R4+,CG
+30 44                mov @R4+,PC
+34 44                mov @R4+,R4
+35 44                mov @R4+,R5
+36 44                mov @R4+,R6
+37 44                mov @R4+,R7
+38 44                mov @R4+,R8
+39 44                mov @R4+,R9
+31 44                mov @R4+,SP
+32 44                mov @R4+,SR
+33 45                mov @R5+,CG
+30 45                mov @R5+,PC
+34 45                mov @R5+,R4
+35 45                mov @R5+,R5
+36 45                mov @R5+,R6
+37 45                mov @R5+,R7
+38 45                mov @R5+,R8
+39 45                mov @R5+,R9
+31 45                mov @R5+,SP
+32 45                mov @R5+,SR
+33 46                mov @R6+,CG
+30 46                mov @R6+,PC
+34 46                mov @R6+,R4
+35 46                mov @R6+,R5
+36 46                mov @R6+,R6
+37 46                mov @R6+,R7
+38 46                mov @R6+,R8
+39 46                mov @R6+,R9
+31 46                mov @R6+,SP
+32 46                mov @R6+,SR
+33 47                mov @R7+,CG
+30 47                mov @R7+,PC
+34 47                mov @R7+,R4
+35 47                mov @R7+,R5
+36 47                mov @R7+,R6
+37 47                mov @R7+,R7
+38 47                mov @R7+,R8
+39 47                mov @R7+,R9
+31 47                mov @R7+,SP
+32 47                mov @R7+,SR
+33 48                mov @R8+,CG
+30 48                mov @R8+,PC
+34 48                mov @R8+,R4
+35 48                mov @R8+,R5
+36 48                mov @R8+,R6
+37 48                mov @R8+,R7
+38 48                mov @R8+,R8
+39 48                mov @R8+,R9
+31 48                mov @R8+,SP
+32 48                mov @R8+,SR
+33 49                mov @R9+,CG
+30 49                mov @R9+,PC
+34 49                mov @R9+,R4
+35 49                mov @R9+,R5
+36 49                mov @R9+,R6
+37 49                mov @R9+,R7
+38 49                mov @R9+,R8
+39 49                mov @R9+,R9
+31 49                mov @R9+,SP
+32 49                mov @R9+,SR
+33 41                mov @SP+,CG
+30 41                mov @SP+,PC
+34 41                mov @SP+,R4
+35 41                mov @SP+,R5
+36 41                mov @SP+,R6
+37 41                mov @SP+,R7
+38 41                mov @SP+,R8
+39 41                mov @SP+,R9
+31 41                mov @SP+,SP
+32 41                mov @SP+,SR
+53 42                mov.b (0),CG
+50 42                mov.b (0),PC
+5a 42                mov.b (0),R10
+54 42                mov.b (0),R4
+55 42                mov.b (0),R5
+56 42                mov.b (0),R6
+57 42                mov.b (0),R7
+58 42                mov.b (0),R8
+59 42                mov.b (0),R9
+51 42                mov.b (0),SP
+52 42                mov.b (0),SR
+73 43                mov.b -1,CG
+70 43                mov.b -1,PC
+7a 43                mov.b -1,R10
+74 43                mov.b -1,R4
+75 43                mov.b -1,R5
+76 43                mov.b -1,R6
+77 43                mov.b -1,R7
+78 43                mov.b -1,R8
+79 43                mov.b -1,R9
+71 43                mov.b -1,SP
+72 43                mov.b -1,SR
+43 43                mov.b 0,CG
+4a 43                mov.b 0,R10
+4b 43                mov.b 0,R11
+4c 43                mov.b 0,R12
+4d 43                mov.b 0,R13
+4e 43                mov.b 0,R14
+4f 43                mov.b 0,R15
+44 43                mov.b 0,R4
+45 43                mov.b 0,R5
+46 43                mov.b 0,R6
+47 43                mov.b 0,R7
+48 43                mov.b 0,R8
+49 43                mov.b 0,R9
+41 43                mov.b 0,SP
+42 43                mov.b 0,SR
+53 4a 41 41          mov.b 0x4141(R10),CG
+50 4a 41 41          mov.b 0x4141(R10),PC
+5a 4a 41 41          mov.b 0x4141(R10),R10
+54 4a 41 41          mov.b 0x4141(R10),R4
+55 4a 41 41          mov.b 0x4141(R10),R5
+56 4a 41 41          mov.b 0x4141(R10),R6
+57 4a 41 41          mov.b 0x4141(R10),R7
+58 4a 41 41          mov.b 0x4141(R10),R8
+59 4a 41 41          mov.b 0x4141(R10),R9
+51 4a 41 41          mov.b 0x4141(R10),SP
+52 4a 41 41          mov.b 0x4141(R10),SR
+53 4b 41 41          mov.b 0x4141(R11),CG
+50 4b 41 41          mov.b 0x4141(R11),PC
+5a 4b 41 41          mov.b 0x4141(R11),R10
+54 4b 41 41          mov.b 0x4141(R11),R4
+55 4b 41 41          mov.b 0x4141(R11),R5
+56 4b 41 41          mov.b 0x4141(R11),R6
+57 4b 41 41          mov.b 0x4141(R11),R7
+58 4b 41 41          mov.b 0x4141(R11),R8
+59 4b 41 41          mov.b 0x4141(R11),R9
+51 4b 41 41          mov.b 0x4141(R11),SP
+52 4b 41 41          mov.b 0x4141(R11),SR
+53 4c 41 41          mov.b 0x4141(R12),CG
+50 4c 41 41          mov.b 0x4141(R12),PC
+5a 4c 41 41          mov.b 0x4141(R12),R10
+54 4c 41 41          mov.b 0x4141(R12),R4
+55 4c 41 41          mov.b 0x4141(R12),R5
+56 4c 41 41          mov.b 0x4141(R12),R6
+57 4c 41 41          mov.b 0x4141(R12),R7
+58 4c 41 41          mov.b 0x4141(R12),R8
+59 4c 41 41          mov.b 0x4141(R12),R9
+51 4c 41 41          mov.b 0x4141(R12),SP
+52 4c 41 41          mov.b 0x4141(R12),SR
+53 4d 41 41          mov.b 0x4141(R13),CG
+50 4d 41 41          mov.b 0x4141(R13),PC
+5a 4d 41 41          mov.b 0x4141(R13),R10
+54 4d 41 41          mov.b 0x4141(R13),R4
+55 4d 41 41          mov.b 0x4141(R13),R5
+56 4d 41 41          mov.b 0x4141(R13),R6
+57 4d 41 41          mov.b 0x4141(R13),R7
+58 4d 41 41          mov.b 0x4141(R13),R8
+59 4d 41 41          mov.b 0x4141(R13),R9
+51 4d 41 41          mov.b 0x4141(R13),SP
+52 4d 41 41          mov.b 0x4141(R13),SR
+53 4e 41 41          mov.b 0x4141(R14),CG
+50 4e 41 41          mov.b 0x4141(R14),PC
+5a 4e 41 41          mov.b 0x4141(R14),R10
+54 4e 41 41          mov.b 0x4141(R14),R4
+55 4e 41 41          mov.b 0x4141(R14),R5
+56 4e 41 41          mov.b 0x4141(R14),R6
+57 4e 41 41          mov.b 0x4141(R14),R7
+58 4e 41 41          mov.b 0x4141(R14),R8
+59 4e 41 41          mov.b 0x4141(R14),R9
+51 4e 41 41          mov.b 0x4141(R14),SP
+52 4e 41 41          mov.b 0x4141(R14),SR
+53 4f 41 41          mov.b 0x4141(R15),CG
+50 4f 41 41          mov.b 0x4141(R15),PC
+5a 4f 41 41          mov.b 0x4141(R15),R10
+54 4f 41 41          mov.b 0x4141(R15),R4
+55 4f 41 41          mov.b 0x4141(R15),R5
+56 4f 41 41          mov.b 0x4141(R15),R6
+57 4f 41 41          mov.b 0x4141(R15),R7
+58 4f 41 41          mov.b 0x4141(R15),R8
+59 4f 41 41          mov.b 0x4141(R15),R9
+51 4f 41 41          mov.b 0x4141(R15),SP
+52 4f 41 41          mov.b 0x4141(R15),SR
+53 44 41 41          mov.b 0x4141(R4),CG
+50 44 41 41          mov.b 0x4141(R4),PC
+5a 44 41 41          mov.b 0x4141(R4),R10
+54 44 41 41          mov.b 0x4141(R4),R4
+55 44 41 41          mov.b 0x4141(R4),R5
+56 44 41 41          mov.b 0x4141(R4),R6
+57 44 41 41          mov.b 0x4141(R4),R7
+58 44 41 41          mov.b 0x4141(R4),R8
+59 44 41 41          mov.b 0x4141(R4),R9
+51 44 41 41          mov.b 0x4141(R4),SP
+52 44 41 41          mov.b 0x4141(R4),SR
+53 45 41 41          mov.b 0x4141(R5),CG
+50 45 41 41          mov.b 0x4141(R5),PC
+5a 45 41 41          mov.b 0x4141(R5),R10
+54 45 41 41          mov.b 0x4141(R5),R4
+55 45 41 41          mov.b 0x4141(R5),R5
+56 45 41 41          mov.b 0x4141(R5),R6
+57 45 41 41          mov.b 0x4141(R5),R7
+58 45 41 41          mov.b 0x4141(R5),R8
+59 45 41 41          mov.b 0x4141(R5),R9
+51 45 41 41          mov.b 0x4141(R5),SP
+52 45 41 41          mov.b 0x4141(R5),SR
+53 46 41 41          mov.b 0x4141(R6),CG
+50 46 41 41          mov.b 0x4141(R6),PC
+5a 46 41 41          mov.b 0x4141(R6),R10
+54 46 41 41          mov.b 0x4141(R6),R4
+55 46 41 41          mov.b 0x4141(R6),R5
+56 46 41 41          mov.b 0x4141(R6),R6
+57 46 41 41          mov.b 0x4141(R6),R7
+58 46 41 41          mov.b 0x4141(R6),R8
+59 46 41 41          mov.b 0x4141(R6),R9
+51 46 41 41          mov.b 0x4141(R6),SP
+52 46 41 41          mov.b 0x4141(R6),SR
+53 47 41 41          mov.b 0x4141(R7),CG
+50 47 41 41          mov.b 0x4141(R7),PC
+5a 47 41 41          mov.b 0x4141(R7),R10
+54 47 41 41          mov.b 0x4141(R7),R4
+55 47 41 41          mov.b 0x4141(R7),R5
+56 47 41 41          mov.b 0x4141(R7),R6
+57 47 41 41          mov.b 0x4141(R7),R7
+58 47 41 41          mov.b 0x4141(R7),R8
+59 47 41 41          mov.b 0x4141(R7),R9
+51 47 41 41          mov.b 0x4141(R7),SP
+52 47 41 41          mov.b 0x4141(R7),SR
+53 48 41 41          mov.b 0x4141(R8),CG
+50 48 41 41          mov.b 0x4141(R8),PC
+5a 48 41 41          mov.b 0x4141(R8),R10
+54 48 41 41          mov.b 0x4141(R8),R4
+55 48 41 41          mov.b 0x4141(R8),R5
+56 48 41 41          mov.b 0x4141(R8),R6
+57 48 41 41          mov.b 0x4141(R8),R7
+58 48 41 41          mov.b 0x4141(R8),R8
+59 48 41 41          mov.b 0x4141(R8),R9
+51 48 41 41          mov.b 0x4141(R8),SP
+52 48 41 41          mov.b 0x4141(R8),SR
+53 49 41 41          mov.b 0x4141(R9),CG
+50 49 41 41          mov.b 0x4141(R9),PC
+5a 49 41 41          mov.b 0x4141(R9),R10
+54 49 41 41          mov.b 0x4141(R9),R4
+55 49 41 41          mov.b 0x4141(R9),R5
+56 49 41 41          mov.b 0x4141(R9),R6
+57 49 41 41          mov.b 0x4141(R9),R7
+58 49 41 41          mov.b 0x4141(R9),R8
+59 49 41 41          mov.b 0x4141(R9),R9
+51 49 41 41          mov.b 0x4141(R9),SP
+52 49 41 41          mov.b 0x4141(R9),SR
+53 41 41 41          mov.b 0x4141(SP),CG
+50 41 41 41          mov.b 0x4141(SP),PC
+5a 41 41 41          mov.b 0x4141(SP),R10
+54 41 41 41          mov.b 0x4141(SP),R4
+55 41 41 41          mov.b 0x4141(SP),R5
+56 41 41 41          mov.b 0x4141(SP),R6
+57 41 41 41          mov.b 0x4141(SP),R7
+58 41 41 41          mov.b 0x4141(SP),R8
+59 41 41 41          mov.b 0x4141(SP),R9
+51 41 41 41          mov.b 0x4141(SP),SP
+52 41 41 41          mov.b 0x4141(SP),SR
+53 43                mov.b 1,CG
+50 43                mov.b 1,PC
+5a 43                mov.b 1,R10
+54 43                mov.b 1,R4
+55 43                mov.b 1,R5
+56 43                mov.b 1,R6
+57 43                mov.b 1,R7
+58 43                mov.b 1,R8
+59 43                mov.b 1,R9
+51 43                mov.b 1,SP
+52 43                mov.b 1,SR
+63 43                mov.b 2,CG
+6a 43                mov.b 2,R10
+6b 43                mov.b 2,R11
+6c 43                mov.b 2,R12
+6d 43                mov.b 2,R13
+6e 43                mov.b 2,R14
+6f 43                mov.b 2,R15
+64 43                mov.b 2,R4
+65 43                mov.b 2,R5
+66 43                mov.b 2,R6
+67 43                mov.b 2,R7
+68 43                mov.b 2,R8
+69 43                mov.b 2,R9
+61 43                mov.b 2,SP
+62 43                mov.b 2,SR
+63 42                mov.b 4,CG
+6a 42                mov.b 4,R10
+6b 42                mov.b 4,R11
+6c 42                mov.b 4,R12
+6d 42                mov.b 4,R13
+6e 42                mov.b 4,R14
+6f 42                mov.b 4,R15
+64 42                mov.b 4,R4
+65 42                mov.b 4,R5
+66 42                mov.b 4,R6
+67 42                mov.b 4,R7
+68 42                mov.b 4,R8
+69 42                mov.b 4,R9
+61 42                mov.b 4,SP
+62 42                mov.b 4,SR
+73 42                mov.b 8,CG
+70 42                mov.b 8,PC
+7a 42                mov.b 8,R10
+74 42                mov.b 8,R4
+75 42                mov.b 8,R5
+76 42                mov.b 8,R6
+77 42                mov.b 8,R7
+78 42                mov.b 8,R8
+79 42                mov.b 8,R9
+71 42                mov.b 8,SP
+72 42                mov.b 8,SR
+73 4a                mov.b @R10+,CG
+70 4a                mov.b @R10+,PC
+7a 4a                mov.b @R10+,R10
+74 4a                mov.b @R10+,R4
+75 4a                mov.b @R10+,R5
+76 4a                mov.b @R10+,R6
+77 4a                mov.b @R10+,R7
+78 4a                mov.b @R10+,R8
+79 4a                mov.b @R10+,R9
+71 4a                mov.b @R10+,SP
+72 4a                mov.b @R10+,SR
+63 4a                mov.b @R10,CG
+6a 4a                mov.b @R10,R10
+6b 4a                mov.b @R10,R11
+6c 4a                mov.b @R10,R12
+6d 4a                mov.b @R10,R13
+6e 4a                mov.b @R10,R14
+6f 4a                mov.b @R10,R15
+64 4a                mov.b @R10,R4
+65 4a                mov.b @R10,R5
+66 4a                mov.b @R10,R6
+67 4a                mov.b @R10,R7
+68 4a                mov.b @R10,R8
+69 4a                mov.b @R10,R9
+61 4a                mov.b @R10,SP
+62 4a                mov.b @R10,SR
+73 4b                mov.b @R11+,CG
+70 4b                mov.b @R11+,PC
+7a 4b                mov.b @R11+,R10
+74 4b                mov.b @R11+,R4
+75 4b                mov.b @R11+,R5
+76 4b                mov.b @R11+,R6
+77 4b                mov.b @R11+,R7
+78 4b                mov.b @R11+,R8
+79 4b                mov.b @R11+,R9
+71 4b                mov.b @R11+,SP
+72 4b                mov.b @R11+,SR
+63 4b                mov.b @R11,CG
+6a 4b                mov.b @R11,R10
+6b 4b                mov.b @R11,R11
+6c 4b                mov.b @R11,R12
+6d 4b                mov.b @R11,R13
+6e 4b                mov.b @R11,R14
+6f 4b                mov.b @R11,R15
+64 4b                mov.b @R11,R4
+65 4b                mov.b @R11,R5
+66 4b                mov.b @R11,R6
+67 4b                mov.b @R11,R7
+68 4b                mov.b @R11,R8
+69 4b                mov.b @R11,R9
+61 4b                mov.b @R11,SP
+62 4b                mov.b @R11,SR
+73 4c                mov.b @R12+,CG
+70 4c                mov.b @R12+,PC
+7a 4c                mov.b @R12+,R10
+74 4c                mov.b @R12+,R4
+75 4c                mov.b @R12+,R5
+76 4c                mov.b @R12+,R6
+77 4c                mov.b @R12+,R7
+78 4c                mov.b @R12+,R8
+79 4c                mov.b @R12+,R9
+71 4c                mov.b @R12+,SP
+72 4c                mov.b @R12+,SR
+63 4c                mov.b @R12,CG
+6a 4c                mov.b @R12,R10
+6b 4c                mov.b @R12,R11
+6c 4c                mov.b @R12,R12
+6d 4c                mov.b @R12,R13
+6e 4c                mov.b @R12,R14
+6f 4c                mov.b @R12,R15
+64 4c                mov.b @R12,R4
+65 4c                mov.b @R12,R5
+66 4c                mov.b @R12,R6
+67 4c                mov.b @R12,R7
+68 4c                mov.b @R12,R8
+69 4c                mov.b @R12,R9
+61 4c                mov.b @R12,SP
+62 4c                mov.b @R12,SR
+73 4d                mov.b @R13+,CG
+70 4d                mov.b @R13+,PC
+7a 4d                mov.b @R13+,R10
+74 4d                mov.b @R13+,R4
+75 4d                mov.b @R13+,R5
+76 4d                mov.b @R13+,R6
+77 4d                mov.b @R13+,R7
+78 4d                mov.b @R13+,R8
+79 4d                mov.b @R13+,R9
+71 4d                mov.b @R13+,SP
+72 4d                mov.b @R13+,SR
+63 4d                mov.b @R13,CG
+6a 4d                mov.b @R13,R10
+6b 4d                mov.b @R13,R11
+6c 4d                mov.b @R13,R12
+6d 4d                mov.b @R13,R13
+6e 4d                mov.b @R13,R14
+6f 4d                mov.b @R13,R15
+64 4d                mov.b @R13,R4
+65 4d                mov.b @R13,R5
+66 4d                mov.b @R13,R6
+67 4d                mov.b @R13,R7
+68 4d                mov.b @R13,R8
+69 4d                mov.b @R13,R9
+61 4d                mov.b @R13,SP
+62 4d                mov.b @R13,SR
+73 4e                mov.b @R14+,CG
+70 4e                mov.b @R14+,PC
+7a 4e                mov.b @R14+,R10
+74 4e                mov.b @R14+,R4
+75 4e                mov.b @R14+,R5
+76 4e                mov.b @R14+,R6
+77 4e                mov.b @R14+,R7
+78 4e                mov.b @R14+,R8
+79 4e                mov.b @R14+,R9
+71 4e                mov.b @R14+,SP
+72 4e                mov.b @R14+,SR
+63 4e                mov.b @R14,CG
+6a 4e                mov.b @R14,R10
+6b 4e                mov.b @R14,R11
+6c 4e                mov.b @R14,R12
+6d 4e                mov.b @R14,R13
+6e 4e                mov.b @R14,R14
+6f 4e                mov.b @R14,R15
+64 4e                mov.b @R14,R4
+65 4e                mov.b @R14,R5
+66 4e                mov.b @R14,R6
+67 4e                mov.b @R14,R7
+68 4e                mov.b @R14,R8
+69 4e                mov.b @R14,R9
+61 4e                mov.b @R14,SP
+62 4e                mov.b @R14,SR
+73 4f                mov.b @R15+,CG
+70 4f                mov.b @R15+,PC
+7a 4f                mov.b @R15+,R10
+74 4f                mov.b @R15+,R4
+75 4f                mov.b @R15+,R5
+76 4f                mov.b @R15+,R6
+77 4f                mov.b @R15+,R7
+78 4f                mov.b @R15+,R8
+79 4f                mov.b @R15+,R9
+71 4f                mov.b @R15+,SP
+72 4f                mov.b @R15+,SR
+63 4f                mov.b @R15,CG
+6a 4f                mov.b @R15,R10
+6b 4f                mov.b @R15,R11
+6c 4f                mov.b @R15,R12
+6d 4f                mov.b @R15,R13
+6e 4f                mov.b @R15,R14
+6f 4f                mov.b @R15,R15
+64 4f                mov.b @R15,R4
+65 4f                mov.b @R15,R5
+66 4f                mov.b @R15,R6
+67 4f                mov.b @R15,R7
+68 4f                mov.b @R15,R8
+69 4f                mov.b @R15,R9
+61 4f                mov.b @R15,SP
+62 4f                mov.b @R15,SR
+73 44                mov.b @R4+,CG
+70 44                mov.b @R4+,PC
+7a 44                mov.b @R4+,R10
+74 44                mov.b @R4+,R4
+75 44                mov.b @R4+,R5
+76 44                mov.b @R4+,R6
+77 44                mov.b @R4+,R7
+78 44                mov.b @R4+,R8
+79 44                mov.b @R4+,R9
+71 44                mov.b @R4+,SP
+72 44                mov.b @R4+,SR
+63 44                mov.b @R4,CG
+6a 44                mov.b @R4,R10
+6b 44                mov.b @R4,R11
+6c 44                mov.b @R4,R12
+6d 44                mov.b @R4,R13
+6e 44                mov.b @R4,R14
+6f 44                mov.b @R4,R15
+64 44                mov.b @R4,R4
+65 44                mov.b @R4,R5
+66 44                mov.b @R4,R6
+67 44                mov.b @R4,R7
+68 44                mov.b @R4,R8
+69 44                mov.b @R4,R9
+61 44                mov.b @R4,SP
+62 44                mov.b @R4,SR
+73 45                mov.b @R5+,CG
+70 45                mov.b @R5+,PC
+7a 45                mov.b @R5+,R10
+74 45                mov.b @R5+,R4
+75 45                mov.b @R5+,R5
+76 45                mov.b @R5+,R6
+77 45                mov.b @R5+,R7
+78 45                mov.b @R5+,R8
+79 45                mov.b @R5+,R9
+71 45                mov.b @R5+,SP
+72 45                mov.b @R5+,SR
+63 45                mov.b @R5,CG
+6a 45                mov.b @R5,R10
+6b 45                mov.b @R5,R11
+6c 45                mov.b @R5,R12
+6d 45                mov.b @R5,R13
+6e 45                mov.b @R5,R14
+6f 45                mov.b @R5,R15
+64 45                mov.b @R5,R4
+65 45                mov.b @R5,R5
+66 45                mov.b @R5,R6
+67 45                mov.b @R5,R7
+68 45                mov.b @R5,R8
+69 45                mov.b @R5,R9
+61 45                mov.b @R5,SP
+62 45                mov.b @R5,SR
+73 46                mov.b @R6+,CG
+70 46                mov.b @R6+,PC
+7a 46                mov.b @R6+,R10
+74 46                mov.b @R6+,R4
+75 46                mov.b @R6+,R5
+76 46                mov.b @R6+,R6
+77 46                mov.b @R6+,R7
+78 46                mov.b @R6+,R8
+79 46                mov.b @R6+,R9
+71 46                mov.b @R6+,SP
+72 46                mov.b @R6+,SR
+63 46                mov.b @R6,CG
+6a 46                mov.b @R6,R10
+6b 46                mov.b @R6,R11
+6c 46                mov.b @R6,R12
+6d 46                mov.b @R6,R13
+6e 46                mov.b @R6,R14
+6f 46                mov.b @R6,R15
+64 46                mov.b @R6,R4
+65 46                mov.b @R6,R5
+66 46                mov.b @R6,R6
+67 46                mov.b @R6,R7
+68 46                mov.b @R6,R8
+69 46                mov.b @R6,R9
+61 46                mov.b @R6,SP
+62 46                mov.b @R6,SR
+73 47                mov.b @R7+,CG
+70 47                mov.b @R7+,PC
+7a 47                mov.b @R7+,R10
+74 47                mov.b @R7+,R4
+75 47                mov.b @R7+,R5
+76 47                mov.b @R7+,R6
+77 47                mov.b @R7+,R7
+78 47                mov.b @R7+,R8
+79 47                mov.b @R7+,R9
+71 47                mov.b @R7+,SP
+72 47                mov.b @R7+,SR
+63 47                mov.b @R7,CG
+6a 47                mov.b @R7,R10
+6b 47                mov.b @R7,R11
+6c 47                mov.b @R7,R12
+6d 47                mov.b @R7,R13
+6e 47                mov.b @R7,R14
+6f 47                mov.b @R7,R15
+64 47                mov.b @R7,R4
+65 47                mov.b @R7,R5
+66 47                mov.b @R7,R6
+67 47                mov.b @R7,R7
+68 47                mov.b @R7,R8
+69 47                mov.b @R7,R9
+61 47                mov.b @R7,SP
+62 47                mov.b @R7,SR
+73 48                mov.b @R8+,CG
+70 48                mov.b @R8+,PC
+7a 48                mov.b @R8+,R10
+74 48                mov.b @R8+,R4
+75 48                mov.b @R8+,R5
+76 48                mov.b @R8+,R6
+77 48                mov.b @R8+,R7
+78 48                mov.b @R8+,R8
+79 48                mov.b @R8+,R9
+71 48                mov.b @R8+,SP
+72 48                mov.b @R8+,SR
+63 48                mov.b @R8,CG
+6a 48                mov.b @R8,R10
+6b 48                mov.b @R8,R11
+6c 48                mov.b @R8,R12
+6d 48                mov.b @R8,R13
+6e 48                mov.b @R8,R14
+6f 48                mov.b @R8,R15
+64 48                mov.b @R8,R4
+65 48                mov.b @R8,R5
+66 48                mov.b @R8,R6
+67 48                mov.b @R8,R7
+68 48                mov.b @R8,R8
+69 48                mov.b @R8,R9
+61 48                mov.b @R8,SP
+62 48                mov.b @R8,SR
+73 49                mov.b @R9+,CG
+70 49                mov.b @R9+,PC
+7a 49                mov.b @R9+,R10
+74 49                mov.b @R9+,R4
+75 49                mov.b @R9+,R5
+76 49                mov.b @R9+,R6
+77 49                mov.b @R9+,R7
+78 49                mov.b @R9+,R8
+79 49                mov.b @R9+,R9
+71 49                mov.b @R9+,SP
+72 49                mov.b @R9+,SR
+63 49                mov.b @R9,CG
+6a 49                mov.b @R9,R10
+6b 49                mov.b @R9,R11
+6c 49                mov.b @R9,R12
+6d 49                mov.b @R9,R13
+6e 49                mov.b @R9,R14
+6f 49                mov.b @R9,R15
+64 49                mov.b @R9,R4
+65 49                mov.b @R9,R5
+66 49                mov.b @R9,R6
+67 49                mov.b @R9,R7
+68 49                mov.b @R9,R8
+69 49                mov.b @R9,R9
+61 49                mov.b @R9,SP
+62 49                mov.b @R9,SR
+73 41                mov.b @SP+,CG
+70 41                mov.b @SP+,PC
+7a 41                mov.b @SP+,R10
+74 41                mov.b @SP+,R4
+75 41                mov.b @SP+,R5
+76 41                mov.b @SP+,R6
+77 41                mov.b @SP+,R7
+78 41                mov.b @SP+,R8
+79 41                mov.b @SP+,R9
+71 41                mov.b @SP+,SP
+72 41                mov.b @SP+,SR
+63 41                mov.b @SP,CG
+6a 41                mov.b @SP,R10
+6b 41                mov.b @SP,R11
+6c 41                mov.b @SP,R12
+6d 41                mov.b @SP,R13
+6e 41                mov.b @SP,R14
+6f 41                mov.b @SP,R15
+64 41                mov.b @SP,R4
+65 41                mov.b @SP,R5
+66 41                mov.b @SP,R6
+67 41                mov.b @SP,R7
+68 41                mov.b @SP,R8
+69 41                mov.b @SP,R9
+61 41                mov.b @SP,SP
+62 41                mov.b @SP,SR
+43 4a                mov.b R10,CG
+4a 4a                mov.b R10,R10
+4b 4a                mov.b R10,R11
+4c 4a                mov.b R10,R12
+4d 4a                mov.b R10,R13
+4e 4a                mov.b R10,R14
+4f 4a                mov.b R10,R15
+44 4a                mov.b R10,R4
+45 4a                mov.b R10,R5
+46 4a                mov.b R10,R6
+47 4a                mov.b R10,R7
+48 4a                mov.b R10,R8
+49 4a                mov.b R10,R9
+41 4a                mov.b R10,SP
+42 4a                mov.b R10,SR
+43 4b                mov.b R11,CG
+4a 4b                mov.b R11,R10
+4b 4b                mov.b R11,R11
+4c 4b                mov.b R11,R12
+4d 4b                mov.b R11,R13
+4e 4b                mov.b R11,R14
+4f 4b                mov.b R11,R15
+44 4b                mov.b R11,R4
+45 4b                mov.b R11,R5
+46 4b                mov.b R11,R6
+47 4b                mov.b R11,R7
+48 4b                mov.b R11,R8
+49 4b                mov.b R11,R9
+41 4b                mov.b R11,SP
+42 4b                mov.b R11,SR
+43 4c                mov.b R12,CG
+4a 4c                mov.b R12,R10
+4b 4c                mov.b R12,R11
+4c 4c                mov.b R12,R12
+4d 4c                mov.b R12,R13
+4e 4c                mov.b R12,R14
+4f 4c                mov.b R12,R15
+44 4c                mov.b R12,R4
+45 4c                mov.b R12,R5
+46 4c                mov.b R12,R6
+47 4c                mov.b R12,R7
+48 4c                mov.b R12,R8
+49 4c                mov.b R12,R9
+41 4c                mov.b R12,SP
+42 4c                mov.b R12,SR
+43 4d                mov.b R13,CG
+4a 4d                mov.b R13,R10
+4b 4d                mov.b R13,R11
+4c 4d                mov.b R13,R12
+4d 4d                mov.b R13,R13
+4e 4d                mov.b R13,R14
+4f 4d                mov.b R13,R15
+44 4d                mov.b R13,R4
+45 4d                mov.b R13,R5
+46 4d                mov.b R13,R6
+47 4d                mov.b R13,R7
+48 4d                mov.b R13,R8
+49 4d                mov.b R13,R9
+41 4d                mov.b R13,SP
+42 4d                mov.b R13,SR
+43 4e                mov.b R14,CG
+4a 4e                mov.b R14,R10
+4b 4e                mov.b R14,R11
+4c 4e                mov.b R14,R12
+4d 4e                mov.b R14,R13
+4e 4e                mov.b R14,R14
+4f 4e                mov.b R14,R15
+44 4e                mov.b R14,R4
+45 4e                mov.b R14,R5
+46 4e                mov.b R14,R6
+47 4e                mov.b R14,R7
+48 4e                mov.b R14,R8
+49 4e                mov.b R14,R9
+41 4e                mov.b R14,SP
+42 4e                mov.b R14,SR
+43 4f                mov.b R15,CG
+4a 4f                mov.b R15,R10
+4b 4f                mov.b R15,R11
+4c 4f                mov.b R15,R12
+4d 4f                mov.b R15,R13
+4e 4f                mov.b R15,R14
+4f 4f                mov.b R15,R15
+44 4f                mov.b R15,R4
+45 4f                mov.b R15,R5
+46 4f                mov.b R15,R6
+47 4f                mov.b R15,R7
+48 4f                mov.b R15,R8
+49 4f                mov.b R15,R9
+41 4f                mov.b R15,SP
+42 4f                mov.b R15,SR
+43 44                mov.b R4,CG
+4a 44                mov.b R4,R10
+4b 44                mov.b R4,R11
+4c 44                mov.b R4,R12
+4d 44                mov.b R4,R13
+4e 44                mov.b R4,R14
+4f 44                mov.b R4,R15
+44 44                mov.b R4,R4
+45 44                mov.b R4,R5
+46 44                mov.b R4,R6
+47 44                mov.b R4,R7
+48 44                mov.b R4,R8
+49 44                mov.b R4,R9
+41 44                mov.b R4,SP
+42 44                mov.b R4,SR
+43 45                mov.b R5,CG
+4a 45                mov.b R5,R10
+4b 45                mov.b R5,R11
+4c 45                mov.b R5,R12
+4d 45                mov.b R5,R13
+4e 45                mov.b R5,R14
+4f 45                mov.b R5,R15
+44 45                mov.b R5,R4
+45 45                mov.b R5,R5
+46 45                mov.b R5,R6
+47 45                mov.b R5,R7
+48 45                mov.b R5,R8
+49 45                mov.b R5,R9
+41 45                mov.b R5,SP
+42 45                mov.b R5,SR
+43 46                mov.b R6,CG
+4a 46                mov.b R6,R10
+4b 46                mov.b R6,R11
+4c 46                mov.b R6,R12
+4d 46                mov.b R6,R13
+4e 46                mov.b R6,R14
+4f 46                mov.b R6,R15
+44 46                mov.b R6,R4
+45 46                mov.b R6,R5
+46 46                mov.b R6,R6
+47 46                mov.b R6,R7
+48 46                mov.b R6,R8
+49 46                mov.b R6,R9
+41 46                mov.b R6,SP
+42 46                mov.b R6,SR
+43 47                mov.b R7,CG
+4a 47                mov.b R7,R10
+4b 47                mov.b R7,R11
+4c 47                mov.b R7,R12
+4d 47                mov.b R7,R13
+4e 47                mov.b R7,R14
+4f 47                mov.b R7,R15
+44 47                mov.b R7,R4
+45 47                mov.b R7,R5
+46 47                mov.b R7,R6
+47 47                mov.b R7,R7
+48 47                mov.b R7,R8
+49 47                mov.b R7,R9
+41 47                mov.b R7,SP
+42 47                mov.b R7,SR
+43 48                mov.b R8,CG
+4a 48                mov.b R8,R10
+4b 48                mov.b R8,R11
+4c 48                mov.b R8,R12
+4d 48                mov.b R8,R13
+4e 48                mov.b R8,R14
+4f 48                mov.b R8,R15
+44 48                mov.b R8,R4
+45 48                mov.b R8,R5
+46 48                mov.b R8,R6
+47 48                mov.b R8,R7
+48 48                mov.b R8,R8
+49 48                mov.b R8,R9
+41 48                mov.b R8,SP
+42 48                mov.b R8,SR
+43 49                mov.b R9,CG
+4a 49                mov.b R9,R10
+4b 49                mov.b R9,R11
+4c 49                mov.b R9,R12
+4d 49                mov.b R9,R13
+4e 49                mov.b R9,R14
+4f 49                mov.b R9,R15
+44 49                mov.b R9,R4
+45 49                mov.b R9,R5
+46 49                mov.b R9,R6
+47 49                mov.b R9,R7
+48 49                mov.b R9,R8
+49 49                mov.b R9,R9
+41 49                mov.b R9,SP
+42 49                mov.b R9,SR
+43 41                mov.b SP,CG
+4a 41                mov.b SP,R10
+4b 41                mov.b SP,R11
+4c 41                mov.b SP,R12
+4d 41                mov.b SP,R13
+4e 41                mov.b SP,R14
+4f 41                mov.b SP,R15
+44 41                mov.b SP,R4
+45 41                mov.b SP,R5
+46 41                mov.b SP,R6
+47 41                mov.b SP,R7
+48 41                mov.b SP,R8
+49 41                mov.b SP,R9
+41 41                mov.b SP,SP
+42 41                mov.b SP,SR
+43 42                mov.b SR,CG
+4a 42                mov.b SR,R10
+4b 42                mov.b SR,R11
+4c 42                mov.b SR,R12
+4d 42                mov.b SR,R13
+4e 42                mov.b SR,R14
+4f 42                mov.b SR,R15
+44 42                mov.b SR,R4
+45 42                mov.b SR,R5
+46 42                mov.b SR,R6
+47 42                mov.b SR,R7
+48 42                mov.b SR,R8
+49 42                mov.b SR,R9
+41 42                mov.b SR,SP
+42 42                mov.b SR,SR
+33 70 41 41          subc #0x4141,CG
+30 70 41 41          subc #0x4141,PC
+34 70 41 41          subc #0x4141,R4
+35 70 41 41          subc #0x4141,R5
+36 70 41 41          subc #0x4141,R6
+37 70 41 41          subc #0x4141,R7
+38 70 41 41          subc #0x4141,R8
+39 70 41 41          subc #0x4141,R9
+31 70 41 41          subc #0x4141,SP
+32 70 41 41          subc #0x4141,SR
+33 73                subc -1,CG
+30 73                subc -1,PC
+34 73                subc -1,R4
+35 73                subc -1,R5
+36 73                subc -1,R6
+37 73                subc -1,R7
+38 73                subc -1,R8
+39 73                subc -1,R9
+31 73                subc -1,SP
+32 73                subc -1,SR
+33 72                subc 8,CG
+30 72                subc 8,PC
+34 72                subc 8,R4
+35 72                subc 8,R5
+36 72                subc 8,R6
+37 72                subc 8,R7
+38 72                subc 8,R8
+39 72                subc 8,R9
+31 72                subc 8,SP
+32 72                subc 8,SR
+33 7a                subc @R10+,CG
+30 7a                subc @R10+,PC
+34 7a                subc @R10+,R4
+35 7a                subc @R10+,R5
+36 7a                subc @R10+,R6
+37 7a                subc @R10+,R7
+38 7a                subc @R10+,R8
+39 7a                subc @R10+,R9
+31 7a                subc @R10+,SP
+32 7a                subc @R10+,SR
+33 74                subc @R4+,CG
+30 74                subc @R4+,PC
+34 74                subc @R4+,R4
+35 74                subc @R4+,R5
+36 74                subc @R4+,R6
+37 74                subc @R4+,R7
+38 74                subc @R4+,R8
+39 74                subc @R4+,R9
+31 74                subc @R4+,SP
+32 74                subc @R4+,SR
+33 75                subc @R5+,CG
+30 75                subc @R5+,PC
+34 75                subc @R5+,R4
+35 75                subc @R5+,R5
+36 75                subc @R5+,R6
+37 75                subc @R5+,R7
+38 75                subc @R5+,R8
+39 75                subc @R5+,R9
+31 75                subc @R5+,SP
+32 75                subc @R5+,SR
+33 76                subc @R6+,CG
+30 76                subc @R6+,PC
+34 76                subc @R6+,R4
+35 76                subc @R6+,R5
+36 76                subc @R6+,R6
+37 76                subc @R6+,R7
+38 76                subc @R6+,R8
+39 76                subc @R6+,R9
+31 76                subc @R6+,SP
+32 76                subc @R6+,SR
+33 77                subc @R7+,CG
+30 77                subc @R7+,PC
+34 77                subc @R7+,R4
+35 77                subc @R7+,R5
+36 77                subc @R7+,R6
+37 77                subc @R7+,R7
+38 77                subc @R7+,R8
+39 77                subc @R7+,R9
+31 77                subc @R7+,SP
+32 77                subc @R7+,SR
+33 78                subc @R8+,CG
+30 78                subc @R8+,PC
+34 78                subc @R8+,R4
+35 78                subc @R8+,R5
+36 78                subc @R8+,R6
+37 78                subc @R8+,R7
+38 78                subc @R8+,R8
+39 78                subc @R8+,R9
+31 78                subc @R8+,SP
+32 78                subc @R8+,SR
+33 79                subc @R9+,CG
+30 79                subc @R9+,PC
+34 79                subc @R9+,R4
+35 79                subc @R9+,R5
+36 79                subc @R9+,R6
+37 79                subc @R9+,R7
+38 79                subc @R9+,R8
+39 79                subc @R9+,R9
+31 79                subc @R9+,SP
+32 79                subc @R9+,SR
+33 71                subc @SP+,CG
+30 71                subc @SP+,PC
+34 71                subc @SP+,R4
+35 71                subc @SP+,R5
+36 71                subc @SP+,R6
+37 71                subc @SP+,R7
+38 71                subc @SP+,R8
+39 71                subc @SP+,R9
+31 71                subc @SP+,SP
+32 71                subc @SP+,SR
+73 70 41 41          subc.b #0x4141,CG
+70 70 41 41          subc.b #0x4141,PC
+7a 70 41 41          subc.b #0x4141,R10
+74 70 41 41          subc.b #0x4141,R4
+75 70 41 41          subc.b #0x4141,R5
+76 70 41 41          subc.b #0x4141,R6
+77 70 41 41          subc.b #0x4141,R7
+78 70 41 41          subc.b #0x4141,R8
+79 70 41 41          subc.b #0x4141,R9
+71 70 41 41          subc.b #0x4141,SP
+72 70 41 41          subc.b #0x4141,SR
+53 72                subc.b (0),CG
+50 72                subc.b (0),PC
+5a 72                subc.b (0),R10
+54 72                subc.b (0),R4
+55 72                subc.b (0),R5
+56 72                subc.b (0),R6
+57 72                subc.b (0),R7
+58 72                subc.b (0),R8
+59 72                subc.b (0),R9
+51 72                subc.b (0),SP
+52 72                subc.b (0),SR
+73 73                subc.b -1,CG
+70 73                subc.b -1,PC
+7a 73                subc.b -1,R10
+74 73                subc.b -1,R4
+75 73                subc.b -1,R5
+76 73                subc.b -1,R6
+77 73                subc.b -1,R7
+78 73                subc.b -1,R8
+79 73                subc.b -1,R9
+71 73                subc.b -1,SP
+72 73                subc.b -1,SR
+43 73                subc.b 0,CG
+4a 73                subc.b 0,R10
+4b 73                subc.b 0,R11
+4c 73                subc.b 0,R12
+4d 73                subc.b 0,R13
+4e 73                subc.b 0,R14
+4f 73                subc.b 0,R15
+44 73                subc.b 0,R4
+45 73                subc.b 0,R5
+46 73                subc.b 0,R6
+47 73                subc.b 0,R7
+48 73                subc.b 0,R8
+49 73                subc.b 0,R9
+41 73                subc.b 0,SP
+42 73                subc.b 0,SR
+53 7a 41 41          subc.b 0x4141(R10),CG
+50 7a 41 41          subc.b 0x4141(R10),PC
+5a 7a 41 41          subc.b 0x4141(R10),R10
+54 7a 41 41          subc.b 0x4141(R10),R4
+55 7a 41 41          subc.b 0x4141(R10),R5
+56 7a 41 41          subc.b 0x4141(R10),R6
+57 7a 41 41          subc.b 0x4141(R10),R7
+58 7a 41 41          subc.b 0x4141(R10),R8
+59 7a 41 41          subc.b 0x4141(R10),R9
+51 7a 41 41          subc.b 0x4141(R10),SP
+52 7a 41 41          subc.b 0x4141(R10),SR
+53 74 41 41          subc.b 0x4141(R4),CG
+50 74 41 41          subc.b 0x4141(R4),PC
+5a 74 41 41          subc.b 0x4141(R4),R10
+54 74 41 41          subc.b 0x4141(R4),R4
+55 74 41 41          subc.b 0x4141(R4),R5
+56 74 41 41          subc.b 0x4141(R4),R6
+57 74 41 41          subc.b 0x4141(R4),R7
+58 74 41 41          subc.b 0x4141(R4),R8
+59 74 41 41          subc.b 0x4141(R4),R9
+51 74 41 41          subc.b 0x4141(R4),SP
+52 74 41 41          subc.b 0x4141(R4),SR
+53 75 41 41          subc.b 0x4141(R5),CG
+50 75 41 41          subc.b 0x4141(R5),PC
+5a 75 41 41          subc.b 0x4141(R5),R10
+54 75 41 41          subc.b 0x4141(R5),R4
+55 75 41 41          subc.b 0x4141(R5),R5
+56 75 41 41          subc.b 0x4141(R5),R6
+57 75 41 41          subc.b 0x4141(R5),R7
+58 75 41 41          subc.b 0x4141(R5),R8
+59 75 41 41          subc.b 0x4141(R5),R9
+51 75 41 41          subc.b 0x4141(R5),SP
+52 75 41 41          subc.b 0x4141(R5),SR
+53 76 41 41          subc.b 0x4141(R6),CG
+50 76 41 41          subc.b 0x4141(R6),PC
+5a 76 41 41          subc.b 0x4141(R6),R10
+54 76 41 41          subc.b 0x4141(R6),R4
+55 76 41 41          subc.b 0x4141(R6),R5
+56 76 41 41          subc.b 0x4141(R6),R6
+57 76 41 41          subc.b 0x4141(R6),R7
+58 76 41 41          subc.b 0x4141(R6),R8
+59 76 41 41          subc.b 0x4141(R6),R9
+51 76 41 41          subc.b 0x4141(R6),SP
+52 76 41 41          subc.b 0x4141(R6),SR
+53 77 41 41          subc.b 0x4141(R7),CG
+50 77 41 41          subc.b 0x4141(R7),PC
+5a 77 41 41          subc.b 0x4141(R7),R10
+54 77 41 41          subc.b 0x4141(R7),R4
+55 77 41 41          subc.b 0x4141(R7),R5
+56 77 41 41          subc.b 0x4141(R7),R6
+57 77 41 41          subc.b 0x4141(R7),R7
+58 77 41 41          subc.b 0x4141(R7),R8
+59 77 41 41          subc.b 0x4141(R7),R9
+51 77 41 41          subc.b 0x4141(R7),SP
+52 77 41 41          subc.b 0x4141(R7),SR
+53 78 41 41          subc.b 0x4141(R8),CG
+50 78 41 41          subc.b 0x4141(R8),PC
+5a 78 41 41          subc.b 0x4141(R8),R10
+54 78 41 41          subc.b 0x4141(R8),R4
+55 78 41 41          subc.b 0x4141(R8),R5
+56 78 41 41          subc.b 0x4141(R8),R6
+57 78 41 41          subc.b 0x4141(R8),R7
+58 78 41 41          subc.b 0x4141(R8),R8
+59 78 41 41          subc.b 0x4141(R8),R9
+51 78 41 41          subc.b 0x4141(R8),SP
+52 78 41 41          subc.b 0x4141(R8),SR
+53 79 41 41          subc.b 0x4141(R9),CG
+50 79 41 41          subc.b 0x4141(R9),PC
+5a 79 41 41          subc.b 0x4141(R9),R10
+54 79 41 41          subc.b 0x4141(R9),R4
+55 79 41 41          subc.b 0x4141(R9),R5
+56 79 41 41          subc.b 0x4141(R9),R6
+57 79 41 41          subc.b 0x4141(R9),R7
+58 79 41 41          subc.b 0x4141(R9),R8
+59 79 41 41          subc.b 0x4141(R9),R9
+51 79 41 41          subc.b 0x4141(R9),SP
+52 79 41 41          subc.b 0x4141(R9),SR
+53 71 41 41          subc.b 0x4141(SP),CG
+50 71 41 41          subc.b 0x4141(SP),PC
+5a 71 41 41          subc.b 0x4141(SP),R10
+54 71 41 41          subc.b 0x4141(SP),R4
+55 71 41 41          subc.b 0x4141(SP),R5
+56 71 41 41          subc.b 0x4141(SP),R6
+57 71 41 41          subc.b 0x4141(SP),R7
+58 71 41 41          subc.b 0x4141(SP),R8
+59 71 41 41          subc.b 0x4141(SP),R9
+51 71 41 41          subc.b 0x4141(SP),SP
+52 71 41 41          subc.b 0x4141(SP),SR
+53 70 41 41          subc.b 0x4141,CG
+50 70 41 41          subc.b 0x4141,PC
+5a 70 41 41          subc.b 0x4141,R10
+54 70 41 41          subc.b 0x4141,R4
+55 70 41 41          subc.b 0x4141,R5
+56 70 41 41          subc.b 0x4141,R6
+57 70 41 41          subc.b 0x4141,R7
+58 70 41 41          subc.b 0x4141,R8
+59 70 41 41          subc.b 0x4141,R9
+51 70 41 41          subc.b 0x4141,SP
+52 70 41 41          subc.b 0x4141,SR
+53 73                subc.b 1,CG
+50 73                subc.b 1,PC
+5a 73                subc.b 1,R10
+54 73                subc.b 1,R4
+55 73                subc.b 1,R5
+56 73                subc.b 1,R6
+57 73                subc.b 1,R7
+58 73                subc.b 1,R8
+59 73                subc.b 1,R9
+51 73                subc.b 1,SP
+52 73                subc.b 1,SR
+63 73                subc.b 2,CG
+6a 73                subc.b 2,R10
+6b 73                subc.b 2,R11
+6c 73                subc.b 2,R12
+6d 73                subc.b 2,R13
+6e 73                subc.b 2,R14
+6f 73                subc.b 2,R15
+64 73                subc.b 2,R4
+65 73                subc.b 2,R5
+66 73                subc.b 2,R6
+67 73                subc.b 2,R7
+68 73                subc.b 2,R8
+69 73                subc.b 2,R9
+61 73                subc.b 2,SP
+62 73                subc.b 2,SR
+63 72                subc.b 4,CG
+6a 72                subc.b 4,R10
+6b 72                subc.b 4,R11
+6c 72                subc.b 4,R12
+6d 72                subc.b 4,R13
+6e 72                subc.b 4,R14
+6f 72                subc.b 4,R15
+64 72                subc.b 4,R4
+65 72                subc.b 4,R5
+66 72                subc.b 4,R6
+67 72                subc.b 4,R7
+68 72                subc.b 4,R8
+69 72                subc.b 4,R9
+61 72                subc.b 4,SP
+62 72                subc.b 4,SR
+73 72                subc.b 8,CG
+70 72                subc.b 8,PC
+7a 72                subc.b 8,R10
+74 72                subc.b 8,R4
+75 72                subc.b 8,R5
+76 72                subc.b 8,R6
+77 72                subc.b 8,R7
+78 72                subc.b 8,R8
+79 72                subc.b 8,R9
+71 72                subc.b 8,SP
+72 72                subc.b 8,SR
+63 70                subc.b @PC,CG
+6a 70                subc.b @PC,R10
+6b 70                subc.b @PC,R11
+6c 70                subc.b @PC,R12
+6d 70                subc.b @PC,R13
+6e 70                subc.b @PC,R14
+6f 70                subc.b @PC,R15
+64 70                subc.b @PC,R4
+65 70                subc.b @PC,R5
+66 70                subc.b @PC,R6
+67 70                subc.b @PC,R7
+68 70                subc.b @PC,R8
+69 70                subc.b @PC,R9
+61 70                subc.b @PC,SP
+62 70                subc.b @PC,SR
+73 7a                subc.b @R10+,CG
+70 7a                subc.b @R10+,PC
+7a 7a                subc.b @R10+,R10
+74 7a                subc.b @R10+,R4
+75 7a                subc.b @R10+,R5
+76 7a                subc.b @R10+,R6
+77 7a                subc.b @R10+,R7
+78 7a                subc.b @R10+,R8
+79 7a                subc.b @R10+,R9
+71 7a                subc.b @R10+,SP
+72 7a                subc.b @R10+,SR
+63 7a                subc.b @R10,CG
+6a 7a                subc.b @R10,R10
+6b 7a                subc.b @R10,R11
+6c 7a                subc.b @R10,R12
+6d 7a                subc.b @R10,R13
+6e 7a                subc.b @R10,R14
+6f 7a                subc.b @R10,R15
+64 7a                subc.b @R10,R4
+65 7a                subc.b @R10,R5
+66 7a                subc.b @R10,R6
+67 7a                subc.b @R10,R7
+68 7a                subc.b @R10,R8
+69 7a                subc.b @R10,R9
+61 7a                subc.b @R10,SP
+62 7a                subc.b @R10,SR
+73 74                subc.b @R4+,CG
+70 74                subc.b @R4+,PC
+7a 74                subc.b @R4+,R10
+74 74                subc.b @R4+,R4
+75 74                subc.b @R4+,R5
+76 74                subc.b @R4+,R6
+77 74                subc.b @R4+,R7
+78 74                subc.b @R4+,R8
+79 74                subc.b @R4+,R9
+71 74                subc.b @R4+,SP
+72 74                subc.b @R4+,SR
+63 74                subc.b @R4,CG
+6a 74                subc.b @R4,R10
+6b 74                subc.b @R4,R11
+6c 74                subc.b @R4,R12
+6d 74                subc.b @R4,R13
+6e 74                subc.b @R4,R14
+6f 74                subc.b @R4,R15
+64 74                subc.b @R4,R4
+65 74                subc.b @R4,R5
+66 74                subc.b @R4,R6
+67 74                subc.b @R4,R7
+68 74                subc.b @R4,R8
+69 74                subc.b @R4,R9
+61 74                subc.b @R4,SP
+62 74                subc.b @R4,SR
+73 75                subc.b @R5+,CG
+70 75                subc.b @R5+,PC
+7a 75                subc.b @R5+,R10
+74 75                subc.b @R5+,R4
+75 75                subc.b @R5+,R5
+76 75                subc.b @R5+,R6
+77 75                subc.b @R5+,R7
+78 75                subc.b @R5+,R8
+79 75                subc.b @R5+,R9
+71 75                subc.b @R5+,SP
+72 75                subc.b @R5+,SR
+63 75                subc.b @R5,CG
+6a 75                subc.b @R5,R10
+6b 75                subc.b @R5,R11
+6c 75                subc.b @R5,R12
+6d 75                subc.b @R5,R13
+6e 75                subc.b @R5,R14
+6f 75                subc.b @R5,R15
+64 75                subc.b @R5,R4
+65 75                subc.b @R5,R5
+66 75                subc.b @R5,R6
+67 75                subc.b @R5,R7
+68 75                subc.b @R5,R8
+69 75                subc.b @R5,R9
+61 75                subc.b @R5,SP
+62 75                subc.b @R5,SR
+73 76                subc.b @R6+,CG
+70 76                subc.b @R6+,PC
+7a 76                subc.b @R6+,R10
+74 76                subc.b @R6+,R4
+75 76                subc.b @R6+,R5
+76 76                subc.b @R6+,R6
+77 76                subc.b @R6+,R7
+78 76                subc.b @R6+,R8
+79 76                subc.b @R6+,R9
+71 76                subc.b @R6+,SP
+72 76                subc.b @R6+,SR
+63 76                subc.b @R6,CG
+6a 76                subc.b @R6,R10
+6b 76                subc.b @R6,R11
+6c 76                subc.b @R6,R12
+6d 76                subc.b @R6,R13
+6e 76                subc.b @R6,R14
+6f 76                subc.b @R6,R15
+64 76                subc.b @R6,R4
+65 76                subc.b @R6,R5
+66 76                subc.b @R6,R6
+67 76                subc.b @R6,R7
+68 76                subc.b @R6,R8
+69 76                subc.b @R6,R9
+61 76                subc.b @R6,SP
+62 76                subc.b @R6,SR
+73 77                subc.b @R7+,CG
+70 77                subc.b @R7+,PC
+7a 77                subc.b @R7+,R10
+74 77                subc.b @R7+,R4
+75 77                subc.b @R7+,R5
+76 77                subc.b @R7+,R6
+77 77                subc.b @R7+,R7
+78 77                subc.b @R7+,R8
+79 77                subc.b @R7+,R9
+71 77                subc.b @R7+,SP
+72 77                subc.b @R7+,SR
+63 77                subc.b @R7,CG
+6a 77                subc.b @R7,R10
+6b 77                subc.b @R7,R11
+6c 77                subc.b @R7,R12
+6d 77                subc.b @R7,R13
+6e 77                subc.b @R7,R14
+6f 77                subc.b @R7,R15
+64 77                subc.b @R7,R4
+65 77                subc.b @R7,R5
+66 77                subc.b @R7,R6
+67 77                subc.b @R7,R7
+68 77                subc.b @R7,R8
+69 77                subc.b @R7,R9
+61 77                subc.b @R7,SP
+62 77                subc.b @R7,SR
+73 78                subc.b @R8+,CG
+70 78                subc.b @R8+,PC
+7a 78                subc.b @R8+,R10
+74 78                subc.b @R8+,R4
+75 78                subc.b @R8+,R5
+76 78                subc.b @R8+,R6
+77 78                subc.b @R8+,R7
+78 78                subc.b @R8+,R8
+79 78                subc.b @R8+,R9
+71 78                subc.b @R8+,SP
+72 78                subc.b @R8+,SR
+63 78                subc.b @R8,CG
+6a 78                subc.b @R8,R10
+6b 78                subc.b @R8,R11
+6c 78                subc.b @R8,R12
+6d 78                subc.b @R8,R13
+6e 78                subc.b @R8,R14
+6f 78                subc.b @R8,R15
+64 78                subc.b @R8,R4
+65 78                subc.b @R8,R5
+66 78                subc.b @R8,R6
+67 78                subc.b @R8,R7
+68 78                subc.b @R8,R8
+69 78                subc.b @R8,R9
+61 78                subc.b @R8,SP
+62 78                subc.b @R8,SR
+73 79                subc.b @R9+,CG
+70 79                subc.b @R9+,PC
+7a 79                subc.b @R9+,R10
+74 79                subc.b @R9+,R4
+75 79                subc.b @R9+,R5
+76 79                subc.b @R9+,R6
+77 79                subc.b @R9+,R7
+78 79                subc.b @R9+,R8
+79 79                subc.b @R9+,R9
+71 79                subc.b @R9+,SP
+72 79                subc.b @R9+,SR
+63 79                subc.b @R9,CG
+6a 79                subc.b @R9,R10
+6b 79                subc.b @R9,R11
+6c 79                subc.b @R9,R12
+6d 79                subc.b @R9,R13
+6e 79                subc.b @R9,R14
+6f 79                subc.b @R9,R15
+64 79                subc.b @R9,R4
+65 79                subc.b @R9,R5
+66 79                subc.b @R9,R6
+67 79                subc.b @R9,R7
+68 79                subc.b @R9,R8
+69 79                subc.b @R9,R9
+61 79                subc.b @R9,SP
+62 79                subc.b @R9,SR
+73 71                subc.b @SP+,CG
+70 71                subc.b @SP+,PC
+7a 71                subc.b @SP+,R10
+74 71                subc.b @SP+,R4
+75 71                subc.b @SP+,R5
+76 71                subc.b @SP+,R6
+77 71                subc.b @SP+,R7
+78 71                subc.b @SP+,R8
+79 71                subc.b @SP+,R9
+71 71                subc.b @SP+,SP
+72 71                subc.b @SP+,SR
+63 71                subc.b @SP,CG
+6a 71                subc.b @SP,R10
+6b 71                subc.b @SP,R11
+6c 71                subc.b @SP,R12
+6d 71                subc.b @SP,R13
+6e 71                subc.b @SP,R14
+6f 71                subc.b @SP,R15
+64 71                subc.b @SP,R4
+65 71                subc.b @SP,R5
+66 71                subc.b @SP,R6
+67 71                subc.b @SP,R7
+68 71                subc.b @SP,R8
+69 71                subc.b @SP,R9
+61 71                subc.b @SP,SP
+62 71                subc.b @SP,SR
+43 70                subc.b PC,CG
+4a 70                subc.b PC,R10
+4b 70                subc.b PC,R11
+4c 70                subc.b PC,R12
+4d 70                subc.b PC,R13
+4e 70                subc.b PC,R14
+4f 70                subc.b PC,R15
+44 70                subc.b PC,R4
+45 70                subc.b PC,R5
+46 70                subc.b PC,R6
+47 70                subc.b PC,R7
+48 70                subc.b PC,R8
+49 70                subc.b PC,R9
+41 70                subc.b PC,SP
+42 70                subc.b PC,SR
+43 7a                subc.b R10,CG
+4a 7a                subc.b R10,R10
+4b 7a                subc.b R10,R11
+4c 7a                subc.b R10,R12
+4d 7a                subc.b R10,R13
+4e 7a                subc.b R10,R14
+4f 7a                subc.b R10,R15
+44 7a                subc.b R10,R4
+45 7a                subc.b R10,R5
+46 7a                subc.b R10,R6
+47 7a                subc.b R10,R7
+48 7a                subc.b R10,R8
+49 7a                subc.b R10,R9
+41 7a                subc.b R10,SP
+42 7a                subc.b R10,SR
+43 74                subc.b R4,CG
+4a 74                subc.b R4,R10
+4b 74                subc.b R4,R11
+4c 74                subc.b R4,R12
+4d 74                subc.b R4,R13
+4e 74                subc.b R4,R14
+4f 74                subc.b R4,R15
+44 74                subc.b R4,R4
+45 74                subc.b R4,R5
+46 74                subc.b R4,R6
+47 74                subc.b R4,R7
+48 74                subc.b R4,R8
+49 74                subc.b R4,R9
+41 74                subc.b R4,SP
+42 74                subc.b R4,SR
+43 75                subc.b R5,CG
+4a 75                subc.b R5,R10
+4b 75                subc.b R5,R11
+4c 75                subc.b R5,R12
+4d 75                subc.b R5,R13
+4e 75                subc.b R5,R14
+4f 75                subc.b R5,R15
+44 75                subc.b R5,R4
+45 75                subc.b R5,R5
+46 75                subc.b R5,R6
+47 75                subc.b R5,R7
+48 75                subc.b R5,R8
+49 75                subc.b R5,R9
+41 75                subc.b R5,SP
+42 75                subc.b R5,SR
+43 76                subc.b R6,CG
+4a 76                subc.b R6,R10
+4b 76                subc.b R6,R11
+4c 76                subc.b R6,R12
+4d 76                subc.b R6,R13
+4e 76                subc.b R6,R14
+4f 76                subc.b R6,R15
+44 76                subc.b R6,R4
+45 76                subc.b R6,R5
+46 76                subc.b R6,R6
+47 76                subc.b R6,R7
+48 76                subc.b R6,R8
+49 76                subc.b R6,R9
+41 76                subc.b R6,SP
+42 76                subc.b R6,SR
+43 77                subc.b R7,CG
+4a 77                subc.b R7,R10
+4b 77                subc.b R7,R11
+4c 77                subc.b R7,R12
+4d 77                subc.b R7,R13
+4e 77                subc.b R7,R14
+4f 77                subc.b R7,R15
+44 77                subc.b R7,R4
+45 77                subc.b R7,R5
+46 77                subc.b R7,R6
+47 77                subc.b R7,R7
+48 77                subc.b R7,R8
+49 77                subc.b R7,R9
+41 77                subc.b R7,SP
+42 77                subc.b R7,SR
+43 78                subc.b R8,CG
+4a 78                subc.b R8,R10
+4b 78                subc.b R8,R11
+4c 78                subc.b R8,R12
+4d 78                subc.b R8,R13
+4e 78                subc.b R8,R14
+4f 78                subc.b R8,R15
+44 78                subc.b R8,R4
+45 78                subc.b R8,R5
+46 78                subc.b R8,R6
+47 78                subc.b R8,R7
+48 78                subc.b R8,R8
+49 78                subc.b R8,R9
+41 78                subc.b R8,SP
+42 78                subc.b R8,SR
+43 79                subc.b R9,CG
+4a 79                subc.b R9,R10
+4b 79                subc.b R9,R11
+4c 79                subc.b R9,R12
+4d 79                subc.b R9,R13
+4e 79                subc.b R9,R14
+4f 79                subc.b R9,R15
+44 79                subc.b R9,R4
+45 79                subc.b R9,R5
+46 79                subc.b R9,R6
+47 79                subc.b R9,R7
+48 79                subc.b R9,R8
+49 79                subc.b R9,R9
+41 79                subc.b R9,SP
+42 79                subc.b R9,SR
+43 71                subc.b SP,CG
+4a 71                subc.b SP,R10
+4b 71                subc.b SP,R11
+4c 71                subc.b SP,R12
+4d 71                subc.b SP,R13
+4e 71                subc.b SP,R14
+4f 71                subc.b SP,R15
+44 71                subc.b SP,R4
+45 71                subc.b SP,R5
+46 71                subc.b SP,R6
+47 71                subc.b SP,R7
+48 71                subc.b SP,R8
+49 71                subc.b SP,R9
+41 71                subc.b SP,SP
+42 71                subc.b SP,SR
+43 72                subc.b SR,CG
+4a 72                subc.b SR,R10
+4b 72                subc.b SR,R11
+4c 72                subc.b SR,R12
+4d 72                subc.b SR,R13
+4e 72                subc.b SR,R14
+4f 72                subc.b SR,R15
+44 72                subc.b SR,R4
+45 72                subc.b SR,R5
+46 72                subc.b SR,R6
+47 72                subc.b SR,R7
+48 72                subc.b SR,R8
+49 72                subc.b SR,R9
+41 72                subc.b SR,SP
+42 72                subc.b SR,SR
