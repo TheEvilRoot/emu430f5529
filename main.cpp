@@ -33,9 +33,9 @@ auto load_file(const std::string& file_name) {
     return Program(file_name, std::move(buffer), count);
 }
 
-int main() {
+int main(const int argc, const char* argv[]) {
   emu::Emulator emulator;
-  Program prog = load_file("../out/shellcode");
+  Program prog = load_file(argc > 1 ? argv[1] : "../out/shellcode");
   std::cout << "Program " << prog.file_name << " size:" << prog.size << "\n";
   emulator.load_from_buffer(prog.data.get(), prog.size);
   emulator.run();
