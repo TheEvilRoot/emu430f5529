@@ -10,19 +10,22 @@
 #include <utils/opcodes.h>
 #include <utils/addressing.h>
 #include <utils/instructions.h>
+#include <core/registerFile.h>
 
 #include <utility>
+
+#include <spdlog/spdlog.h>
 
 namespace core {
 
 class Pipeline {
  private:
-  core::MemoryView &regs;
+  core::RegisterFile &regs;
   core::MemoryView &ram;
 
   core::MemoryRef pc;
  public:
-  Pipeline(core::MemoryView &regs, core::MemoryView &ram) : regs {regs}, ram {ram}, pc {regs.get_word(0x0)} {}
+  Pipeline(core::RegisterFile &regs, core::MemoryView &ram) : regs {regs}, ram {ram}, pc {regs.get_ref(0)} {}
 
   static Instruction *decode(std::uint16_t instruction) {
     const auto format = InstructionFormat::from_value((instruction & 0xF000) >> 12);
@@ -79,10 +82,12 @@ class Pipeline {
 #endif
 
     if (instruction != nullptr) {
-        fprintf(stderr, "%04x instruction %04x => %s %s\n",
-                pc_val, instruction_word, InstructionFormat::to_string(instruction->format).c_str(),
-                instruction->to_string().c_str());
+        spdlog::info("{:04X} instruction {:04X} => {:s} {:s}",
+                     pc_val, instruction_word,
+                     InstructionFormat::to_string(instruction->format),
+                     instruction->to_string());
 #ifndef DRY
+        regs.dump();
         instruction->execute(pc, regs, ram);
 #endif
     }

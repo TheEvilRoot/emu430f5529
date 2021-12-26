@@ -34,9 +34,11 @@ auto load_file(const std::string& file_name) {
 }
 
 int main(const int argc, const char* argv[]) {
+  spdlog::set_level(spdlog::level::debug);
+  spdlog::set_pattern("[%H:%M:%S.%f] [%^%05l%$] %v");
   emu::Emulator emulator;
-  Program prog = load_file(argc > 1 ? argv[1] : "../out/shellcode");
-  std::cout << "Program " << prog.file_name << " size:" << prog.size << "\n";
-  emulator.load_from_buffer(prog.data.get(), prog.size);
+  Program program = load_file(argc > 1 ? argv[1] : "../out/shellcode");
+  spdlog::info("Program {} size: {}", program.file_name, program.size);
+  emulator.load_from_buffer(program.data.get(), program.size);
   emulator.run();
 }

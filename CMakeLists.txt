@@ -13,10 +13,13 @@ set(COMMON_SRC
         emulator/emulator.cpp
         core/memoryView.cpp
         core/memoryRef.cpp
-        core/pipeline.cpp)
+        core/pipeline.cpp
+        core/memoryRegion.h
+        core/registerFile.cpp
+        core/registerFile.h)
 
 add_executable(untitled main.cpp ${COMMON_SRC})
-add_executable(test test.cpp ${COMMON_SRC} core/memoryRegion.h)
+add_executable(test test.cpp ${COMMON_SRC})
 add_executable(test_endian test_endian.cpp ${COMMON_SRC})
 
 target_link_libraries(untitled spdlog)

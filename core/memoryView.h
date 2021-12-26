@@ -12,6 +12,8 @@
 #include <core/memoryRef.h>
 #include <core/memoryRegion.h>
 
+#include <spdlog/spdlog.h>
+
 namespace core {
 
 class MemoryView {
@@ -48,10 +50,10 @@ class MemoryView {
 
   void dump(std::size_t ptr, std::size_t count) const {
       for (auto i = ptr; i < ptr + count && i < size; i++) {
-          fprintf(stderr, "%02x ", data.get()[i]);
-          if (i > 0 && i % 0x10 == 0) fprintf(stderr, "\n");
+          printf("%02x ", data.get()[i]);
+          if (i > 0 && i % 0x10 == 0) printf("\n");
       }
-      fprintf(stderr, "\n");
+      printf("\n");
   }
 
 };
