@@ -37,3 +37,7 @@ std::uint16_t MemoryRef::get_and_increment(std::uint16_t delta) {
     set(value + delta);
   return value;
 }
+
+std::uint16_t MemoryRef::operator*() const {
+    return get();
+}

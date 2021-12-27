@@ -8,15 +8,19 @@
 #include <memory>
 #include <vector>
 #include <cassert>
+#include <array>
 
 #include <core/memoryRef.h>
 #include <core/memoryRegion.h>
 
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/bin_to_hex.h>
 
 namespace core {
 
 class MemoryView {
+ private:
+
  protected:
   std::size_t size;
   std::shared_ptr<unsigned char> data;
@@ -49,11 +53,6 @@ class MemoryView {
   }
 
   void dump(std::size_t ptr, std::size_t count) const {
-      for (auto i = ptr; i < ptr + count && i < size; i++) {
-          printf("%02x ", data.get()[i]);
-          if (i > 0 && i % 0x10 == 0) printf("\n");
-      }
-      printf("\n");
   }
 
 };
