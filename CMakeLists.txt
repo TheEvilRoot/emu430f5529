@@ -2,11 +2,17 @@ cmake_minimum_required(VERSION 3.20)
 project(untitled)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic -Werror -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type")
 
 include_directories(.)
 
-include_directories(libs/spdlog/include)
 add_subdirectory(libs/spdlog)
+include_directories(libs/spdlog/include)
+
+enable_testing()
+add_subdirectory(libs/googletest)
+include_directories(libs/googletest/googletest/include)
 
 set(COMMON_SRC
         utils/addressing.cpp
@@ -19,7 +25,11 @@ set(COMMON_SRC
         core/registerFile.h)
 
 add_executable(untitled main.cpp ${COMMON_SRC})
-add_executable(test test.cpp ${COMMON_SRC})
-add_executable(test_endian test_endian.cpp ${COMMON_SRC})
-
 target_link_libraries(untitled spdlog)
+
+add_executable(memory_test memory_test.cpp ${COMMON_SRC})
+target_link_libraries(memory_test gtest gtest_main)
+
+add_executable(endian_test endian_test.cpp ${COMMON_SRC})
+
+add_test(memory_test memory_test)

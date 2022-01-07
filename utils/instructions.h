@@ -69,7 +69,7 @@ class JumpInstruction : public Instruction {
     signed_offset = JumpInstruction::unsigned_to_signed_offset(unsigned_offset);
   }
 
-  void execute(core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) override {
+  void execute(core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &/*ram*/) override {
     if (JumpInstruction::check_condition(condition, regs)) {
       pc.set(JumpInstruction::calculate(pc.get(), signed_offset));
     }
@@ -83,7 +83,7 @@ class JumpInstruction : public Instruction {
     return pc + signed_offset;
   }
 
-  static bool check_condition(JumpInstructionOpcode cond, core::RegisterFile &regs) {
+  static bool check_condition(JumpInstructionOpcode /*cond*/, core::RegisterFile &/*regs*/) {
     return false;
   }
 

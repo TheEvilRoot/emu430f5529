@@ -32,11 +32,8 @@ class RegisterDirect : public SourceAddressing {
   RegisterDirect(std::uint16_t reg, core::MemoryRefType ref_type):
    SourceAddressing(ref_type), reg{reg} { }
 
-  core::MemoryRef get_ref(core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) const override {
-    switch (ref_type) {
-      case core::MemoryRefType::BYTE: return regs.get_ref(reg);
-      case core::MemoryRefType::WORD: return regs.get_ref(reg);
-    }
+  core::MemoryRef get_ref(core::MemoryRef &/*pc*/, core::RegisterFile &regs, core::MemoryView &/*ram*/) const override {
+    return regs.get_ref(reg);
   }
 
   [[nodiscard]] std::string to_string() const override {
@@ -74,7 +71,7 @@ public:
     RegisterIndirect(std::uint16_t reg, std::uint16_t delta, core::MemoryRefType ref_type):
             SourceAddressing(ref_type), reg{reg}, delta{delta} { }
 
-    core::MemoryRef get_ref(core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) const override {
+    core::MemoryRef get_ref(core::MemoryRef &/*pc*/, core::RegisterFile &regs, core::MemoryView &ram) const override {
         const auto address = regs.get_ref(reg).get_and_increment(delta);
 //        const auto address = regs.get_word(reg).get();
         switch (ref_type) {

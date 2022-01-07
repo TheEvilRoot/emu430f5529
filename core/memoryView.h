@@ -52,7 +52,7 @@ class MemoryView {
       }
   }
 
-  void dump(std::size_t ptr, std::size_t count) const {
+  void dump(std::size_t, std::size_t) const {
   }
 
 };

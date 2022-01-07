@@ -32,7 +32,7 @@ class Emulator {
   void load_from_buffer(const unsigned char* data, std::size_t count) {
       const std::size_t ram_addr = 0x200;
       const std::size_t ram_size = 0x9FF - 0x200;
-      for (auto i = 0; i < count && i < ram_size; i++) {
+      for (std::size_t i = 0; i < count && i < ram_size; i++) {
           ram.get_byte(ram_addr + i).set(data[i]);
       }
       regs.get_ref(0x0).set(ram_addr);

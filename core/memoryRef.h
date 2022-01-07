@@ -27,7 +27,7 @@ class MemoryRef {
 
   MemoryRef& operator--() {
       const auto delta = type == MemoryRefType::WORD ? 2 : 1;
-      assert(std::ssize_t(offset) - std::ssize_t(delta) >= 0);
+      assert(ssize_t(offset) - ssize_t(delta) >= 0);
       offset -= delta;
       return *this;
   }
