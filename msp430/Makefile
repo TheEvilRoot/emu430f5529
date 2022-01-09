@@ -6,10 +6,10 @@ WARNINGS=-Wall -mlarge -mcode-region=none -mdata-region=lower
 
 out/simple_1.o: simple_1.cc
 	mkdir -p out
-	${CC} ${WARNINGS} ${STDLIB_INC} ${MSP430_TARGET} -c -o out/simple_1.o simple_1.cc
+	${CC} ${WARNINGS} ${STDLIB_INC} ${MSP430_TARGET} -O0 -c -o out/simple_1.o simple_1.cc
 out/simple_1.out: out/simple_1.o
 	mkdir -p out
-	${CC} ${WARNINGS} ${STDLIB_INC} ${MSP430_TARGET} -o out/simple_1.out out/simple_1.o
+	${CC} ${WARNINGS} ${STDLIB_INC} ${MSP430_TARGET} -O0 -o out/simple_1.out out/simple_1.o
 
 all: out/simple_1.out
 
