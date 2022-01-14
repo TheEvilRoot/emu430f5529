@@ -16,7 +16,7 @@ MemoryRef::MemoryRef(std::shared_ptr<unsigned char> base, std::size_t offset, Me
 std::uint16_t MemoryRef::get() const {
   switch (type) {
     case MemoryRefType::BYTE: return static_cast<std::uint16_t>(base.get()[offset]);
-    case MemoryRefType::WORD: return WORD_AT_OFFSET(base.get(), offset);
+    case MemoryRefType::WORD: return endian::msp<decltype(base.get())>::word_at(base.get(), offset);
   }
 }
 
@@ -26,7 +26,7 @@ void MemoryRef::set(std::uint16_t val) {
       base.get()[offset] = static_cast<char>(val & 0xFF);
       return;
     case MemoryRefType::WORD:
-      WORD_TO_OFFSET(base.get(), offset, val);
+      endian::msp<decltype(base.get())>::word_to(base.get(), offset, val);
       return;
   }
 }
