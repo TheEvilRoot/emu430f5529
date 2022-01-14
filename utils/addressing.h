@@ -8,85 +8,102 @@
 #include <core/memoryRef.h>
 #include <core/memoryView.h>
 #include <core/registerFile.h>
+#include <utils/utils.h>
 
-class SourceAddressing {
- public:
-  const core::MemoryRefType ref_type;
+#include <variant>
 
-  explicit SourceAddressing(core::MemoryRefType ref_type): ref_type{ref_type} { }
+namespace msp {
+  struct RegisterDirectAddressing {
+    std::uint16_t reg;
+  };
 
-  virtual core::MemoryRef get_ref(core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) const = 0;
+  struct RegisterIndexedAddressing {
+    std::uint16_t reg;
+    core::MemoryRefType ref_type;
+  };
 
-  [[nodiscard]] virtual std::string to_string() const = 0;
-
-  static SourceAddressing * from_source(std::uint16_t reg, std::uint16_t mode, std::uint16_t bw);
-
-  static SourceAddressing * from_destination(std::uint16_t reg, std::uint16_t mode, std::uint16_t bw);
-
-};
-
-class RegisterDirect : public SourceAddressing {
- public:
-  std::uint16_t reg;
-
-  RegisterDirect(std::uint16_t reg, core::MemoryRefType ref_type):
-   SourceAddressing(ref_type), reg{reg} { }
-
-  core::MemoryRef get_ref(core::MemoryRef &/*pc*/, core::RegisterFile &regs, core::MemoryView &/*ram*/) const override {
-    return regs.get_ref(reg);
-  }
-
-  [[nodiscard]] std::string to_string() const override {
-      return "R" + std::to_string(reg);
-  }
-};
-
-class RegisterIndexed : public SourceAddressing {
- public:
-  std::uint16_t reg;
-
-  RegisterIndexed(std::uint16_t reg, core::MemoryRefType ref_type):
-   SourceAddressing(ref_type), reg{reg} { }
-
-  core::MemoryRef get_ref(core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) const override {
-    const auto next_word = ram.get_word(pc.get_and_increment(0x2)).get();
-//    const auto next_word = ram.get_word(pc.get()).get();
-    const auto base = regs.get_ref(reg).get();
-    switch (ref_type) {
-      case core::MemoryRefType::BYTE: return ram.get_byte(base + next_word);
-      case core::MemoryRefType::WORD: return ram.get_word(base + next_word);
-    }
-  }
-
-  [[nodiscard]] std::string to_string() const override {
-      return "x(R" + std::to_string(reg) + ")";
-  }
-};
-
-class RegisterIndirect : public SourceAddressing {
-public:
+  struct RegisterIndirectAddressing {
     std::uint16_t reg;
     std::uint16_t delta;
+    core::MemoryRefType ref_type;
+  };
 
-    RegisterIndirect(std::uint16_t reg, std::uint16_t delta, core::MemoryRefType ref_type):
-            SourceAddressing(ref_type), reg{reg}, delta{delta} { }
+  typedef std::variant<RegisterDirectAddressing, RegisterIndexedAddressing, RegisterIndirectAddressing>
+      Addressing;
 
-    core::MemoryRef get_ref(core::MemoryRef &/*pc*/, core::RegisterFile &regs, core::MemoryView &ram) const override {
-        const auto address = regs.get_ref(reg).get_and_increment(delta);
-//        const auto address = regs.get_word(reg).get();
-        switch (ref_type) {
-            case core::MemoryRefType::BYTE: return ram.get_byte(address);
-            case core::MemoryRefType::WORD: return ram.get_word(address);
-        }
+  struct addressing {
+
+    static Addressing from_source(std::uint16_t reg, std::uint16_t mode, std::uint16_t bw) noexcept {
+      const auto ref_type = bw == 0 ? core::MemoryRefType::WORD : core::MemoryRefType::BYTE;
+      switch (mode) {
+        case 0x00: return RegisterDirectAddressing{reg};
+        case 0x01: return RegisterIndexedAddressing{reg, ref_type};
+        case 0x02: return RegisterIndirectAddressing{reg, 0x0, ref_type};
+        case 0x03: return RegisterIndirectAddressing{
+          .reg = reg,
+          .delta = std::uint16_t(ref_type == core::MemoryRefType::BYTE ? 1u : 2u),
+          .ref_type = ref_type};
+        default: assert(false);
+      }
     }
 
-    [[nodiscard]] std::string to_string() const override {
-        if (delta > 0) {
-            return "@R" + std::to_string(reg) + "+";
-        } else {
-            return "@R" + std::to_string(reg);
-        }
+    static Addressing from_destination(std::uint16_t reg, std::uint16_t mode, std::uint16_t bw) {
+      const auto ref_type = bw == 0 ? core::MemoryRefType::WORD : core::MemoryRefType::BYTE;
+      switch (mode) {
+        case 0x0: return RegisterDirectAddressing{reg};
+        case 0x1: return RegisterIndexedAddressing{reg, ref_type};
+        default: assert(false);
+      }
     }
-};
+
+    [[nodiscard]] static core::MemoryRef get_ref(const RegisterDirectAddressing& addr, core::MemoryRef &/*pc*/, core::RegisterFile &regs, core::MemoryView &/*ram*/) noexcept {
+      return regs.get_ref(addr.reg);
+    }
+
+    [[nodiscard]] static core::MemoryRef get_ref(const RegisterIndexedAddressing& addr, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
+      const auto next_word = ram.get_word(pc.get_and_increment(0x2)).get();
+      const auto base = regs.get_ref(addr.reg).get();
+      switch (addr.ref_type) {
+        case core::MemoryRefType::BYTE: return ram.get_byte(base + next_word);
+        case core::MemoryRefType::WORD: return ram.get_word(base + next_word);
+      }
+    }
+
+    [[nodiscard]] static core::MemoryRef get_ref(const RegisterIndirectAddressing& addr, core::MemoryRef &/*pc*/, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
+      const auto address = regs.get_ref(addr.reg).get_and_increment(addr.delta);
+      switch (addr.ref_type) {
+        case core::MemoryRefType::BYTE: return ram.get_byte(address);
+        case core::MemoryRefType::WORD: return ram.get_word(address);
+      }
+    }
+
+    [[nodiscard]] static std::string to_string(const RegisterDirectAddressing& addr) noexcept {
+      if (addr.reg == 0)
+        return "PC";
+      return "R" + std::to_string(addr.reg);
+    }
+
+    [[nodiscard]] static std::string to_string(const RegisterIndexedAddressing& addr) noexcept {
+      return "x(R" + std::to_string(addr.reg) + ")";
+    }
+
+    [[nodiscard]] static std::string to_string(const RegisterIndirectAddressing& addr) noexcept {
+      return "@R" + std::to_string(addr.reg);
+    }
+
+    [[nodiscard]] static core::MemoryRef get_ref(const Addressing& addr, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
+      return std::visit(overloaded {
+        [&pc, &regs, &ram](const auto& a) { return get_ref(a, pc, regs, ram); }
+      }, addr);
+    }
+
+    [[nodiscard]] static std::string to_string(const Addressing& addr) noexcept {
+      return std::visit(overloaded {
+        [](const auto& a) { return to_string(a); }
+      }, addr);
+    }
+  };
+
+}
 
 #endif //UNTITLED_UTILS_ADDRESSING_H_
