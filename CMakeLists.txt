@@ -9,6 +9,8 @@ include_directories(.)
 add_subdirectory(libs/spdlog)
 include_directories(libs/spdlog/include)
 
+add_subdirectory(gui)
+
 enable_testing()
 add_subdirectory(libs/googletest)
 include_directories(libs/googletest/googletest/include)
@@ -24,7 +26,7 @@ set(COMMON_SRC
         core/registerFile.h)
 
 add_executable(untitled main.cpp ${COMMON_SRC})
-target_link_libraries(untitled spdlog)
+target_link_libraries(untitled spdlog emugui)
 
 add_executable(memory_test memory_test.cpp ${COMMON_SRC})
 target_link_libraries(memory_test gtest gtest_main)

@@ -6,6 +6,7 @@
 
 #include <emulator/emulator.h>
 #include <utils/elffile.h>
+#include <utils/hex430parser.h>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -42,6 +43,5 @@ int main(const int argc, const char* argv[]) {
   Program program = load_file(argc > 1 ? argv[1] : "../out/shellcode");
   spdlog::info("Program {} size: {}", program.file_name, program.size);
   emulator.load_from_buffer(program.data.get(), program.size);
-  emulator.run();
   emulator.run();
 }
