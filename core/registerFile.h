@@ -6,6 +6,7 @@
 #define UNTITLED_REGISTERFILE_H
 
 #include <core/memoryView.h>
+#include <core/statusRegister.h>
 
 namespace core {
 

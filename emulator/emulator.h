@@ -11,6 +11,9 @@
 
 #include <utils/tickController.h>
 
+#include <gui/emugui.h>
+#include <gui/glfw_backend.h>
+
 namespace emu {
 class Emulator {
  private:
@@ -19,6 +22,7 @@ class Emulator {
 
   core::Pipeline pipeline;
 
+  emugui::EmuGui<emugui::GlfwBackend> gui;
   TickController tick_controller;
 
  public:
@@ -45,8 +49,11 @@ class Emulator {
       regs.get_ref(0x0).set(ram_addr);
   }
 
-  [[noreturn]] void run() {
+  void run() {
+    auto pc = regs.get_ref(0x0);
+    gui.run();
     while (true) {
+      if (!gui.render(pc.get())) break;
       pipeline.step();
       tick_controller.tick_control_sleep();
     }

@@ -9,11 +9,24 @@ include_directories(.)
 add_subdirectory(libs/spdlog)
 include_directories(libs/spdlog/include)
 
-add_subdirectory(gui)
+add_subdirectory(libs/glfw)
+include_directories(libs/glfw/include)
 
 enable_testing()
 add_subdirectory(libs/googletest)
 include_directories(libs/googletest/googletest/include)
+
+include_directories(libs/imgui)
+include_directories(libs/imgui/backends)
+
+set(GUI_SRC
+        libs/imgui/imgui.cpp
+        libs/imgui/imgui_draw.cpp
+        libs/imgui/imgui_tables.cpp
+        libs/imgui/imgui_widgets.cpp
+        libs/imgui/backends/imgui_impl_opengl3.cpp
+        libs/imgui/backends/imgui_impl_opengl2.cpp
+        libs/imgui/backends/imgui_impl_glfw.cpp)
 
 set(COMMON_SRC
         utils/addressing.cpp
@@ -25,8 +38,19 @@ set(COMMON_SRC
         core/registerFile.cpp
         core/registerFile.h)
 
-add_executable(untitled main.cpp ${COMMON_SRC})
-target_link_libraries(untitled spdlog emugui)
+find_package(OpenGL REQUIRED)
+if (APPLE)
+    find_library(COCOA_LIBRARY Cocoa)
+    find_library(IOKIT_LIBRARY IOKit)
+endif()
+
+add_executable(untitled main.cpp ${COMMON_SRC} ${GUI_SRC})
+target_compile_features(untitled PRIVATE cxx_std_20)
+target_link_libraries(untitled PRIVATE spdlog glfw ${OPENGL_LIBRARIES} ${COCOA_LIBRARY} ${IOKIT_LIBRARY})
+
+if (APPLE)
+    target_link_libraries(untitled PRIVATE "-framework OpenGL")
+endif()
 
 add_executable(memory_test memory_test.cpp ${COMMON_SRC})
 target_link_libraries(memory_test gtest gtest_main)

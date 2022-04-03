@@ -28,10 +28,10 @@ struct Hex430Parser {
       if (programs.empty() || programs.back().is_finished) {
         if (buffer.front() != '@') throw std::logic_error{"Expected @address"};
         const auto addr_string = buffer.substr(1);
-        const auto addr_value = std::stoul(addr_string, 0 , 16);
+        const auto addr_value = std::stoul(addr_string, nullptr, 16);
         programs.emplace_back(addr_value);
       } else {
-        buffer.find(' ')
+        buffer.find(' ');
       }
     } while (!buffer.empty());
   }

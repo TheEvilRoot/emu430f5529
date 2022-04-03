@@ -8,6 +8,7 @@
 #include <core/memoryRef.h>
 
 #include <utility>
+#include <string>
 
 namespace core {
 

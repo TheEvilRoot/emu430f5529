@@ -44,4 +44,5 @@ int main(const int argc, const char* argv[]) {
   spdlog::info("Program {} size: {}", program.file_name, program.size);
   emulator.load_from_buffer(program.data.get(), program.size);
   emulator.run();
+  return 0;
 }
