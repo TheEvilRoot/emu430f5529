@@ -22,11 +22,11 @@ class Emulator {
 
   core::Pipeline pipeline;
 
-  emugui::EmuGui<emugui::GlfwBackend> gui;
   TickController tick_controller;
+    emugui::EmuGui<emugui::GlfwBackend> gui;
 
  public:
-  Emulator(): ram(0x10000), regs(16), pipeline(regs, ram), tick_controller(0) {
+  Emulator(): ram(0x10000), regs(16), pipeline(regs, ram), tick_controller(0), gui{regs, ram} {
       ram.add_region(core::MemoryRegion{"special function registers", 0x0, 0xF, core::MemoryRegionAccess::ONLY_BYTE});
       ram.add_region(core::MemoryRegion{"8-bit peripheral", 0x10, 0xFF, core::MemoryRegionAccess::ONLY_BYTE});
       ram.add_region(core::MemoryRegion{"16-bit peripheral", 0x100, 0x1FF, core::MemoryRegionAccess::ONLY_WORD});
@@ -53,9 +53,13 @@ class Emulator {
     auto pc = regs.get_ref(0x0);
     gui.run();
     while (true) {
-      if (!gui.render(pc.get())) break;
-      pipeline.step();
-      tick_controller.tick_control_sleep();
+        const auto state = gui.render();
+        if (state == emugui::UserState::KILL) {
+            break;
+        } else if (state == emugui::UserState::STEP) {
+            pipeline.step();
+            tick_controller.tick_control_sleep();
+        }
     }
   }
 };

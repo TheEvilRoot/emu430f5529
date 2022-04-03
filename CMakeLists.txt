@@ -18,8 +18,10 @@ include_directories(libs/googletest/googletest/include)
 
 include_directories(libs/imgui)
 include_directories(libs/imgui/backends)
+include_directories(libs/imgui_club/imgui_memory_editor)
 
 set(GUI_SRC
+        gui/emugui.cpp
         libs/imgui/imgui.cpp
         libs/imgui/imgui_draw.cpp
         libs/imgui/imgui_tables.cpp

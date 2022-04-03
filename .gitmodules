@@ -10,3 +10,6 @@
 [submodule "libs/imgui"]
 	path = libs/imgui
 	url = git@github.com:ocornut/imgui
+[submodule "libs/imgui_club"]
+	path = libs/imgui_club
+	url = git@github.com:ocornut/imgui_club.git

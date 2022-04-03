@@ -22,13 +22,13 @@ class MemoryView {
  private:
 
  protected:
-  std::size_t size;
-  std::shared_ptr<unsigned char> data;
   std::size_t max_ptr_set;
-
   std::vector<core::MemoryRegion> regions;
 
  public:
+  std::size_t size;
+  std::shared_ptr<unsigned char> data;
+
   MemoryView(std::size_t size);
 
   void add_region(MemoryRegion region) {

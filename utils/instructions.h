@@ -81,7 +81,7 @@ namespace msp {
       const auto source_value = source_ref.get();
       const auto res_value = UnaryInstruction::calculate(ins.opcode, source_value);
       if (res_value != source_value) {
-        // source_ref.set(res_value);
+         source_ref.set(res_value);
       }
     }
 
@@ -93,7 +93,7 @@ namespace msp {
                     source_ref.get(), addressing::to_string(ins.destination_addressing), dst_ref.get());
       const auto result = BinaryInstruction::calculate(ins.opcode, source_ref.get(), dst_ref.get());
       spdlog::debug("write-back {:X} => {:s}", result, addressing::to_string(ins.destination_addressing));
-      //dst_ref.set(result);
+      dst_ref.set(result);
     }
 
     [[nodiscard]] static std::string to_string(const UnaryInstruction& ins) noexcept {
