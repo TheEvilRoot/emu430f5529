@@ -40,9 +40,6 @@ int main(const int argc, const char* argv[]) {
   spdlog::set_level(spdlog::level::info);
   spdlog::set_pattern("[%H:%M:%S.%f] [%^%05l%$] %v");
   emu::Emulator emulator;
-  Program program = load_file(argc > 1 ? argv[1] : "../out/shellcode");
-  spdlog::info("Program {} size: {}", program.file_name, program.size);
-  emulator.load_from_buffer(program.data.get(), program.size);
   emulator.run();
   return 0;
 }

@@ -12,8 +12,6 @@
 
 #include <core/registerFile.h>
 
-
-
 namespace emugui {
     enum class UserState {
         STEP,
@@ -24,16 +22,22 @@ namespace emugui {
     template<typename Backend>
     struct EmuGui {
 
+        // references from the emulator
+        // must not be copied
         core::RegisterFile& regs;
         core::MemoryView& ram;
 
+        // ui and rendering state
         Backend backend{};
         MemoryEditor regsEditor{};
         MemoryEditor ramEditor{};
 
-        ImVec4 colorRunning{0, 1, 0, 1};
-        ImVec4 colorIdle{1, 0, 0, 1};
+        // consts
+        const ImVec4 colorRunning{0, 1, 0, 1};
+        const ImVec4 colorIdle{1, 0, 0, 1};
 
+        // user-related/controlled emulator state
+        // must be separated to emulator controller over EmuGui
         bool isRunning{false};
 
         explicit EmuGui(core::RegisterFile& regs, core::MemoryView& ram): regs{regs}, ram{ram} {
@@ -55,7 +59,7 @@ namespace emugui {
             }
             backend.renderPrepare();
             bool isStep = false;
-            ImGui::Begin("Emulator Control");
+            ImGui::Begin("Emulator Control", nullptr, ImGuiWindowFlags_NoCollapse);
             ImGui::Text("Emulator is");
             ImGui::SameLine();
             ImGui::TextColored(isRunning ? colorRunning : colorIdle, isRunning ? "Running" : "Idle");

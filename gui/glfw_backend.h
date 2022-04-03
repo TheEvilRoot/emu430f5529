@@ -20,15 +20,17 @@ namespace emugui {
         const ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
         static void glfw_error_callback(int error, const char* description) {
-            fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+            spdlog::error("GLFW failure {}: {}", error, description);
         }
 
         GLFWwindow* window{nullptr};
 
         int initiate(const char* title) {
             glfwSetErrorCallback(glfw_error_callback);
-            if (!glfwInit())
+            if (!glfwInit()) {
+                spdlog::error("GLFW init failure");
                 return 1;
+            }
 
             // Decide GL+GLSL versions
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -53,18 +55,21 @@ namespace emugui {
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
             window = glfwCreateWindow(1280, 720, title, nullptr, nullptr);
-            if (window == nullptr)
+            if (window == nullptr) {
+                spdlog::error("GLFW window create failure");
                 return 1;
+            }
             glfwMakeContextCurrent(window);
             glfwSwapInterval(1); // Enable vsync
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
             ImGuiIO &io = ImGui::GetIO();
             (void) io;
+            io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
             ImGui::StyleColorsDark();
             ImGui_ImplGlfw_InitForOpenGL(window, true);
             ImGui_ImplOpenGL3_Init(glsl_version);
-
+            spdlog::info("GLFW backend just initialized gui");
             return 0;
         }
 
