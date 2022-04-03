@@ -24,8 +24,8 @@ namespace emugui {
 
         // references from the emulator
         // must not be copied
-        core::RegisterFile& regs;
-        core::MemoryView& ram;
+        core::RegisterFile &regs;
+        core::MemoryView &ram;
 
         // ui and rendering state
         Backend backend{};
@@ -40,7 +40,7 @@ namespace emugui {
         // must be separated to emulator controller over EmuGui
         bool isRunning{false};
 
-        explicit EmuGui(core::RegisterFile& regs, core::MemoryView& ram): regs{regs}, ram{ram} {
+        explicit EmuGui(core::RegisterFile &regs, core::MemoryView &ram) : regs{regs}, ram{ram} {
             regsEditor.PreviewDataType = ImGuiDataType_U16;
             regsEditor.ReadOnly = true;
 
@@ -76,6 +76,6 @@ namespace emugui {
             return (isRunning || isStep) ? UserState::STEP : UserState::IDLE;
         }
     };
-}
+}// namespace emugui
 
-#endif //UNTITLED_EMUGUI_H
+#endif//UNTITLED_EMUGUI_H

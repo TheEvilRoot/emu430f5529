@@ -14,11 +14,11 @@ struct StatusRegister {
     std::uint16_t scg0 : 1;
     std::uint16_t osc_off : 1;
     std::uint16_t cpu_off : 1;
-    std::uint16_t gie: 1;
+    std::uint16_t gie : 1;
     std::uint16_t n : 1;
     std::uint16_t z : 1;
     std::uint16_t c : 1;
 };
 
 
-#endif //UNTITLED_STATUSREGISTER_H
+#endif//UNTITLED_STATUSREGISTER_H
