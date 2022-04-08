@@ -82,8 +82,16 @@ namespace msp {
                     return source ^ dest;
                 case BinaryInstructionOpcode::MOV:
                     return source;
-                default:
-                    assert(false);
+                case BinaryInstructionOpcode::CMP:
+                    return source;
+                case BinaryInstructionOpcode::DADD:
+                    return dest + source;
+                case BinaryInstructionOpcode::BIT:
+                    return source;
+                case BinaryInstructionOpcode::BIC:
+                    return source;
+                case BinaryInstructionOpcode::BIS:
+                    return source;
             }
         }
     };

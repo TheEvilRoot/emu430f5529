@@ -68,6 +68,7 @@ namespace emugui {
                 const auto dec = Decompiler::get_decompiled(ram.data.get(), ram.size);
                 decompiled = dec;
             }
+            ImGui::PushItemWidth(-1);
             if (ImGui::BeginListBox("Decompiled output")) {
                 for (const auto& i : decompiled) {
                     ImGui::BeginGroup();
@@ -91,7 +92,16 @@ namespace emugui {
                 isStep = true;
             }
             ImGui::End();
-            regsEditor.DrawWindow("Registers", regs.memory.data.get(), regs.memory.size);
+            if (ImGui::Begin("Registers")) {
+                for (std::size_t i = 0; i < regs.count; i++) {
+                    const auto value = regs.get_ref(i).get();
+                    ImGui::Text("%4s: ", msp::addressing::reg_to_string(i).c_str());
+                    ImGui::SameLine();
+                    ImGui::Text("%04X", value);
+                    if (i == 0 || i % 4 != 0) ImGui::SameLine();
+                }
+                ImGui::End();
+            }
             ramEditor.DrawWindow("RAM", ram.data.get(), ram.size);
             backend.renderFinalize();
             return (isRunning || isStep) ? UserState::STEP : UserState::IDLE;
