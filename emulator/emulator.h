@@ -10,6 +10,7 @@
 #include <core/registerFile.h>
 
 #include <utils/tickController.h>
+#include <utils/program.h>
 
 #include <gui/emugui.h>
 #include <gui/glfw_backend.h>
@@ -40,13 +41,24 @@ namespace emu {
             regs.get_ref(0x0).set(virt_addr);
         }
 
+        void load_from_program(const Program& program) {
+            spdlog::info("loading program from {} with {} fragments", program.file_name, program.fragments.size());
+            for (const auto& fragment : program.fragments) {
+                for (std::uint16_t ptr = 0; std::uint8_t byte : fragment.bytes) {
+                    ram.get_byte(fragment.address + ptr).set(byte);
+                    ptr++;
+                }
+            }
+            regs.get_ref(0x0).set(0x4400);
+        }
+
         void load_from_buffer(const unsigned char *data, std::size_t count) {
             const std::size_t ram_addr = 0x200;
             const std::size_t ram_size = 0x9FF - 0x200;
             for (std::size_t i = 0; i < count && i < ram_size; i++) {
                 ram.get_byte(ram_addr + i).set(data[i]);
             }
-            regs.get_ref(0x0).set(ram_addr);
+            regs.get_ref(0x0).set(0x0200);
         }
 
         void run() {

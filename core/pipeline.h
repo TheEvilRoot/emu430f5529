@@ -39,7 +39,7 @@ namespace core {
                 }
                 case InstructionFormat::BINARY_OP: {
                     const auto opcode = BinaryInstructionOpcode::from_value((instruction & 0xF000) >> 12);
-                    const auto source_register_num = (instruction & 0x0F00) >> 16;
+                    const auto source_register_num = (instruction & 0x0F00) >> 8;
                     const auto destination_register_num = instruction & 0xF;
                     const auto source_addressing_mode = (instruction & 0x0030) >> 4;
                     const auto byte_word_mode = (instruction & 0x0040) >> 6;
@@ -58,20 +58,26 @@ namespace core {
                             .opcode = opcode,
                             .source_addressing = msp::addressing::from_source(register_num, source_addressing_mode, byte_word_mode)};
                 }
-                case InstructionFormat::UNIMPL_OP:
-                    assert(false);
+                case InstructionFormat::UNIMPL_OP: {
+                    spdlog::debug("implemented instruction {:04X} format {}", instruction, InstructionFormat::to_string(format));
+                    throw false;
+                }
             }
         }
 
         void step() {
             const auto pc_val = pc.get_and_increment(0x2);
-            const auto instruction_word = ram.get_word(pc_val).get();
-            const auto instruction = decode(instruction_word);
-            spdlog::info("{:04X} instruction {:04X} => {:s}",
-                         pc_val, instruction_word,
-                         msp::instruction::to_string(instruction));
-            regs.dump();
-            msp::instruction::execute(instruction, pc, regs, ram);
+            try {
+                const auto instruction_word = ram.get_word(pc_val).get();
+                const auto instruction = decode(instruction_word);
+                spdlog::info("{:04X} instruction {:04X} => {:s}",
+                             pc_val, instruction_word,
+                             msp::instruction::to_string(instruction));
+                regs.dump();
+                msp::instruction::execute(instruction, pc, regs, ram);
+            } catch (...) {
+                spdlog::info("{:04X} instruction => error", pc_val);
+            }
         }
     };
 

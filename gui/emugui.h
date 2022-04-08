@@ -11,6 +11,8 @@
 #include <cstdint>
 
 #include <core/registerFile.h>
+#include <emulator/decompiler.h>
+#include <utils/instructions.h>
 
 namespace emugui {
     enum class UserState {
@@ -39,6 +41,7 @@ namespace emugui {
         // user-related/controlled emulator state
         // must be separated to emulator controller over EmuGui
         bool isRunning{false};
+        std::vector<Decompiler::DecompiledInstruction> decompiled{};
 
         explicit EmuGui(core::RegisterFile &regs, core::MemoryView &ram) : regs{regs}, ram{ram} {
             regsEditor.PreviewDataType = ImGuiDataType_U16;
@@ -59,6 +62,24 @@ namespace emugui {
             }
             backend.renderPrepare();
             bool isStep = false;
+
+            ImGui::Begin("Decompiler", nullptr, ImGuiWindowFlags_NoCollapse);
+            if (ImGui::Button("Update")) {
+                const auto dec = Decompiler::get_decompiled(ram.data.get(), ram.size);
+                decompiled = dec;
+            }
+            if (ImGui::BeginListBox("Decompiled output")) {
+                for (const auto& i : decompiled) {
+                    ImGui::BeginGroup();
+                    ImGui::Text("%04X => ", i.pc);
+                    ImGui::SameLine();
+                    ImGui::Text("%s", i.repr.c_str());
+                    ImGui::EndGroup();
+                }
+                ImGui::EndListBox();
+            }
+            ImGui::End();
+
             ImGui::Begin("Emulator Control", nullptr, ImGuiWindowFlags_NoCollapse);
             ImGui::Text("Emulator is");
             ImGui::SameLine();

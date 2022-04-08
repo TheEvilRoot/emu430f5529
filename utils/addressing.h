@@ -28,13 +28,34 @@ namespace msp {
         core::MemoryRefType ref_type;
     };
 
-    typedef std::variant<RegisterDirectAddressing, RegisterIndexedAddressing, RegisterIndirectAddressing>
+    struct Absolute {
+    };
+
+    struct ConstantAddressing {
+        std::uint16_t value;
+        std::uint16_t constant_reg;
+    };
+
+    typedef std::variant<RegisterDirectAddressing, RegisterIndexedAddressing, RegisterIndirectAddressing, ConstantAddressing, Absolute>
             Addressing;
 
     struct addressing {
 
         static Addressing from_source(std::uint16_t reg, std::uint16_t mode, std::uint16_t bw) noexcept {
             const auto ref_type = bw == 0 ? core::MemoryRefType::WORD : core::MemoryRefType::BYTE;
+            if (reg == 3) {
+                constexpr static std::uint16_t constant_value[4] = {0x0, 0x1, 0x2, static_cast<std::uint16_t>(-1)};
+                constexpr static std::uint16_t constant_reg[4] = {0x0, 0x2, 0x4, 0xA};
+                return ConstantAddressing{constant_value[mode], constant_reg[mode]};
+            } else if (reg == 2) {
+                if (mode == 1) {
+                    return Absolute{};
+                } else if (mode > 1) {
+                    constexpr static std::uint16_t constant_value[2] = {0x6, 0x8};
+                    constexpr static std::uint16_t constant_reg[2] = {0x4, 0x8};
+                    return ConstantAddressing{constant_value[mode - 2], constant_reg[mode - 2]};
+                }
+            }
             switch (mode) {
                 case 0x00:
                     return RegisterDirectAddressing{reg};
@@ -64,6 +85,14 @@ namespace msp {
             }
         }
 
+        [[nodiscard]] static core::MemoryRef get_ref(const Absolute &/* addr */, core::MemoryRef &pc, core::RegisterFile & /* regs */, core::MemoryView &ram) noexcept {
+            return ram.get_word(pc.get_and_increment(0x2));
+        }
+
+        [[nodiscard]] static core::MemoryRef get_ref(const ConstantAddressing &addr, core::MemoryRef & /*pc*/, core::RegisterFile &regs, core::MemoryView & /*ram*/) noexcept {
+            return regs.constants.get_word(addr.constant_reg);
+        }
+
         [[nodiscard]] static core::MemoryRef get_ref(const RegisterDirectAddressing &addr, core::MemoryRef & /*pc*/, core::RegisterFile &regs, core::MemoryView & /*ram*/) noexcept {
             return regs.get_ref(addr.reg);
         }
@@ -89,18 +118,37 @@ namespace msp {
             }
         }
 
-        [[nodiscard]] static std::string to_string(const RegisterDirectAddressing &addr) noexcept {
-            if (addr.reg == 0)
+        [[nodiscard]] static std::string to_string(const Absolute &/*addr*/) noexcept {
+            return "&LABEL";
+        }
+
+        [[nodiscard]] static std::string to_string(const ConstantAddressing &addr) noexcept {
+            return "#" + std::to_string(addr.value);
+        }
+
+        [[nodiscard]] static std::string reg_to_string(std::uint16_t reg) noexcept {
+            if (reg == 0)
                 return "PC";
-            return "R" + std::to_string(addr.reg);
+            if (reg == 1)
+                return "SP";
+            if (reg == 2)
+                return "SR";
+            return "R" + std::to_string(reg);
+        }
+
+        [[nodiscard]] static std::string to_string(const RegisterDirectAddressing &addr) noexcept {
+            return reg_to_string(addr.reg);
         }
 
         [[nodiscard]] static std::string to_string(const RegisterIndexedAddressing &addr) noexcept {
-            return "x(R" + std::to_string(addr.reg) + ")";
+            return "x(" + reg_to_string(addr.reg) + ")";
         }
 
         [[nodiscard]] static std::string to_string(const RegisterIndirectAddressing &addr) noexcept {
-            return "@R" + std::to_string(addr.reg);
+            if (addr.delta > 0) {
+                return "@" + reg_to_string(addr.reg) + "+" + std::to_string(addr.delta);
+            }
+            return "@" + reg_to_string(addr.reg);
         }
 
         [[nodiscard]] static core::MemoryRef get_ref(const Addressing &addr, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {

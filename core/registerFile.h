@@ -12,10 +12,18 @@ namespace core {
 
     class RegisterFile {
     public:
+        core::MemoryView constants;
         core::MemoryView memory;
         std::size_t count;
 
-        RegisterFile(std::size_t regs_count) : memory{regs_count * 2}, count{regs_count} {}
+        RegisterFile(std::size_t regs_count) : constants{6 * 2}, memory{regs_count * 2}, count{regs_count} {
+            constants.get_word(0x0).set(0x0);
+            constants.get_word(0x2).set(0x1);
+            constants.get_word(0x4).set(0x2);
+            constants.get_word(0x6).set(0x4);
+            constants.get_word(0x8).set(0x8);
+            constants.get_word(0xA).set(static_cast<std::uint16_t>(-1));
+        }
 
         [[nodiscard]] core::MemoryRef get_ref(std::size_t reg_num) const {
             return memory.get_word(reg_num * 2);

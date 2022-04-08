@@ -6,6 +6,7 @@
 #define UNTITLED_UTILS_INSTRUCTIONS_H_
 
 #include <core/registerFile.h>
+#include <utils/opcodes.h>
 
 #include <memory>
 
@@ -40,17 +41,22 @@ namespace msp {
 
     struct JumpInstruction {
         JumpInstructionOpcode condition;
-        std::uint16_t signed_offset;
+        std::int16_t signed_offset;
         static std::uint16_t calculate(std::uint16_t pc, std::uint16_t signed_offset) noexcept {
             return pc + signed_offset;
         }
 
-        static bool check_condition(JumpInstructionOpcode /*cond*/, core::RegisterFile & /*regs*/) noexcept {
-            return false;
+        static bool check_condition(JumpInstructionOpcode cond, core::RegisterFile & /*regs*/) noexcept {
+            return cond.value == JumpInstructionOpcode::JMP;
         }
 
-        static std::uint16_t unsigned_to_signed_offset(std::uint16_t unsigned_offset) noexcept {
-            return unsigned_offset;
+        static std::int16_t unsigned_to_signed_offset(std::uint16_t unsigned_offset) noexcept {
+            const std::uint16_t carry = (unsigned_offset) & 0x200;
+            if (carry == 0)
+                return static_cast<std::int16_t>(unsigned_offset & 0x1FFu);
+            const std::uint16_t value = unsigned_offset & 0x1FFu;
+            const std::uint16_t negated = value | 0xFE00u;
+            return static_cast<std::int16_t>(negated) * static_cast<std::int16_t>(2);
         }
     };
 
@@ -69,9 +75,9 @@ namespace msp {
                 case BinaryInstructionOpcode::AND:
                     return source & dest;
                 case BinaryInstructionOpcode::SUB:
-                    return source - dest;
+                    return dest - source;
                 case BinaryInstructionOpcode::SUBC:
-                    return source - dest;
+                    return dest - source;
                 case BinaryInstructionOpcode::XOR:
                     return source ^ dest;
                 case BinaryInstructionOpcode::MOV:
@@ -96,8 +102,18 @@ namespace msp {
             auto source_ref = addressing::get_ref(ins.source_addressing, pc, regs, ram);
             const auto source_value = source_ref.get();
             const auto res_value = UnaryInstruction::calculate(ins.opcode, source_value);
-            if (res_value != source_value) {
-                source_ref.set(res_value);
+            if (ins.opcode.value == UnaryInstructionOpcode::CALL) {
+                const auto dst = source_ref.get();
+                auto sp = regs.get_ref(0x1);
+                sp.get_and_increment(-0x2);
+                auto stack = ram.get_word(sp.get());
+                stack.set(pc.get());
+                spdlog::info("push to stack {:04x}", pc.get());
+                pc.set(dst);
+            } else {
+                if (res_value != source_value) {
+                    source_ref.set(res_value);
+                }
             }
         }
 

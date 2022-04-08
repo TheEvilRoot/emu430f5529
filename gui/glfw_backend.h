@@ -5,6 +5,9 @@
 #ifndef UNTITLED_GLFW_BACKEND_H
 #define UNTITLED_GLFW_BACKEND_H
 
+#warning "OpenGL deprecation have been silenced"
+#define GL_SILENCE_DEPRECATION
+
 #include <cstdio>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>

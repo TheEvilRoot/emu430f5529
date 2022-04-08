@@ -46,8 +46,10 @@ namespace core {
 
         void ensure_access(std::size_t virt_addr, MemoryRefType ref_type) const {
             for (const auto &reg: regions) {
-                if (!reg.can_access(virt_addr, ref_type))
-                    assert(false);
+                if (!reg.can_access(virt_addr, ref_type)) {
+                    spdlog::error("illegal access to {:04x} : {} region", virt_addr, reg.name);
+                    throw false;
+                }
             }
         }
 

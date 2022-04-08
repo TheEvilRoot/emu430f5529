@@ -31,6 +31,7 @@ set(GUI_SRC
         libs/imgui/backends/imgui_impl_glfw.cpp)
 
 set(COMMON_SRC
+        emulator/decompiler.cpp
         utils/addressing.cpp
         emulator/emulator.cpp
         core/memoryView.cpp
@@ -66,7 +67,11 @@ target_link_libraries(elffile_test gtest gtest_main)
 add_executable(instruction_test test_ins.cpp ${COMMON_SRC})
 target_link_libraries(instruction_test gtest gtest_main)
 
+add_executable(hex430_test test_hex430.cpp ${COMMON_SRC})
+target_link_libraries(hex430_test gtest gtest_main)
+
 add_test(memory_test memory_test)
 add_test(endian_test endian_test)
 add_test(elffile_test elffile_test)
 add_test(instruction_test instruction_test)
+add_test(hex430_test hex430_test)
