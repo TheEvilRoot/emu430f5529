@@ -56,6 +56,7 @@ namespace emugui {
         }
 
         [[nodiscard]] auto render() {
+            const auto pc_val = regs.get_ref(0x0).get();
             if (backend.isTerminated()) {
                 backend.terminate();
                 return UserState::KILL;
@@ -69,10 +70,14 @@ namespace emugui {
                 decompiled = dec;
             }
             ImGui::PushItemWidth(-1);
-            if (ImGui::BeginListBox("Decompiled output")) {
+            if (ImGui::BeginListBox("##Decompiled output", ImVec2(-1, -1))) {
                 for (const auto& i : decompiled) {
                     ImGui::BeginGroup();
-                    ImGui::Text("%04X => ", i.pc);
+                    if (ImGui::Button(fmt::format("{:04X}", i.pc).c_str())) {
+                        ramEditor.GotoAddrAndHighlight(i.pc, i.pc);
+                    }
+                    ImGui::SameLine();
+                    ImGui::Text(" %s ", i.pc == pc_val ? "=>" : "  ");
                     ImGui::SameLine();
                     ImGui::Text("%s", i.repr.c_str());
                     ImGui::EndGroup();

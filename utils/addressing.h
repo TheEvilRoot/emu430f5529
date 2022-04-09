@@ -118,14 +118,6 @@ namespace msp {
             }
         }
 
-        [[nodiscard]] static std::string to_string(const Absolute &/*addr*/) noexcept {
-            return "&LABEL";
-        }
-
-        [[nodiscard]] static std::string to_string(const ConstantAddressing &addr) noexcept {
-            return "#" + std::to_string(addr.value);
-        }
-
         [[nodiscard]] static std::string reg_to_string(std::uint16_t reg) noexcept {
             if (reg == 0)
                 return "PC";
@@ -136,7 +128,29 @@ namespace msp {
             return "R" + std::to_string(reg);
         }
 
+        [[nodiscard]] static std::string to_string(const Absolute &/*addr*/) noexcept {
+            return "&LABEL";
+        }
+
+        [[nodiscard]] static std::string to_string(const Absolute &/*addr*/, const core::MemoryRef& ref) noexcept {
+            if (ref.offset > 0xFFFF)
+                return "&INVALID_REF";
+            return fmt::format("&{:4X}", ref.offset);
+        }
+
+        [[nodiscard]] static std::string to_string(const ConstantAddressing &addr) noexcept {
+            return "#" + std::to_string(addr.value);
+        }
+
+        [[nodiscard]] static std::string to_string(const ConstantAddressing &addr, const core::MemoryRef& /*ref*/) noexcept {
+            return "#" + std::to_string(addr.value);
+        }
+
         [[nodiscard]] static std::string to_string(const RegisterDirectAddressing &addr) noexcept {
+            return reg_to_string(addr.reg);
+        }
+
+        [[nodiscard]] static std::string to_string(const RegisterDirectAddressing &addr, const core::MemoryRef& /*ref*/) noexcept {
             return reg_to_string(addr.reg);
         }
 
@@ -144,7 +158,21 @@ namespace msp {
             return "x(" + reg_to_string(addr.reg) + ")";
         }
 
+        [[nodiscard]] static std::string to_string(const RegisterIndexedAddressing &addr, const core::MemoryRef& ref) noexcept {
+            return fmt::format("{}+{:04X}", reg_to_string(addr.reg), ref.offset);
+        }
+
         [[nodiscard]] static std::string to_string(const RegisterIndirectAddressing &addr) noexcept {
+            if (addr.delta > 0) {
+                return "@" + reg_to_string(addr.reg) + "+" + std::to_string(addr.delta);
+            }
+            return "@" + reg_to_string(addr.reg);
+        }
+
+        [[nodiscard]] static std::string to_string(const RegisterIndirectAddressing &addr, const core::MemoryRef& ref) noexcept {
+            if (addr.reg == 0) {
+                return fmt::format("#{:04X}", ref.get());
+            }
             if (addr.delta > 0) {
                 return "@" + reg_to_string(addr.reg) + "+" + std::to_string(addr.delta);
             }
@@ -160,6 +188,12 @@ namespace msp {
         [[nodiscard]] static std::string to_string(const Addressing &addr) noexcept {
             return std::visit(overloaded{
                                       [](const auto &a) { return to_string(a); }},
+                              addr);
+        }
+
+        [[nodiscard]] static std::string to_string(const Addressing &addr, const core::MemoryRef& ref) noexcept {
+            return std::visit(overloaded{
+                                      [&ref](const auto &a) { return to_string(a, ref); }},
                               addr);
         }
     };

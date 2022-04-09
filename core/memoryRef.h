@@ -19,7 +19,6 @@ namespace core {
     class MemoryRef {
     private:
         std::shared_ptr<unsigned char> base;
-        std::size_t offset;
         MemoryRefType type;
 
         MemoryRef &operator++() {
@@ -40,6 +39,8 @@ namespace core {
         }
 
     public:
+        std::size_t offset;
+
         MemoryRef(std::shared_ptr<unsigned char> base, std::size_t offset, MemoryRefType type);
 
         [[nodiscard]] std::uint16_t operator*() const;

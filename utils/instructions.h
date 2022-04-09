@@ -98,12 +98,33 @@ namespace msp {
 
     typedef std::variant<BinaryInstruction, UnaryInstruction, JumpInstruction> Instruction;
 
+    struct BinaryInstructionDetail {
+        std::string source;
+        std::string dest;
+    };
+
+    struct UnaryInstructionDetail {
+        std::string source;
+    };
+
+    struct JumpInstructionDetail {
+        std::uint16_t jump_addr;
+        std::int16_t jump_offset;
+    };
+
+    typedef std::variant<BinaryInstructionDetail, UnaryInstructionDetail, JumpInstructionDetail> InstructionDetail;
+
     struct instruction {
 
         static void execute(const JumpInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView & /*ram*/) noexcept {
             if (JumpInstruction::check_condition(ins.condition, regs)) {
                 pc.set(JumpInstruction::calculate(pc.get(), ins.signed_offset));
             }
+        }
+
+        inline static InstructionDetail decompile(const JumpInstruction &ins, core::MemoryRef &pc, core::RegisterFile &/* regs */, core::MemoryView & /*ram*/) noexcept {
+            const auto jump_addr = JumpInstruction::calculate(pc.get(), ins.signed_offset);
+            return JumpInstructionDetail{jump_addr, ins.signed_offset};
         }
 
         static void execute(const UnaryInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
@@ -116,13 +137,17 @@ namespace msp {
                 sp.get_and_increment(-0x2);
                 auto stack = ram.get_word(sp.get());
                 stack.set(pc.get());
-                spdlog::info("push to stack {:04x}", pc.get());
                 pc.set(dst);
             } else {
                 if (res_value != source_value) {
                     source_ref.set(res_value);
                 }
             }
+        }
+
+        inline static InstructionDetail decompile(const UnaryInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
+            auto source_ref = addressing::get_ref(ins.source_addressing, pc, regs, ram);
+            return UnaryInstructionDetail{addressing::to_string(ins.source_addressing, source_ref)};
         }
 
         static void execute(const BinaryInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
@@ -134,6 +159,12 @@ namespace msp {
             const auto result = BinaryInstruction::calculate(ins.opcode, source_ref.get(), dst_ref.get());
             spdlog::debug("write-back {:X} => {:s}", result, addressing::to_string(ins.destination_addressing));
             dst_ref.set(result);
+        }
+
+        inline static InstructionDetail decompile(const BinaryInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
+            auto source_ref = addressing::get_ref(ins.source_addressing, pc, regs, ram);
+            auto dst_ref = addressing::get_ref(ins.destination_addressing, pc, regs, ram);
+            return BinaryInstructionDetail{addressing::to_string(ins.source_addressing, source_ref), addressing::to_string(ins.destination_addressing, dst_ref)};
         }
 
         [[nodiscard]] static std::string to_string(const UnaryInstruction &ins) noexcept {
@@ -149,15 +180,47 @@ namespace msp {
             return JumpInstructionOpcode::to_string(ins.condition) + " +(" + std::to_string(ins.signed_offset) + ")";
         }
 
+        [[nodiscard]] static std::string to_string(const BinaryInstructionDetail& detail) {
+            return fmt::format("{} {}", detail.source, detail.dest);
+        }
+
+        [[nodiscard]] static std::string to_string(const UnaryInstructionDetail& detail) {
+            return detail.source;
+        }
+
+        [[nodiscard]] static std::string to_string(const JumpInstructionDetail& detail) {
+            return fmt::format("{:04X} <{}{:04X}>", detail.jump_addr, detail.jump_offset >= 0 ? '+' : '-', abs(detail.jump_offset));
+        }
+
         [[nodiscard]] static std::string to_string(const Instruction &ins) noexcept {
             return std::visit(overloaded{
                                       [](const auto &i) { return to_string(i); }},
                               ins);
         }
 
+        [[nodiscard]] static std::string opcode_to_string(const Instruction& ins) noexcept {
+            return std::visit(overloaded{
+                    [](const BinaryInstruction& bi) { return BinaryInstructionOpcode::to_string(bi.opcode); },
+                    [](const UnaryInstruction& ui) { return UnaryInstructionOpcode::to_string(ui.opcode); },
+                    [](const JumpInstruction& ji) { return JumpInstructionOpcode::to_string(ji.condition); },
+            }, ins);
+        }
+
+        [[nodiscard]] static std::string to_string(const InstructionDetail& detail) {
+            return std::visit(overloaded{
+                                      [](const auto &i) { return to_string(i); }},
+                              detail);
+        }
+
         static void execute(const Instruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
             std::visit(overloaded{
                                [&pc, &regs, &ram](const auto &i) { execute(i, pc, regs, ram); }},
+                       ins);
+        }
+
+        static InstructionDetail decompile(const Instruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
+            return std::visit(overloaded{
+                               [&pc, &regs, &ram](const auto &i) { return decompile(i, pc, regs, ram); }},
                        ins);
         }
     };
