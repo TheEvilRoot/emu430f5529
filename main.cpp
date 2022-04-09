@@ -40,7 +40,6 @@ int main(const int /*argc*/, const char* /*argv*/[]) {
   spdlog::set_level(spdlog::level::info);
   spdlog::set_pattern("[%H:%M:%S.%f] [%^%05l%$] %v");
   emu::Emulator emulator;
-  emulator.load_from_program(Hex430Parser::read_file("/Volumes/Data/ClionProjects/untitled/msp430/out/simple_1.hex"));
   emulator.run();
   return 0;
 }

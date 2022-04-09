@@ -109,6 +109,10 @@ namespace msp {
         }
 
         [[nodiscard]] static core::MemoryRef get_ref(const RegisterIndirectAddressing &addr, core::MemoryRef & /*pc*/, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
+            if (addr.reg == 0) {
+                const auto address = regs.get_ref(addr.reg).get_and_increment(0x2);
+                return ram.get_word(address);
+            }
             const auto address = regs.get_ref(addr.reg).get_and_increment(addr.delta);
             switch (addr.ref_type) {
                 case core::MemoryRefType::BYTE:
