@@ -30,9 +30,9 @@ struct Decompiler {
 
         const std::size_t ram_addr = 0x0;
         for (std::size_t i = 0; i < size; i++) {
-            ram.get_byte(ram_addr + i).set(data[i]);
+            ram.set_byte(ram_addr + i, data[i]);
         }
-        pc.set(0x0);
+        pc.set(ram_addr);
 
         const auto start = std::chrono::steady_clock::now();
         while (pc.get() < 0xFFFE) {

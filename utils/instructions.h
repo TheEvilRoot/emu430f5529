@@ -14,19 +14,67 @@
 
 namespace msp {
 
+    struct FlaggedResult {
+        std::uint16_t value;
+        std::uint16_t set_flags;
+        std::uint16_t reset_flags;
+
+
+         // implicit for a reason
+        FlaggedResult(std::uint16_t v): value{v}, set_flags{0}, reset_flags{0} {
+        }
+
+        FlaggedResult(std::uint16_t v, std::uint16_t set, std::uint16_t reset): value{v}, set_flags{set}, reset_flags{reset} {
+        }
+    };
+
     struct UnaryInstruction {
         UnaryInstructionOpcode opcode;
         Addressing source_addressing;
-        static std::uint16_t calculate(UnaryInstructionOpcode opcode, std::uint16_t value) {
+        static FlaggedResult calculate(UnaryInstructionOpcode opcode, std::uint16_t value, std::uint16_t status) {
             switch (opcode.value) {
-                case UnaryInstructionOpcode::RRC:
-                    return value >> 1;
-                case UnaryInstructionOpcode::RRA:
-                    return value >> 1;
+                case UnaryInstructionOpcode::RRC: {
+                    std::uint16_t result = value >> 1;
+                    if ((status & 0x1) != 0) result |= 0x8000; else result &= ~0x8000;
+                    const bool c = (value & 0x1) != 0;
+                    const bool n = (result & 0x8000) != 0;
+                    const bool z = result == 0;
+                    const bool v = false;
+
+                    FlaggedResult fr{result, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
+                case UnaryInstructionOpcode::RRA: {
+                    std::uint16_t result = value >> 1;
+                    result |= (value & 0x8000);
+                    const bool c = (value & 0x1) != 0;
+                    const bool n = (result & 0x8000) != 0;
+                    const bool z = result == 0;
+                    const bool v = false;
+
+                    FlaggedResult fr{result, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
                 case UnaryInstructionOpcode::SWPB:
                     return ((value & 0xFF) << 8) | ((value & 0xFF00) >> 8);
-                case UnaryInstructionOpcode::SXT:
-                    return value;
+                case UnaryInstructionOpcode::SXT: {
+                    std::uint16_t result = value & 0xFF;
+                    const auto sign = (value & 0x80) != 0;
+                    if (sign) result |= 0xFF00; else result &= ~0xFF00;
+                    const bool n = (result & 0x8000) != 0;
+                    const bool z = result == 0;
+                    const bool c = result != 0;
+                    const bool v = false;
+
+                    FlaggedResult fr{value, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
                 case UnaryInstructionOpcode::PUSH:
                     return value;
                 case UnaryInstructionOpcode::CALL:
@@ -42,18 +90,37 @@ namespace msp {
     struct JumpInstruction {
         JumpInstructionOpcode condition;
         std::int16_t signed_offset;
-        static std::uint16_t calculate(std::uint16_t pc, std::uint16_t signed_offset) noexcept {
+
+        static FlaggedResult calculate(std::uint16_t pc, std::uint16_t signed_offset) noexcept {
             return pc + signed_offset;
         }
 
-        static bool check_condition(JumpInstructionOpcode cond, core::RegisterFile & /*regs*/) noexcept {
-            return cond.value == JumpInstructionOpcode::JMP;
+        static bool check_condition(JumpInstructionOpcode cond, std::uint16_t status) noexcept {
+            switch (cond.value) {
+                case JumpInstructionOpcode::JNE_JNZ:
+                    return (status & 0x2) == 0;
+                case JumpInstructionOpcode::JEQ_JZ:
+                    return (status & 0x2) != 0;
+                case JumpInstructionOpcode::JNC_JLO:
+                    return (status & 0x1) == 0;
+                case JumpInstructionOpcode::JC_JHS:
+                    return (status & 0x1) != 0;
+                case JumpInstructionOpcode::JN:
+                    return (status & 0x4) != 0;
+                case JumpInstructionOpcode::JGE:
+                    return (status & 0x4) == (status & 0x80);
+                case JumpInstructionOpcode::JL:
+                    return (status & 0x4) != (status & 0x80);
+                case JumpInstructionOpcode::JMP:
+                    return true;
+            }
         }
 
         static std::int16_t unsigned_to_signed_offset(std::uint16_t unsigned_offset) noexcept {
             const std::uint16_t carry = (unsigned_offset) & 0x200;
-            if (carry == 0)
-                return static_cast<std::int16_t>(unsigned_offset & 0x1FFu);
+            if (carry == 0) {
+                return static_cast<std::int16_t>(unsigned_offset & 0x1FFu) * static_cast<std::int16_t>(2);
+            }
             const std::uint16_t value = unsigned_offset & 0x1FFu;
             const std::uint16_t negated = value | 0xFE00u;
             return static_cast<std::int16_t>(negated) * static_cast<std::int16_t>(2);
@@ -65,33 +132,131 @@ namespace msp {
         Addressing source_addressing;
         Addressing destination_addressing;
 
-        static std::uint16_t calculate(BinaryInstructionOpcode opcode, std::uint16_t source, std::uint16_t dest) {
+        static FlaggedResult calculate(BinaryInstructionOpcode opcode, std::uint16_t source, std::uint16_t dest, std::uint16_t status) {
             spdlog::debug("calculate {:X} {:s} {:X}", source, BinaryInstructionOpcode::to_string(opcode), dest);
             switch (opcode.value) {
-                case BinaryInstructionOpcode::ADD:
-                    return source + dest;
-                case BinaryInstructionOpcode::ADDC:
-                    return source + dest;
-                case BinaryInstructionOpcode::AND:
-                    return source & dest;
-                case BinaryInstructionOpcode::SUB:
-                    return dest - source;
-                case BinaryInstructionOpcode::SUBC:
-                    return dest - source;
-                case BinaryInstructionOpcode::XOR:
-                    return source ^ dest;
+                case BinaryInstructionOpcode::ADD: {
+                    const std::uint16_t result = source + dest;
+                    const bool sourceNegative = (source & 0x8000) != 0;
+                    const bool destNegative = (dest & 0x8000) != 0;
+                    const bool resultNegative = (result & 0x8000) != 0;
+                    const bool v = (sourceNegative && destNegative && !resultNegative) || (!sourceNegative && !destNegative && resultNegative);
+                    const bool n = resultNegative;
+                    const bool z = result == 0;
+                    const bool c = false; // what is produce carry?
+
+                    FlaggedResult fr{result, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
+                case BinaryInstructionOpcode::ADDC: {
+                    const bool carry = (status & 0x1) != 0;
+                    const std::uint16_t result = source + dest + (carry ? 0x1 : 0x0);
+                    const bool sourceNegative = (source & 0x8000) != 0;
+                    const bool destNegative = (dest & 0x8000) != 0;
+                    const bool resultNegative = (result & 0x8000) != 0;
+                    const bool v = (sourceNegative && destNegative && !resultNegative) || (!sourceNegative && !destNegative && resultNegative);
+                    const bool n = resultNegative;
+                    const bool z = result == 0;
+                    const bool c = false; // what is produce carry?
+
+                    FlaggedResult fr{result, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
+                case BinaryInstructionOpcode::AND: {
+                    const std::uint16_t result = source & dest;
+
+                    const bool n = (result & 0x8000) != 0;
+                    const bool z = result == 0;
+                    const bool c = result != 0;
+                    const bool v = false;
+
+                    FlaggedResult fr{result, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
+                case BinaryInstructionOpcode::SUB: {
+                    const std::uint16_t result = dest - source;
+                    const bool sourceNegative = (source & 0x8000) != 0;
+                    const bool destNegative = (dest & 0x8000) != 0;
+                    const bool resultNegative = (result & 0x8000) != 0;
+                    const bool v = (!destNegative && sourceNegative && resultNegative) || (destNegative && !sourceNegative && !resultNegative);
+                    const bool n = resultNegative;
+                    const bool z = result == 0;
+                    const bool c = false; // what is produce carry?
+
+                    FlaggedResult fr{result, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
+                case BinaryInstructionOpcode::SUBC: {
+                    const bool carry = (status & 0x1) != 0;
+                    const std::uint16_t result = dest - source + (carry ? 0x1 : 0x0);
+                    const bool sourceNegative = (source & 0x8000) != 0;
+                    const bool destNegative = (dest & 0x8000) != 0;
+                    const bool resultNegative = (result & 0x8000) != 0;
+                    const bool v = (!destNegative && sourceNegative && resultNegative) || (destNegative && !sourceNegative && !resultNegative);
+                    const bool n = resultNegative;
+                    const bool z = result == 0;
+                    const bool c = false; // what is produce carry?
+
+                    FlaggedResult fr{result, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
+                case BinaryInstructionOpcode::XOR: {
+                    const std::uint16_t result = source ^ dest;
+                    const bool n = (result & 0x8000) != 0;
+                    const bool z = result == 0;
+                    const bool c = result != 0;
+                    const bool v = ((source & 0x8000) != 0) && ((dest & 0x8000) != 0);
+
+                    FlaggedResult fr{result, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
                 case BinaryInstructionOpcode::MOV:
                     return source;
-                case BinaryInstructionOpcode::CMP:
-                    return source;
+                case BinaryInstructionOpcode::CMP: {
+                    const std::uint16_t result = dest - source;
+                    const bool sourceNegative = (source & 0x8000) != 0;
+                    const bool destNegative = (dest & 0x8000) != 0;
+                    const bool resultNegative = (result & 0x8000) != 0;
+                    const bool v = (!destNegative && sourceNegative && resultNegative) || (destNegative && !sourceNegative && !resultNegative);
+                    const bool n = resultNegative;
+                    const bool z = result == 0;
+                    const bool c = false; // what is produce carry?
+
+                    FlaggedResult fr{dest, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
                 case BinaryInstructionOpcode::DADD:
                     return dest + source;
-                case BinaryInstructionOpcode::BIT:
-                    return source;
+                case BinaryInstructionOpcode::BIT: {
+                    const std::uint16_t result = dest & source;
+                    const bool n = (result & 0x8000) != 0;
+                    const bool z = result == 0;
+                    const bool c = result != 0;
+                    const bool v = false;
+
+                    FlaggedResult fr{dest, 0x0, 0x0};
+                    fr.set_flags |= (c ? 0x1 : 0x0) | (z ? 0x2 : 0x0) | (n ? 0x4 : 0x0) | (v ? 0x80 : 0);
+                    fr.reset_flags |= (c ? 0x0 : 0x1) | (z ? 0x0 : 0x2) | (n ? 0x0 : 0x4) | (v ? 0x0 : 0x80);
+                    return fr;
+                }
                 case BinaryInstructionOpcode::BIC:
-                    return source;
+                    return dest & (~source);
                 case BinaryInstructionOpcode::BIS:
-                    return source;
+                    return dest | source;
             }
         }
     };
@@ -116,21 +281,30 @@ namespace msp {
 
     struct instruction {
 
+        static std::uint16_t apply_status(std::uint16_t flags, std::uint16_t set_flags, std::uint16_t reset_flags) {
+            return (flags | set_flags) & (~reset_flags);
+        }
+
         static void execute(const JumpInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView & /*ram*/) noexcept {
-            if (JumpInstruction::check_condition(ins.condition, regs)) {
-                pc.set(JumpInstruction::calculate(pc.get(), ins.signed_offset));
+            const auto status_value = regs.get_ref(0x2).get();
+            if (JumpInstruction::check_condition(ins.condition, status_value)) {
+                const auto result = JumpInstruction::calculate(pc.get(), ins.signed_offset);
+                pc.set(result.value);
             }
         }
 
         inline static InstructionDetail decompile(const JumpInstruction &ins, core::MemoryRef &pc, core::RegisterFile &/* regs */, core::MemoryView & /*ram*/) noexcept {
-            const auto jump_addr = JumpInstruction::calculate(pc.get(), ins.signed_offset);
-            return JumpInstructionDetail{jump_addr, ins.signed_offset};
+            const auto result = JumpInstruction::calculate(pc.get(), ins.signed_offset);
+            return JumpInstructionDetail{result.value, ins.signed_offset};
         }
 
         static void execute(const UnaryInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
+            auto status_ref = regs.get_ref(0x2);
             auto source_ref = addressing::get_ref(ins.source_addressing, pc, regs, ram);
             const auto source_value = source_ref.get();
-            const auto res_value = UnaryInstruction::calculate(ins.opcode, source_value);
+            const auto status_value = status_ref.get();
+            const auto result = UnaryInstruction::calculate(ins.opcode, source_value, status_value);
+            const auto res_value = result.value;
             if (ins.opcode.value == UnaryInstructionOpcode::CALL) {
                 const auto dst = source_ref.get();
                 auto sp = regs.get_ref(0x1);
@@ -143,6 +317,8 @@ namespace msp {
                     source_ref.set(res_value);
                 }
             }
+            const auto new_status = apply_status(status_value, result.set_flags, result.reset_flags);
+            status_ref.set(new_status);
         }
 
         inline static InstructionDetail decompile(const UnaryInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
@@ -151,14 +327,18 @@ namespace msp {
         }
 
         static void execute(const BinaryInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
+            auto status_ref = regs.get_ref(0x2);
             auto source_ref = addressing::get_ref(ins.source_addressing, pc, regs, ram);
             auto dst_ref = addressing::get_ref(ins.destination_addressing, pc, regs, ram);
 
             spdlog::debug("execute {:s} = {:X}, {:s} = {:X}", addressing::to_string(ins.source_addressing),
                           source_ref.get(), addressing::to_string(ins.destination_addressing), dst_ref.get());
-            const auto result = BinaryInstruction::calculate(ins.opcode, source_ref.get(), dst_ref.get());
-            spdlog::debug("write-back {:X} => {:s}", result, addressing::to_string(ins.destination_addressing));
-            dst_ref.set(result);
+            const auto status_value = status_ref.get();
+            const auto result = BinaryInstruction::calculate(ins.opcode, source_ref.get(), dst_ref.get(), status_value);
+            spdlog::debug("write-back {:X} => {:s}", result.value, addressing::to_string(ins.destination_addressing));
+            dst_ref.set(result.value);
+            const auto new_status = apply_status(status_value, result.set_flags, result.reset_flags);
+            status_ref.set(new_status);
         }
 
         inline static InstructionDetail decompile(const BinaryInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {

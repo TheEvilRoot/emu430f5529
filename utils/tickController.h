@@ -16,15 +16,24 @@ private:
     long tick_us;
     std::chrono::time_point<std::chrono::steady_clock> tick_state;
 
-public:
-    TickController(long tick_us) : tick_us{tick_us}, tick_state{std::chrono::steady_clock::now()} {}
+    std::uint64_t tick_counter;
+    std::chrono::time_point<std::chrono::steady_clock> tick_counter_state;
 
-    void tick_control_sleep() {
+public:
+    std::uint64_t frequency;
+
+    explicit TickController(long tick_us) : tick_us{tick_us}, tick_state{std::chrono::steady_clock::now()}, tick_counter{0}, tick_counter_state{std::chrono::steady_clock::now()}, frequency{0} {}
+
+    inline void count_tick() {
+    }
+
+    inline void generate_tick() {
         const auto n = std::chrono::steady_clock::now();
         const auto delta = (n - tick_state) / 1us;
         if (delta < tick_us)
             usleep(tick_us - delta);
         tick_state = std::chrono::steady_clock::now();
+        count_tick();
     }
 };
 

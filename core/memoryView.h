@@ -13,6 +13,8 @@
 #include <core/memoryRef.h>
 #include <core/memoryRegion.h>
 
+#include <utils/utils.h>
+
 #include <spdlog/fmt/bin_to_hex.h>
 #include <spdlog/spdlog.h>
 
@@ -32,6 +34,14 @@ namespace core {
 
         void add_region(MemoryRegion region) {
             regions.push_back(std::move(region));
+        }
+
+        void set_byte(std::size_t virt_ptr, std::uint8_t byte) {
+            data.get()[virt_ptr] = static_cast<char>(byte & 0xFF);
+        }
+
+        void set_word(std::size_t virt_ptr, std::uint16_t word) {
+            endian::msp<decltype(data.get())>::word_to(data.get(), virt_ptr, word);
         }
 
         [[nodiscard]] MemoryRef get_byte(std::size_t virt_ptr) const {

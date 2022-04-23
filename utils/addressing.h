@@ -36,7 +36,11 @@ namespace msp {
         std::uint16_t constant_reg;
     };
 
-    typedef std::variant<RegisterDirectAddressing, RegisterIndexedAddressing, RegisterIndirectAddressing, ConstantAddressing, Absolute>
+    struct Label {
+        core::MemoryRefType ref_type;
+    };
+
+    typedef std::variant<RegisterDirectAddressing, RegisterIndexedAddressing, RegisterIndirectAddressing, ConstantAddressing, Absolute, Label>
             Addressing;
 
     struct addressing {
@@ -49,10 +53,10 @@ namespace msp {
                 return ConstantAddressing{constant_value[mode], constant_reg[mode]};
             } else if (reg == 2) {
                 if (mode == 1) {
-                    return Absolute{};
+                    return Label{ref_type};
                 } else if (mode > 1) {
-                    constexpr static std::uint16_t constant_value[2] = {0x6, 0x8};
-                    constexpr static std::uint16_t constant_reg[2] = {0x4, 0x8};
+                    constexpr static std::uint16_t constant_value[2] = {0x4, 0x8};
+                    constexpr static std::uint16_t constant_reg[2] = {0x6, 0x8};
                     return ConstantAddressing{constant_value[mode - 2], constant_reg[mode - 2]};
                 }
             }
@@ -79,6 +83,9 @@ namespace msp {
                 case 0x0:
                     return RegisterDirectAddressing{reg};
                 case 0x1:
+                    if (reg == 0x2) {
+                        return Label{ref_type};
+                    }
                     return RegisterIndexedAddressing{reg, ref_type};
                 default:
                     assert(false);
@@ -90,7 +97,10 @@ namespace msp {
         }
 
         [[nodiscard]] static core::MemoryRef get_ref(const ConstantAddressing &addr, core::MemoryRef & /*pc*/, core::RegisterFile &regs, core::MemoryView & /*ram*/) noexcept {
-            return regs.constants.get_word(addr.constant_reg);
+            const auto ref = regs.constants.get_word(addr.constant_reg);
+            if (ref.get() != addr.value)
+                throw false;
+            return ref;
         }
 
         [[nodiscard]] static core::MemoryRef get_ref(const RegisterDirectAddressing &addr, core::MemoryRef & /*pc*/, core::RegisterFile &regs, core::MemoryView & /*ram*/) noexcept {
@@ -122,6 +132,16 @@ namespace msp {
             }
         }
 
+        [[nodiscard]] static core::MemoryRef get_ref(const Label &addr, core::MemoryRef &pc, core::RegisterFile &/*regs*/, core::MemoryView &ram) noexcept {
+            const auto next_word = ram.get_word(pc.get_and_increment(0x2)).get();
+            switch (addr.ref_type) {
+                case core::MemoryRefType::BYTE:
+                    return ram.get_byte(next_word);
+                case core::MemoryRefType::WORD:
+                    return ram.get_word(next_word);
+            }
+        }
+
         [[nodiscard]] static std::string reg_to_string(std::uint16_t reg) noexcept {
             if (reg == 0)
                 return "PC";
@@ -130,6 +150,14 @@ namespace msp {
             if (reg == 2)
                 return "SR";
             return "R" + std::to_string(reg);
+        }
+
+        [[nodiscard]] static std::string to_string(const Label &/*addr*/) noexcept {
+            return "&LABEL";
+        }
+
+        [[nodiscard]] static std::string to_string(const Label &/*addr*/, const core::MemoryRef& ref) noexcept {
+            return fmt::format("&{:04X}", ref.offset);
         }
 
         [[nodiscard]] static std::string to_string(const Absolute &/*addr*/) noexcept {

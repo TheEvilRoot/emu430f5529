@@ -37,7 +37,7 @@
 //}
 
 int main(const int /*argc*/, const char* /*argv*/[]) {
-  spdlog::set_level(spdlog::level::info);
+  spdlog::set_level(spdlog::level::warn);
   spdlog::set_pattern("[%H:%M:%S.%f] [%^%05l%$] %v");
   emu::Emulator emulator;
   emulator.run();

@@ -59,7 +59,7 @@ namespace core {
                             .source_addressing = msp::addressing::from_source(register_num, source_addressing_mode, byte_word_mode)};
                 }
                 case InstructionFormat::UNIMPL_OP: {
-                    spdlog::debug("implemented instruction {:04X} format {}", instruction, InstructionFormat::to_string(format));
+                    spdlog::debug("unimplemented instruction {:04X} format {}", instruction, InstructionFormat::to_string(format));
                     throw false;
                 }
             }

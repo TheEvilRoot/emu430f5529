@@ -31,6 +31,7 @@ set(GUI_SRC
         libs/imgui/backends/imgui_impl_glfw.cpp)
 
 set(COMMON_SRC
+        core/interruptController.cpp
         emulator/decompiler.cpp
         utils/addressing.cpp
         emulator/emulator.cpp
