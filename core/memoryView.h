@@ -58,7 +58,7 @@ namespace core {
             for (const auto &reg: regions) {
                 if (!reg.can_access(virt_addr, ref_type)) {
                     spdlog::error("illegal access to {:04x} : {} region", virt_addr, reg.name);
-                    throw false;
+                    throw MemoryViolationException("illegal access to region " + reg.name, virt_addr);
                 }
             }
         }

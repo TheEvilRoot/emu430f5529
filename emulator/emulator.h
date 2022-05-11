@@ -5,6 +5,8 @@
 #ifndef UNTITLED_EMULATOR_EMULATOR_H_
 #define UNTITLED_EMULATOR_EMULATOR_H_
 
+#include <dispatch/dispatch.h>
+
 #include <core/memoryView.h>
 #include <core/pipeline.h>
 #include <core/registerFile.h>
@@ -29,17 +31,21 @@ namespace emu {
 
         core::Pipeline pipeline;
 
+        InterruptController interrupt_controller;
         TickController tick_controller;
         emugui::EmuGui<emugui::GlfwBackend> gui;
 
         std::atomic<emugui::UserState> shared_state;
 
     public:
-        Emulator() : ram(0x10000), regs(16), loader{ram, regs}, pipeline(regs, ram), tick_controller(0), gui{regs, ram, loader, tick_controller}, shared_state{emugui::UserState::IDLE} {
+        Emulator() : ram(0x10000), regs(16), loader{ram, regs}, pipeline(regs, ram), interrupt_controller{regs, ram}, tick_controller(0), gui{regs, ram, loader, tick_controller, interrupt_controller}, shared_state{emugui::UserState::IDLE} {
             ram.add_region(core::MemoryRegion{"special function registers", 0x0, 0xF, core::MemoryRegionAccess::ONLY_BYTE});
             ram.add_region(core::MemoryRegion{"8-bit peripheral", 0x10, 0xFF, core::MemoryRegionAccess::ONLY_BYTE});
             ram.add_region(core::MemoryRegion{"16-bit peripheral", 0x100, 0x1FF, core::MemoryRegionAccess::ONLY_WORD});
             ram.add_region(core::MemoryRegion{"ram", 0x200, 0x9FF, core::MemoryRegionAccess::WORD_BYTE});
+
+            auto status_ref = regs.get_ref(0x2);
+            status_ref.set(status_ref.get() | 0x8);
         }
 
         void run() {
@@ -50,16 +56,19 @@ namespace emu {
                     const auto state = shared_state.load();
                     tick_controller.generate_tick();
                     if (state == emugui::UserState::STEP || (state == emugui::UserState::SINGLE_STEP && current_state != emugui::UserState::SINGLE_STEP)) {
-                        pipeline.step();
+                        const auto interrupt = interrupt_controller.consume_interrupt();
+                        if (interrupt) {
+                            pipeline.interrupt_step(interrupt.value());
+                        } else {
+                            pipeline.step();
+                        }
                     } else if (state == emugui::UserState::KILL) {
                         break;
                     }
                     current_state = state;
                 }
             }};
-
             gui.run();
-
             emugui::UserState current_state{emugui::UserState::IDLE};
             while (shared_state != emugui::UserState::KILL) {
                 const auto new_state = gui.render();

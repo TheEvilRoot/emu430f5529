@@ -5,6 +5,8 @@
 #ifndef UNTITLED_UTILS_UTILS_H_
 #define UNTITLED_UTILS_UTILS_H_
 
+#include <spdlog/fmt/fmt.h>
+
 template<typename T>
 concept SubscriptableContainer = requires(T t) {
     { t[std::size_t{}] } -> std::unsigned_integral;
@@ -52,5 +54,20 @@ struct overloaded : Ts... { using Ts::operator()...; };
 // explicit deduction guide (not needed as of C++20)
 template<class... Ts>
 overloaded(Ts...) -> overloaded<Ts...>;
+
+struct MemoryViolationException : public std::exception {
+
+    const std::string message;
+    const std::uint16_t virt_addr;
+
+    const std::string description;
+
+    explicit MemoryViolationException(std::string message, std::uint16_t virt_addr): std::exception(), message{std::move(message)}, virt_addr{virt_addr}, description{fmt::format("Memory violation on {:04X}: {}", virt_addr, message)} {
+    }
+
+    const char * what() const noexcept override {
+        return description.c_str();
+    }
+};
 
 #endif//UNTITLED_UTILS_UTILS_H_

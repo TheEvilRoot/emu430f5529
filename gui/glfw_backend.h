@@ -19,7 +19,7 @@
 namespace emugui {
     struct GlfwBackend {
 
-        const ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        const ImVec4 clear_color = ImVec4(0, 0, 0, 1.00f);
 
         static void glfw_error_callback(int error, const char *description) {
             spdlog::error("GLFW failure {}: {}", error, description);
@@ -63,10 +63,13 @@ namespace emugui {
             }
             glfwMakeContextCurrent(window);
             glfwSwapInterval(1);// Enable vsync
+            glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+            glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
             ImGuiIO &io = ImGui::GetIO();
             (void) io;
+            io.Fonts->AddFontFromFileTTF("../quicksand.ttf", 18.0f, NULL, NULL);
             io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
             ImGui::StyleColorsDark();
             ImGui_ImplGlfw_InitForOpenGL(window, true);

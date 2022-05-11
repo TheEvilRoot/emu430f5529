@@ -97,10 +97,7 @@ namespace msp {
         }
 
         [[nodiscard]] static core::MemoryRef get_ref(const ConstantAddressing &addr, core::MemoryRef & /*pc*/, core::RegisterFile &regs, core::MemoryView & /*ram*/) noexcept {
-            const auto ref = regs.constants.get_word(addr.constant_reg);
-            if (ref.get() != addr.value)
-                throw false;
-            return ref;
+            return regs.constants.get_word(addr.constant_reg);
         }
 
         [[nodiscard]] static core::MemoryRef get_ref(const RegisterDirectAddressing &addr, core::MemoryRef & /*pc*/, core::RegisterFile &regs, core::MemoryView & /*ram*/) noexcept {

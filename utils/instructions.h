@@ -261,7 +261,11 @@ namespace msp {
         }
     };
 
-    typedef std::variant<BinaryInstruction, UnaryInstruction, JumpInstruction> Instruction;
+    struct UnimplementedInstruction {
+        std::uint16_t word;
+    };
+
+    typedef std::variant<BinaryInstruction, UnaryInstruction, JumpInstruction, UnimplementedInstruction> Instruction;
 
     struct BinaryInstructionDetail {
         std::string source;
@@ -277,7 +281,12 @@ namespace msp {
         std::int16_t jump_offset;
     };
 
-    typedef std::variant<BinaryInstructionDetail, UnaryInstructionDetail, JumpInstructionDetail> InstructionDetail;
+    struct UnimplementedInstructionDetail {
+        std::uint16_t pc;
+        std::uint16_t word;
+    };
+
+    typedef std::variant<BinaryInstructionDetail, UnaryInstructionDetail, JumpInstructionDetail, UnimplementedInstructionDetail> InstructionDetail;
 
     struct instruction {
 
@@ -374,6 +383,7 @@ namespace msp {
 
         [[nodiscard]] static std::string to_string(const Instruction &ins) noexcept {
             return std::visit(overloaded{
+                                      [](const UnimplementedInstruction& i) { return fmt::format("Unimplemented instruction {:04X}", i.word); },
                                       [](const auto &i) { return to_string(i); }},
                               ins);
         }
@@ -383,25 +393,27 @@ namespace msp {
                     [](const BinaryInstruction& bi) { return BinaryInstructionOpcode::to_string(bi.opcode); },
                     [](const UnaryInstruction& ui) { return UnaryInstructionOpcode::to_string(ui.opcode); },
                     [](const JumpInstruction& ji) { return JumpInstructionOpcode::to_string(ji.condition); },
+                    [](const UnimplementedInstruction& i) { return fmt::format("Unimplemented instruction {:04x}", i.word); }
             }, ins);
         }
 
         [[nodiscard]] static std::string to_string(const InstructionDetail& detail) {
             return std::visit(overloaded{
+                                      [](const UnimplementedInstructionDetail& d) { return fmt::format("Unimplemented instruction {:04X} on {:04X}", d.word, d.pc); },
                                       [](const auto &i) { return to_string(i); }},
                               detail);
         }
 
         static void execute(const Instruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
             std::visit(overloaded{
-                               [&pc, &regs, &ram](const auto &i) { execute(i, pc, regs, ram); }},
-                       ins);
+                               [](const UnimplementedInstruction&) { },
+                               [&pc, &regs, &ram](const auto &i) { execute(i, pc, regs, ram); }}, ins);
         }
 
         static InstructionDetail decompile(const Instruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
             return std::visit(overloaded{
-                               [&pc, &regs, &ram](const auto &i) { return decompile(i, pc, regs, ram); }},
-                       ins);
+                               [&pc](const UnimplementedInstruction& i) { return InstructionDetail{UnimplementedInstructionDetail{i.word, pc.get()}}; },
+                               [&pc, &regs, &ram](const auto &i) { return decompile(i, pc, regs, ram); }}, ins);
         }
     };
 }// namespace msp

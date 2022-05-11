@@ -8,8 +8,6 @@
 #include <cassert>
 #include <memory>
 
-#include <core/statusRegister.h>
-
 namespace core {
     enum class MemoryRefType {
         BYTE,

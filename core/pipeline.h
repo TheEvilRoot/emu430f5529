@@ -11,6 +11,7 @@
 #include <utils/addressing.h>
 #include <utils/instructions.h>
 #include <utils/opcodes.h>
+#include <utils/interrupts.h>
 
 #include <utility>
 
@@ -60,24 +61,26 @@ namespace core {
                 }
                 case InstructionFormat::UNIMPL_OP: {
                     spdlog::debug("unimplemented instruction {:04X} format {}", instruction, InstructionFormat::to_string(format));
-                    throw false;
+                    return msp::UnimplementedInstruction{instruction};
                 }
             }
         }
 
+        void interrupt_step(const utils::Interrupt& interrupt) {
+            const auto addr = utils::interrupts::read_vector(interrupt, ram);
+            spdlog::warn("interrupt vector set to {}", addr);
+            pc.set(addr);
+        }
+
         void step() {
             const auto pc_val = pc.get_and_increment(0x2);
-            try {
-                const auto instruction_word = ram.get_word(pc_val).get();
-                const auto instruction = decode(instruction_word);
-                spdlog::info("{:04X} instruction {:04X} => {:s}",
-                             pc_val, instruction_word,
-                             msp::instruction::to_string(instruction));
-                regs.dump();
-                msp::instruction::execute(instruction, pc, regs, ram);
-            } catch (...) {
-                spdlog::info("{:04X} instruction => error", pc_val);
-            }
+            const auto instruction_word = ram.get_word(pc_val).get();
+            const auto instruction = decode(instruction_word);
+            spdlog::info("{:04X} instruction {:04X} => {:s}",
+                         pc_val, instruction_word,
+                         msp::instruction::to_string(instruction));
+            regs.dump();
+            msp::instruction::execute(instruction, pc, regs, ram);
         }
     };
 
