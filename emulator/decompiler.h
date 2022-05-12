@@ -7,9 +7,11 @@
 
 #include <cstdint>
 #include <utility>
+#include <map>
 
 #include <core/pipeline.h>
 #include <utils/utils.h>
+#include <core/interruptController.h>
 
 namespace emu {
     struct Decompiler {
@@ -19,6 +21,7 @@ namespace emu {
             msp::Instruction instruction;
             msp::InstructionDetail detail;
             std::string repr;
+            std::string label{};
 
             explicit DecompiledInstruction(std::uint16_t pc, const msp::Instruction &i, msp::InstructionDetail detail, const std::string &repr) : pc{pc}, instruction{i}, detail{std::move(detail)}, repr{repr} {
             }
@@ -26,8 +29,10 @@ namespace emu {
 
         static auto get_decompiled(const std::uint8_t *data, const std::size_t size) {
             std::vector<DecompiledInstruction> instructions;
+            std::map<std::uint16_t, std::string> labels;
             core::MemoryView ram{size};
             core::RegisterFile regs{0x10};
+            InterruptController interrupt_controller{regs, ram};
             auto pc = regs.get_ref(0x0);
 
             const std::size_t ram_addr = 0x0;
@@ -41,17 +46,37 @@ namespace emu {
                 const auto pc_val = pc.get_and_increment(0x2);
                 const auto instruction_word = ram.get_word(pc_val).get();
                 const auto instruction = core::Pipeline::decode(instruction_word);
-                std::visit(overloaded{
-                        [](const msp::UnimplementedInstruction&) { },
+                const auto detail = std::visit(overloaded{
+                        [](const msp::UnimplementedInstruction&) { return msp::InstructionDetail{msp::UnimplementedInstructionDetail{}}; },
                         [&instructions, pc_val, &pc, &regs, &ram](const auto& instruction) {
-                            const auto detail = msp::instruction::decompile(instruction, pc, regs, ram);
+                            auto detail = msp::instruction::decompile(instruction, pc, regs, ram);
                             const auto representation = fmt::format("{} {}", msp::instruction::opcode_to_string(instruction),
                                                                     msp::instruction::to_string(detail));
                             instructions.emplace_back(pc_val, instruction, detail, representation);
+                            return detail;
                         }
                 }, instruction);
+                std::visit(overloaded{
+                        [&labels](const msp::JumpInstructionDetail& j) {
+                            labels[j.jump_addr] = fmt::format("LABEL_{:04X}", j.jump_addr);
+                        },
+                        [](const auto&) { }
+                }, detail);
                 if (pc.get() == 0x0) break;
             }
+            const auto vectors_labels = interrupt_controller.get_vectors_labels();
+            std::for_each(vectors_labels.begin(), vectors_labels.end(), [&labels](const auto& pair) {
+                const auto &[addr, label] = pair;
+                labels[addr] = std::string{label};
+            });
+            std::for_each(instructions.begin(), instructions.end(), [&labels, &interrupt_controller](auto& i) {
+                const auto vector_label = interrupt_controller.get_vector_label(i.pc);
+                if (vector_label) {
+                    i.label = vector_label.value();
+                } else if (labels.contains(i.pc)) {
+                    i.label = labels[i.pc];
+                }
+            });
             const auto end = std::chrono::steady_clock::now();
             const auto delta = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
             spdlog::warn("decompiler ran {}ms", delta);

@@ -19,6 +19,7 @@
 #include <utils/instructions.h>
 #include <utils/fileExplorer.h>
 #include <utils/tickController.h>
+#include <utils/breakpointController.h>
 
 namespace emugui {
     enum class UserState {
@@ -59,6 +60,7 @@ namespace emugui {
         static constexpr ImVec4 ledActive{0, 1, 0, 1};
         static constexpr ImVec4 ledInactive{1, 1, 1, 1};
         static constexpr ImVec4 buttonActive{59, 37, 36, 1};
+        static constexpr ImVec4 buttonBreakpoint{255, 0, 0, 1};
 
         static constexpr std::array leds = {
                 Led{"LED1", 0x0202, 0x1, ledActive, ledInactive},
@@ -98,6 +100,7 @@ namespace emugui {
         utils::ProgramLoader& loader;
         TickController& tick_controller;
         InterruptController& interrupt_controller;
+        utils::BreakpointController& breakpoint_controller;
 
 
         // ui and rendering state
@@ -108,10 +111,9 @@ namespace emugui {
 
         // user-related/controlled emulator state
         // must be separated to emulator controller over EmuGui
-        bool isRunning{false};
         std::vector<emu::Decompiler::DecompiledInstruction> decompiled{};
 
-        explicit EmuGui(core::RegisterFile &regs, core::MemoryView &ram, utils::ProgramLoader& loader, TickController& tick_controller, InterruptController& interrupt_controller) : regs{regs}, ram{ram}, loader{loader}, tick_controller{tick_controller}, interrupt_controller{interrupt_controller} {
+        explicit EmuGui(core::RegisterFile &regs, core::MemoryView &ram, utils::ProgramLoader& loader, TickController& tick_controller, InterruptController& interrupt_controller, utils::BreakpointController& breakpoint_controller) : regs{regs}, ram{ram}, loader{loader}, tick_controller{tick_controller}, interrupt_controller{interrupt_controller}, breakpoint_controller{breakpoint_controller} {
             regsEditor.PreviewDataType = ImGuiDataType_U16;
             regsEditor.ReadOnly = true;
 
@@ -189,9 +191,25 @@ namespace emugui {
                 ImGui::PushItemWidth(-1);
                 if (ImGui::BeginListBox("##Decompiled output", ImVec2(-1, -1))) {
                     for (const auto &i: decompiled) {
+                        const auto has_breakpoint = breakpoint_controller.has_breakpoint(i.pc);
+                        if (!i.label.empty()) {
+                            ImGui::BeginGroup();
+                            ImGui::Text(":%s", i.label.c_str());
+                            ImGui::EndGroup();
+                        }
                         ImGui::BeginGroup();
+                        if (has_breakpoint) {
+                            ImGui::PushStyleColor(ImGuiCol_Button, buttonBreakpoint);
+                        }
                         if (ImGui::Button(fmt::format("{:04X}", i.pc).c_str())) {
-                            ramEditor.GotoAddrAndHighlight(i.pc, i.pc);
+                            if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+                                breakpoint_controller.toggle_breakpoint(i.pc);
+                            } else {
+                                ramEditor.GotoAddrAndHighlight(i.pc, i.pc);
+                            }
+                        }
+                        if (has_breakpoint) {
+                            ImGui::PopStyleColor();
                         }
                         ImGui::SameLine();
                         ImGui::Text(" %s ", i.pc == pc_val ? "=>" : "  ");
@@ -237,8 +255,8 @@ namespace emugui {
                         ref.set(value & ~led.mask);
                     }
                     if (prev_state != next_state) {
-                        interrupt_controller.generate_interrupt({0xFFFE});
-                        spdlog::warn("generated interrupt for {}", led.tag);
+                        const auto generated = led.mask == 0x80 ? interrupt_controller.generate_interrupt<utils::Port1Interrupt, 7>(next_state) : interrupt_controller.generate_interrupt<utils::Port2Interrupt, 2>(next_state);
+                        spdlog::warn("generated interrupt for {} => {}", led.tag, generated);
                     }
                 }
                 ImGui::EndGroup();
@@ -248,7 +266,7 @@ namespace emugui {
             }
         }
 
-        auto renderEmulatorControl(std::uint64_t frequency, bool &isStep) {
+        auto renderEmulatorControl(std::uint64_t frequency, bool &isRunning, bool &isStep) {
             if (ImGui::Begin("Emulator Control", nullptr, ImGuiWindowFlags_NoCollapse)) {
                 ImGui::Text("Emulator is");
                 ImGui::SameLine();
@@ -293,7 +311,7 @@ namespace emugui {
             ramEditor.DrawWindow("RAM", ram.data.get(), ram.size);
         }
 
-        [[nodiscard]] auto render() {
+        [[nodiscard]] auto render(UserState previous_state) {
             const auto frequency = tick_controller.frequency;
             const auto pc_val = regs.get_ref(0x0).get();
             const auto status = regs.get_ref(0x2).get();
@@ -304,14 +322,49 @@ namespace emugui {
             }
 
             backend.renderPrepare();
+            bool isRunning = previous_state == UserState::STEP;
             bool isStep = false;
 
             renderFileExplorer();
             renderDecompiler(pc_val);
             renderBoard();
-            renderEmulatorControl(frequency, isStep);
+            renderEmulatorControl(frequency, isRunning, isStep);
             renderRegisters(status);
             renderRam();
+
+            if (ImGui::IsKeyPressed(ImGuiKey_1, false)) {
+                buttons[0].state = true;
+                auto ref = ram.get_byte(buttons[0].address);
+                const auto value = ref.get();
+                ref.set(value | buttons[0].mask);
+                const auto generated = buttons[0].mask == 0x80 ? interrupt_controller.generate_interrupt<utils::Port1Interrupt, 7>(true) : interrupt_controller.generate_interrupt<utils::Port2Interrupt, 2>(true);
+                spdlog::warn("keyboard generated interrupt for {} => {}", buttons[0].tag, generated);
+            }
+            if (ImGui::IsKeyReleased(ImGuiKey_1)) {
+                buttons[0].state = false;
+                auto ref = ram.get_byte(buttons[0].address);
+                const auto value = ref.get();
+                ref.set(value & ~buttons[0].mask);
+                const auto generated = buttons[0].mask == 0x80 ? interrupt_controller.generate_interrupt<utils::Port1Interrupt, 7>(false) : interrupt_controller.generate_interrupt<utils::Port2Interrupt, 2>(false);
+                spdlog::warn("keyboard  generated interrupt for {} => {}", buttons[0].tag, generated);
+            }
+
+            if (ImGui::IsKeyPressed(ImGuiKey_2, false)) {
+                buttons[1].state = true;
+                auto ref = ram.get_byte(buttons[1].address);
+                const auto value = ref.get();
+                ref.set(value | buttons[1].mask);
+                const auto generated = buttons[1].mask == 0x80 ? interrupt_controller.generate_interrupt<utils::Port1Interrupt, 7>(true) : interrupt_controller.generate_interrupt<utils::Port2Interrupt, 2>(true);
+                spdlog::warn("keyboard generated interrupt for {} => {}", buttons[1].tag, generated);
+            }
+            if (ImGui::IsKeyReleased(ImGuiKey_2)) {
+                buttons[1].state = false;
+                auto ref = ram.get_byte(buttons[1].address);
+                const auto value = ref.get();
+                ref.set(value & ~buttons[1].mask);
+                const auto generated = buttons[1].mask == 0x80 ? interrupt_controller.generate_interrupt<utils::Port1Interrupt, 7>(false) : interrupt_controller.generate_interrupt<utils::Port2Interrupt, 2>(false);
+                spdlog::warn("keyboard generated interrupt for {} => {}", buttons[1].tag, generated);
+            }
 
             backend.renderFinalize();
             return (isRunning ? UserState::STEP : (isStep ? UserState::SINGLE_STEP : UserState::IDLE));

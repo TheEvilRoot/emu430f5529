@@ -9,26 +9,44 @@
 
 #include <variant>
 
-namespace utils {
+template<typename T>
+concept FlaggedInterrupt = requires {
+    { T::ifg };
+};
 
-    struct Interrupt {
-        constexpr static auto description = std::string_view{"Interrupt"};
-        std::uint16_t vector_addr;
+template<typename T>
+concept EnabledInterrupt = requires {
+    { T::ie };
+};
+
+template<typename T>
+concept InterruptWithEdgeSelection = requires {
+    { T::ies };
+};
+
+namespace utils {
+    struct Port1Interrupt {
+        constexpr static auto description = std::string_view{"PORT1_VECTOR"};
+        constexpr static auto handler_description = std::string_view{"PORT1_HANDLER"};
+        constexpr static auto ie = std::uint16_t{0x021A};
+        constexpr static auto ies = std::uint16_t{0x0218};
+        constexpr static auto ifg = std::uint16_t{0x021C};
+        constexpr static auto vector = std::uint16_t{0xFFDE};
     };
 
-    struct interrupts {
-        static auto read_vector(const Interrupt& interrupt, core::MemoryView& ram) {
-            const auto word_ref = ram.get_word(interrupt.vector_addr);
-            return word_ref.get();
-        }
+    struct Port2Interrupt {
+        constexpr static auto description = std::string_view{"PORT2_VECTOR"};
+        constexpr static auto handler_description = std::string_view{"PORT2_HANDLER"};
+        constexpr static auto ie = std::uint16_t{0x021B};
+        constexpr static auto ies = std::uint16_t{0x0219};
+        constexpr static auto ifg = std::uint16_t{0x021D};
+        constexpr static auto vector = std::uint16_t{0xFFD4};
+    };
 
-        static auto check_masking(const Interrupt&, core::MemoryView&) {
-            return true;
-        }
-
-        static auto to_string(const Interrupt&) noexcept {
-            return Interrupt::description;
-        }
+    struct ResetInterrupt {
+        constexpr static auto description = std::string_view{"RESET_VECTOR"};
+        constexpr static auto handler_description = std::string_view{"RESET_HANDLER"};
+        constexpr static auto vector = std::uint16_t{0xFFFE};
     };
 }
 

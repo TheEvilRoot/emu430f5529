@@ -57,12 +57,10 @@ overloaded(Ts...) -> overloaded<Ts...>;
 
 struct MemoryViolationException : public std::exception {
 
-    const std::string message;
     const std::uint16_t virt_addr;
-
     const std::string description;
 
-    explicit MemoryViolationException(std::string message, std::uint16_t virt_addr): std::exception(), message{std::move(message)}, virt_addr{virt_addr}, description{fmt::format("Memory violation on {:04X}: {}", virt_addr, message)} {
+    explicit MemoryViolationException(std::string message, std::uint16_t virt_addr): std::exception(), virt_addr{virt_addr}, description{fmt::format("Memory violation on {:04X}: {}", virt_addr, message)} {
     }
 
     const char * what() const noexcept override {

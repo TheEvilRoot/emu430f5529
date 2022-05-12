@@ -310,9 +310,9 @@ namespace msp {
         static void execute(const UnaryInstruction &ins, core::MemoryRef &pc, core::RegisterFile &regs, core::MemoryView &ram) noexcept {
             auto status_ref = regs.get_ref(0x2);
             auto source_ref = addressing::get_ref(ins.source_addressing, pc, regs, ram);
+            auto status_value = status_ref.get();
             const auto source_value = source_ref.get();
-            const auto status_value = status_ref.get();
-            const auto result = UnaryInstruction::calculate(ins.opcode, source_value, status_value);
+            const auto result = UnaryInstruction::calculate(ins.opcode, source_value, status_ref.get());
             const auto res_value = result.value;
             if (ins.opcode.value == UnaryInstructionOpcode::CALL) {
                 const auto dst = source_ref.get();
@@ -321,6 +321,21 @@ namespace msp {
                 auto stack = ram.get_word(sp.get());
                 stack.set(pc.get());
                 pc.set(dst);
+            } else if (ins.opcode.value == UnaryInstructionOpcode::RETI) {
+                auto sp = regs.get_ref(0x1);
+                // pop sr
+                const auto sr_pop = ram.get_word(sp.get_and_increment(0x2)).get();
+                status_ref.set(sr_pop);
+                // pop pc
+                const auto pc_pop = ram.get_word(sp.get_and_increment(0x2)).get();
+                pc.set(pc_pop);
+
+                status_value = sr_pop;
+            } else if (ins.opcode.value == UnaryInstructionOpcode::PUSH) {
+                auto sp = regs.get_ref(0x1);
+                sp.get_and_increment(-0x2);
+                auto stack = ram.get_word(sp.get());
+                stack.set(source_value);
             } else {
                 if (res_value != source_value) {
                     source_ref.set(res_value);

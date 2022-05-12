@@ -25,9 +25,11 @@ namespace core {
         core::MemoryView &ram;
 
         core::MemoryRef pc;
+        core::MemoryRef sr;
+        core::MemoryRef sp;
 
     public:
-        Pipeline(core::RegisterFile &regs, core::MemoryView &ram) : regs{regs}, ram{ram}, pc{regs.get_ref(0)} {}
+        Pipeline(core::RegisterFile &regs, core::MemoryView &ram) : regs{regs}, ram{ram}, pc{regs.get_ref(0)}, sr{regs.get_ref(0x2)}, sp{regs.get_ref(0x1)} {}
 
         static msp::Instruction decode(std::uint16_t instruction) {
             const auto format = InstructionFormat::from_value((instruction & 0xF000) >> 12);
@@ -66,10 +68,22 @@ namespace core {
             }
         }
 
-        void interrupt_step(const utils::Interrupt& interrupt) {
-            const auto addr = utils::interrupts::read_vector(interrupt, ram);
-            spdlog::warn("interrupt vector set to {}", addr);
-            pc.set(addr);
+        void interrupt_step(const std::uint16_t int_addr) {
+            spdlog::warn("interrupt vector set to {}", int_addr);
+
+            // push pc
+            sp.get_and_increment(-0x2);
+            ram.get_word(sp.get()).set(pc.get());
+
+            // push sr
+            sp.get_and_increment(-0x2);
+            ram.get_word(sp.get()).set(sr.get());
+
+            // jump to interrupt routine
+            pc.set(int_addr);
+
+            // clear gie
+            sr.set(sr.get() & ~0x8); // clear gie
         }
 
         void step() {
