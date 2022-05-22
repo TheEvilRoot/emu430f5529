@@ -10,6 +10,9 @@
 
 #include <cstdint>
 #include <filesystem>
+#include <unordered_map>
+#include <spdlog/fmt/compile.h>
+#include <spdlog/fmt/bundled/format.h>
 
 #include <core/registerFile.h>
 #include <core/interruptController.h>
@@ -20,6 +23,8 @@
 #include <utils/fileExplorer.h>
 #include <utils/tickController.h>
 #include <utils/breakpointController.h>
+#include <utils/ports.h>
+#include <utils/measure.h>
 
 namespace emugui {
     enum class UserState {
@@ -105,9 +110,10 @@ namespace emugui {
 
         // ui and rendering state
         Backend backend{};
+        utils::FileExplorer fileExplorer{};
+
         MemoryEditor regsEditor{};
         MemoryEditor ramEditor{};
-        utils::FileExplorer fileExplorer{};
 
         // user-related/controlled emulator state
         // must be separated to emulator controller over EmuGui
@@ -115,10 +121,12 @@ namespace emugui {
 
         explicit EmuGui(core::RegisterFile &regs, core::MemoryView &ram, utils::ProgramLoader& loader, TickController& tick_controller, InterruptController& interrupt_controller, utils::BreakpointController& breakpoint_controller) : regs{regs}, ram{ram}, loader{loader}, tick_controller{tick_controller}, interrupt_controller{interrupt_controller}, breakpoint_controller{breakpoint_controller} {
             regsEditor.PreviewDataType = ImGuiDataType_U16;
-            regsEditor.ReadOnly = true;
+            regsEditor.ReadOnly = false;
+            regsEditor.WriteFn = [](auto*, auto, auto) { };
 
             ramEditor.PreviewDataType = ImGuiDataType_U16;
-            regsEditor.ReadOnly = true;
+            ramEditor.ReadOnly = false;
+            ramEditor.WriteFn = [](auto*, auto, auto) { };
         }
 
         void run() {
@@ -194,14 +202,14 @@ namespace emugui {
                         const auto has_breakpoint = breakpoint_controller.has_breakpoint(i.pc);
                         if (!i.label.empty()) {
                             ImGui::BeginGroup();
-                            ImGui::Text(":%s", i.label.c_str());
+                            ImGui::Text("%s", i.label.c_str());
                             ImGui::EndGroup();
                         }
                         ImGui::BeginGroup();
                         if (has_breakpoint) {
                             ImGui::PushStyleColor(ImGuiCol_Button, buttonBreakpoint);
                         }
-                        if (ImGui::Button(fmt::format("{:04X}", i.pc).c_str())) {
+                       if (ImGui::Button(fmt::format("{:04X}", i.pc).c_str())) {
                             if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
                                 breakpoint_controller.toggle_breakpoint(i.pc);
                             } else {
@@ -279,7 +287,7 @@ namespace emugui {
                 if (ImGui::Button("Step")) {
                     isStep = true;
                 }
-                ImGui::Text("Frequency %llu", frequency);
+                ImGui::Text("Frequency %llu Hz", frequency);
                 ImGui::End();
             }
         }
@@ -311,7 +319,27 @@ namespace emugui {
             ramEditor.DrawWindow("RAM", ram.data.get(), ram.size);
         }
 
+        auto renderPorts() {
+            if (ImGui::Begin("I/O Ports")) {
+                if (ImGui::BeginTable("Ports", 3)) {
+                    utils::ports::for_each_port(ram, [](const auto& label, const auto addr, const auto value) {
+                        ImGui::TableNextRow();
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%s", label.data());
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%04x", addr);
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%s",fmt::format("{:08b}", value).c_str());
+                    });
+                    ImGui::EndTable();
+                }
+                ImGui::End();
+            }
+        }
+
         [[nodiscard]] auto render(UserState previous_state) {
+            static measure m = measure{};
+            m.template get_time(true);
             const auto frequency = tick_controller.frequency;
             const auto pc_val = regs.get_ref(0x0).get();
             const auto status = regs.get_ref(0x2).get();
@@ -325,18 +353,27 @@ namespace emugui {
             bool isRunning = previous_state == UserState::STEP;
             bool isStep = false;
 
+            auto prepare = m.template get_time(true);
             renderFileExplorer();
+            auto renderFileExplorer = m.template get_time(true);
             renderDecompiler(pc_val);
+            auto renderDecompiler = m.template get_time(true);
             renderBoard();
+            auto renderBoard = m.template get_time(true);
             renderEmulatorControl(frequency, isRunning, isStep);
+            auto renderEmulatorControl = m.template get_time(true);
             renderRegisters(status);
+            auto renderRegisters = m.template get_time(true);
             renderRam();
+            auto renderRam = m.template get_time(true);
+            renderPorts();
+            auto renderPorts = m.template get_time(true);
 
             if (ImGui::IsKeyPressed(ImGuiKey_1, false)) {
                 buttons[0].state = true;
                 auto ref = ram.get_byte(buttons[0].address);
                 const auto value = ref.get();
-                ref.set(value | buttons[0].mask);
+                ref.set(value & ~buttons[0].mask);
                 const auto generated = buttons[0].mask == 0x80 ? interrupt_controller.generate_interrupt<utils::Port1Interrupt, 7>(true) : interrupt_controller.generate_interrupt<utils::Port2Interrupt, 2>(true);
                 spdlog::warn("keyboard generated interrupt for {} => {}", buttons[0].tag, generated);
             }
@@ -344,7 +381,7 @@ namespace emugui {
                 buttons[0].state = false;
                 auto ref = ram.get_byte(buttons[0].address);
                 const auto value = ref.get();
-                ref.set(value & ~buttons[0].mask);
+                ref.set(value | buttons[0].mask);
                 const auto generated = buttons[0].mask == 0x80 ? interrupt_controller.generate_interrupt<utils::Port1Interrupt, 7>(false) : interrupt_controller.generate_interrupt<utils::Port2Interrupt, 2>(false);
                 spdlog::warn("keyboard  generated interrupt for {} => {}", buttons[0].tag, generated);
             }
@@ -353,7 +390,7 @@ namespace emugui {
                 buttons[1].state = true;
                 auto ref = ram.get_byte(buttons[1].address);
                 const auto value = ref.get();
-                ref.set(value | buttons[1].mask);
+                ref.set(value & ~buttons[1].mask);
                 const auto generated = buttons[1].mask == 0x80 ? interrupt_controller.generate_interrupt<utils::Port1Interrupt, 7>(true) : interrupt_controller.generate_interrupt<utils::Port2Interrupt, 2>(true);
                 spdlog::warn("keyboard generated interrupt for {} => {}", buttons[1].tag, generated);
             }
@@ -361,12 +398,35 @@ namespace emugui {
                 buttons[1].state = false;
                 auto ref = ram.get_byte(buttons[1].address);
                 const auto value = ref.get();
-                ref.set(value & ~buttons[1].mask);
+                ref.set(value | buttons[1].mask);
                 const auto generated = buttons[1].mask == 0x80 ? interrupt_controller.generate_interrupt<utils::Port1Interrupt, 7>(false) : interrupt_controller.generate_interrupt<utils::Port2Interrupt, 2>(false);
                 spdlog::warn("keyboard generated interrupt for {} => {}", buttons[1].tag, generated);
             }
 
             backend.renderFinalize();
+            auto renderFinalize = m.template get_time(true);
+
+#ifdef MEASURE_GUI
+            spdlog::warn(
+                    "prepare = {}ms "
+                    "fileExplorer = {}ms "
+                    "decompiler = {}ms "
+                    "board = {}ms "
+                    "emulatorControl = {}ms "
+                    "registers = {}ms "
+                    "ram = {}ms "
+                    "ports = {}ms "
+                    "finalize = {}ms",
+                    prepare, renderFileExplorer,
+                    renderDecompiler,
+                    renderBoard,
+                    renderEmulatorControl,
+                    renderRegisters,
+                    renderRam,
+                    renderPorts,
+                    renderFinalize
+                    );
+#endif
             return (isRunning ? UserState::STEP : (isStep ? UserState::SINGLE_STEP : UserState::IDLE));
         }
     };

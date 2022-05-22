@@ -17,6 +17,7 @@
 #include <utils/programLoader.h>
 #include <utils/interrupts.h>
 #include <utils/breakpointController.h>
+#include <utils/measure.h>
 
 #include <gui/emugui.h>
 #include <gui/glfw_backend.h>
@@ -58,13 +59,13 @@ namespace emu {
                 emugui::UserState previous_state{emugui::UserState::IDLE};
                 while (true) {
                     const auto current_state = shared_state.load();
-                    tick_controller.generate_tick();
                     if (current_state == emugui::UserState::IDLE && previous_state == emugui::UserState::IDLE) {
                         spdlog::warn("halt detected on cpu thread");
                         std::unique_lock lock(halt_mutex);
                         halt_state.wait(lock);
                         spdlog::warn("halt notified");
                     }
+                    tick_controller.generate_tick();
                     if (current_state == emugui::UserState::STEP || (current_state == emugui::UserState::SINGLE_STEP && previous_state != emugui::UserState::SINGLE_STEP)) {
                         const auto interrupt = interrupt_controller.consume_interrupt();
                         try {
@@ -84,6 +85,7 @@ namespace emu {
                     } else if (current_state == emugui::UserState::KILL) {
                         break;
                     }
+                    tick_controller.finalize_tick();
                     previous_state = current_state;
                 }
             }};
