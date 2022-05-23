@@ -66,20 +66,20 @@ struct InterruptController {
     }
 
     template<typename Int>
-    auto get_vector_label(std::pair<std::uint16_t, std::string_view>& ret) {
+    auto get_handler_label(std::pair<std::uint16_t, std::string_view>& ret) {
         ret = std::pair<std::uint16_t, std::string_view>{ram.get_word(Int::vector).get(), Int::handler_description};
     }
 
     template<typename ...Ints>
-    auto get_vectors_labels() {
+    auto get_handlers_labels() {
         std::array<std::pair<std::uint16_t, std::string_view>, sizeof...(Ints)> ret;
         std::size_t index = 0;
-        (get_vector_label<Ints>(ret[index++]), ...);
+        (get_handler_label<Ints>(ret[index++]), ...);
         return ret;
     }
 
-    auto get_vectors_labels() {
-        return get_vectors_labels<utils::ResetInterrupt, utils::Port1Interrupt, utils::Port2Interrupt>();
+    auto get_handlers_labels() {
+        return get_handlers_labels<utils::ResetInterrupt, utils::Port1Interrupt, utils::Port2Interrupt>();
     }
 
     [[nodiscard]] std::optional<std::uint16_t> consume_interrupt() {

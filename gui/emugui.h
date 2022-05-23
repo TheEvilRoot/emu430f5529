@@ -202,7 +202,7 @@ namespace emugui {
                         const auto has_breakpoint = breakpoint_controller.has_breakpoint(i.pc);
                         if (!i.label.empty()) {
                             ImGui::BeginGroup();
-                            ImGui::Text("%s", i.label.c_str());
+                            ImGui::Text(":%s", i.label.c_str());
                             ImGui::EndGroup();
                         }
                         ImGui::BeginGroup();
