@@ -122,7 +122,7 @@ public:
             case 0xF:
                 return Values::AND;
             default:
-                assert(false);
+                return Values::MOV;
         }
     }
 };
@@ -182,7 +182,7 @@ public:
             case 0x7:
                 return Values::JMP;
             default:
-                assert(false);
+                return Values::JMP; // impossible choice
         }
     }
 };
@@ -237,7 +237,7 @@ public:
             case 0x6:
                 return Values::RETI;
             default:
-                assert(false);
+                return Values::RRC;
         }
     }
 };

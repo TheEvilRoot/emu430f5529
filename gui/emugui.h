@@ -353,21 +353,37 @@ namespace emugui {
             bool isRunning = previous_state == UserState::STEP;
             bool isStep = false;
 
+#ifdef MEASURE_GUI
             auto prepare = m.template get_time(true);
+#endif
             renderFileExplorer();
+#ifdef MEASURE_GUI
             auto renderFileExplorer = m.template get_time(true);
+#endif
             renderDecompiler(pc_val);
+#ifdef MEASURE_GUI
             auto renderDecompiler = m.template get_time(true);
+#endif
             renderBoard();
+#ifdef MEASURE_GUI
             auto renderBoard = m.template get_time(true);
+#endif
             renderEmulatorControl(frequency, isRunning, isStep);
+#ifdef MEASURE_GUI
             auto renderEmulatorControl = m.template get_time(true);
+#endif
             renderRegisters(status);
+#ifdef MEASURE_GUI
             auto renderRegisters = m.template get_time(true);
+#endif
             renderRam();
+#ifdef MEASURE_GUI
             auto renderRam = m.template get_time(true);
+#endif
             renderPorts();
+#ifdef MEASURE_GUI
             auto renderPorts = m.template get_time(true);
+#endif
 
             if (ImGui::IsKeyPressed(ImGuiKey_1, false)) {
                 buttons[0].state = true;
@@ -404,7 +420,9 @@ namespace emugui {
             }
 
             backend.renderFinalize();
+#ifdef MEASURE_GUI
             auto renderFinalize = m.template get_time(true);
+#endif
 
 #ifdef MEASURE_GUI
             spdlog::warn(

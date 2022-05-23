@@ -19,7 +19,7 @@ using namespace std::literals;
 class TickController {
 private:
     using tick_clock = std::chrono::steady_clock;
-    const long tick_us;
+    const std::uint64_t expected_frequency;
 
     tick_clock::time_point tick_start;
 
@@ -30,7 +30,7 @@ private:
 public:
     std::uint64_t frequency;
 
-    explicit TickController(long tick_us) : tick_us{tick_us}, tick_start{tick_clock::now()}, tick_counter{0}, tick_counter_state{tick_clock::now()}, frequency{0}, tick_timer{0} {}
+    explicit TickController(std::uint64_t expected_frequency) : expected_frequency{expected_frequency}, tick_start{tick_clock::now()}, tick_timer{0}, tick_counter{0}, tick_counter_state{tick_clock::now()}, frequency{0} {}
 
     inline void count_tick() {
         tick_counter++;
@@ -47,11 +47,12 @@ public:
         }
     }
 
-    inline void generate_tick() {
+    inline void generate_tick() const {
 #ifdef MEASURE_CPU
+    inline void generate_tick() {
         tick_start = tick_clock::now();
 #endif
-        if (frequency > 32768) {
+        if (frequency > expected_frequency) {
             std::this_thread::sleep_for(std::chrono::milliseconds(2));
         }
     }

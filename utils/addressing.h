@@ -73,7 +73,7 @@ namespace msp {
                             .delta = std::uint16_t(ref_type == core::MemoryRefType::BYTE ? 1u : 2u),
                             .ref_type = ref_type};
                 default:
-                    assert(false);
+                    return RegisterDirectAddressing{0}; // impossible choice
             }
         }
 
@@ -88,7 +88,7 @@ namespace msp {
                     }
                     return RegisterIndexedAddressing{reg, ref_type};
                 default:
-                    assert(false);
+                    return RegisterDirectAddressing{0}; // impossible choice
             }
         }
 

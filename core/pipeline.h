@@ -47,6 +47,14 @@ namespace core {
                     const auto source_addressing_mode = (instruction & 0x0030) >> 4;
                     const auto byte_word_mode = (instruction & 0x0040) >> 6;
                     const auto destination_addressing_mode = (instruction & 0x0080) >> 7;
+                    if (destination_addressing_mode > 1) {
+                        spdlog::debug("destination addressing mode validation failed {:04X} format {}", instruction, InstructionFormat::to_string(format));
+                        return msp::UnimplementedInstruction{instruction};
+                    }
+                    if (source_addressing_mode > 3) {
+                        spdlog::debug("source addressing mode validation failed {:04X} format {}", instruction, InstructionFormat::to_string(format));
+                        return msp::UnimplementedInstruction{instruction};
+                    }
                     return msp::BinaryInstruction{
                             .opcode = opcode,
                             .source_addressing = msp::addressing::from_source(source_register_num, source_addressing_mode, byte_word_mode),
@@ -57,6 +65,10 @@ namespace core {
                     const auto source_addressing_mode = (instruction & 0x0030) >> 4;
                     const auto byte_word_mode = (instruction & 0x0040) >> 6;
                     const auto opcode = UnaryInstructionOpcode::from_value((instruction & 0x0380) >> 7);
+                    if (source_addressing_mode > 3) {
+                        spdlog::debug("source addressing mode validation failed {:04X} format {}", instruction, InstructionFormat::to_string(format));
+                        return msp::UnimplementedInstruction{instruction};
+                    }
                     return msp::UnaryInstruction{
                             .opcode = opcode,
                             .source_addressing = msp::addressing::from_source(register_num, source_addressing_mode, byte_word_mode)};
@@ -73,11 +85,11 @@ namespace core {
 
             // push pc
             sp.get_and_increment(-0x2);
-            ram.get_word(sp.get()).set(pc.get());
+            ram.set_word(sp.get(), pc.get());
 
             // push sr
             sp.get_and_increment(-0x2);
-            ram.get_word(sp.get()).set(sr.get());
+            ram.set_word(sp.get(), sr.get());
 
             // jump to interrupt routine
             pc.set(int_addr);

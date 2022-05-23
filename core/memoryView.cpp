@@ -6,4 +6,4 @@
 
 using namespace core;
 
-MemoryView::MemoryView(std::size_t size) : size{size}, data{std::shared_ptr<unsigned char>(new unsigned char[size])}, max_ptr_set{0} {}
+MemoryView::MemoryView(std::size_t size) : max_ptr_set{0}, size{size},data{std::shared_ptr<unsigned char>(new unsigned char[size])} {}

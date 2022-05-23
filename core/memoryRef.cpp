@@ -10,7 +10,8 @@
 
 using namespace core;
 
-MemoryRef::MemoryRef(std::shared_ptr<unsigned char> base, std::size_t offset, MemoryRefType type) : base{std::move(base)}, offset{offset}, type{type} {}
+MemoryRef::MemoryRef(std::shared_ptr<unsigned char> base, std::size_t offset, MemoryRefType type) : base{std::move(base)}, type{type}, offset{offset} {}
+
 
 std::uint16_t MemoryRef::get() const {
     switch (type) {

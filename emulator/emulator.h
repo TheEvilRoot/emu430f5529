@@ -18,6 +18,8 @@
 #include <utils/interrupts.h>
 #include <utils/breakpointController.h>
 #include <utils/measure.h>
+#include <utils/timers.h>
+#include <utils/timerController.h>
 
 #include <gui/emugui.h>
 #include <gui/glfw_backend.h>
@@ -37,13 +39,14 @@ namespace emu {
         TickController tick_controller;
         utils::BreakpointController breakpoint_controller;
         emugui::EmuGui<emugui::GlfwBackend> gui;
+        utils::TimerController timer_controller;
 
         std::atomic<emugui::UserState> shared_state;
 
         std::mutex halt_mutex{};
         std::condition_variable halt_state{};
     public:
-        Emulator() : ram(0x10000), regs(16), loader{ram, regs}, pipeline(regs, ram), interrupt_controller{regs, ram}, tick_controller(0), breakpoint_controller{}, gui{regs, ram, loader, tick_controller, interrupt_controller, breakpoint_controller}, shared_state{emugui::UserState::IDLE} {
+        Emulator() : ram(0x10000), regs(16), loader{ram, regs}, pipeline(regs, ram), interrupt_controller{regs, ram}, tick_controller{32768}, breakpoint_controller{}, gui{regs, ram, loader, tick_controller, interrupt_controller, breakpoint_controller}, timer_controller{interrupt_controller, ram}, shared_state{emugui::UserState::IDLE} {
             ram.add_region(core::MemoryRegion{"special function registers", 0x0, 0xF, core::MemoryRegionAccess::ONLY_BYTE});
             ram.add_region(core::MemoryRegion{"8-bit peripheral", 0x10, 0xFF, core::MemoryRegionAccess::ONLY_BYTE});
             ram.add_region(core::MemoryRegion{"16-bit peripheral", 0x100, 0x1FF, core::MemoryRegionAccess::ONLY_WORD});
@@ -53,42 +56,45 @@ namespace emu {
             status_ref.set(status_ref.get() | 0x8);
         }
 
-        void run() {
-            std::thread thread{[this]() {
-                auto pc = regs.get_ref(0x0);
-                emugui::UserState previous_state{emugui::UserState::IDLE};
-                while (true) {
-                    const auto current_state = shared_state.load();
-                    if (current_state == emugui::UserState::IDLE && previous_state == emugui::UserState::IDLE) {
-                        spdlog::warn("halt detected on cpu thread");
-                        std::unique_lock lock(halt_mutex);
-                        halt_state.wait(lock);
-                        spdlog::warn("halt notified");
-                    }
-                    tick_controller.generate_tick();
-                    if (current_state == emugui::UserState::STEP || (current_state == emugui::UserState::SINGLE_STEP && previous_state != emugui::UserState::SINGLE_STEP)) {
-                        const auto interrupt = interrupt_controller.consume_interrupt();
-                        try {
-                            if (interrupt) {
-                                pipeline.interrupt_step(interrupt.value());
-                            } else {
-                                if (previous_state != emugui::UserState::IDLE && breakpoint_controller.has_breakpoint(pc.get())) {
-                                    shared_state.store(emugui::UserState::IDLE);
-                                } else {
-                                    pipeline.step();
-                                }
-                            }
-                        } catch (const MemoryViolationException& e) {
-                            spdlog::error("{}", e.what());
-                            shared_state.store(emugui::UserState::IDLE);
-                        }
-                    } else if (current_state == emugui::UserState::KILL) {
-                        break;
-                    }
-                    tick_controller.finalize_tick();
-                    previous_state = current_state;
+        void cpu_thread() {
+            auto pc = regs.get_ref(0x0);
+            emugui::UserState previous_state{emugui::UserState::IDLE};
+            while (true) {
+                const auto current_state = shared_state.load();
+                if (current_state == emugui::UserState::IDLE && previous_state == emugui::UserState::IDLE) {
+                    spdlog::warn("halt detected on cpu thread");
+                    std::unique_lock lock(halt_mutex);
+                    halt_state.wait(lock);
+                    spdlog::warn("halt notified");
                 }
-            }};
+                tick_controller.generate_tick();
+                timer_controller.tick_timers();
+                if (current_state == emugui::UserState::STEP || (current_state == emugui::UserState::SINGLE_STEP && previous_state != emugui::UserState::SINGLE_STEP)) {
+                    const auto interrupt = interrupt_controller.consume_interrupt();
+                    try {
+                        if (interrupt) {
+                            pipeline.interrupt_step(interrupt.value());
+                        } else {
+                            if (previous_state != emugui::UserState::IDLE && breakpoint_controller.has_breakpoint(pc.get())) {
+                                shared_state.store(emugui::UserState::IDLE);
+                            } else {
+                                pipeline.step();
+                            }
+                        }
+                    } catch (const MemoryViolationException& e) {
+                        spdlog::error("{}", e.what());
+                        shared_state.store(emugui::UserState::IDLE);
+                    }
+                } else if (current_state == emugui::UserState::KILL) {
+                    break;
+                }
+                tick_controller.finalize_tick();
+                previous_state = current_state;
+            }
+        }
+
+        void run() {
+            std::thread thread{[this]() { cpu_thread(); }};
             gui.run();
             emugui::UserState current_state;
             while (shared_state != emugui::UserState::KILL) {
