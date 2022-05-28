@@ -57,20 +57,15 @@ if (APPLE)
     target_link_libraries(untitled PRIVATE "-framework OpenGL")
 endif()
 
-add_executable(memory_test memory_test.cpp ${COMMON_SRC})
+add_executable(memory_test tests/memory_test.cpp ${COMMON_SRC})
 target_link_libraries(memory_test gtest gtest_main)
 
-add_executable(endian_test endian_test.cpp ${COMMON_SRC})
-target_link_libraries(endian_test gtest gtest_main)
+add_executable(registers_test tests/registers_test.cpp ${COMMON_SRC})
+target_link_libraries(registers_test gtest gtest_main)
 
-add_executable(elffile_test elffile_test.cpp ${COMMON_SRC})
-target_link_libraries(elffile_test gtest gtest_main)
+add_executable(decoder_test tests/decoder_test.cpp ${COMMON_SRC})
+target_link_libraries(decoder_test gtest gtest_main)
 
-add_executable(instruction_test test_ins.cpp ${COMMON_SRC})
-target_link_libraries(instruction_test gtest gtest_main)
-
-add_executable(hex430_test test_hex430.cpp ${COMMON_SRC})
-target_link_libraries(hex430_test gtest gtest_main)
 
 add_test(memory_test memory_test)
 add_test(endian_test endian_test)

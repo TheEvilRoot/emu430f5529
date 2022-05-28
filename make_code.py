@@ -81,4 +81,4 @@ while len(code) > 0x0:
         handle.write(code[:0x7FFF])
     fnum += 1
     code = code[0x0FFF:]
-print('code is written with %d files. final length is %x' % (fnum, len(code)))
+print('code is written with %d files. final length is %x' % (fnum, len( code)))

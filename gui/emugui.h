@@ -46,8 +46,6 @@ namespace emugui {
         const std::string_view tag;
         const std::uint16_t address;
         const std::uint16_t mask;
-        const ImVec4 activeColor;
-        const ImVec4 inactiveColor;
         bool state;
     };
 
@@ -94,8 +92,8 @@ namespace emugui {
         };
 
         std::array<Button, 2> buttons = {
-                Button{"S1", 0x0200, 0x80, buttonActive, buttonActive, false},
-                Button{"S2", 0x0201, 0x4, buttonActive, buttonActive, false}
+                Button{"S1", 0x0200, 0x80, false},
+                Button{"S2", 0x0201, 0x4, false}
         };
 
         // references from the emulator
@@ -112,7 +110,6 @@ namespace emugui {
         Backend backend{};
         utils::FileExplorer fileExplorer{};
 
-        MemoryEditor regsEditor{};
         MemoryEditor ramEditor{};
 
         // user-related/controlled emulator state
@@ -120,10 +117,6 @@ namespace emugui {
         std::vector<emu::Decompiler::DecompiledInstruction> decompiled{};
 
         explicit EmuGui(core::RegisterFile &regs, core::MemoryView &ram, utils::ProgramLoader& loader, TickController& tick_controller, InterruptController& interrupt_controller, utils::BreakpointController& breakpoint_controller) : regs{regs}, ram{ram}, loader{loader}, tick_controller{tick_controller}, interrupt_controller{interrupt_controller}, breakpoint_controller{breakpoint_controller} {
-            regsEditor.PreviewDataType = ImGuiDataType_U16;
-            regsEditor.ReadOnly = false;
-            regsEditor.WriteFn = [](auto*, auto, auto) { };
-
             ramEditor.PreviewDataType = ImGuiDataType_U16;
             ramEditor.ReadOnly = false;
             ramEditor.WriteFn = [](auto*, auto, auto) { };
@@ -145,11 +138,9 @@ namespace emugui {
 
         bool renderButton(Button& led) {
             ImGui::BeginGroup();
-            ImGui::PushStyleColor(ImGuiCol_Button, led.inactiveColor);
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, led.activeColor);
-            ImGui::PushStyleColor(ImGuiCol_Text, led.activeColor);
+            ImGui::PushStyleColor(ImGuiCol_Text, buttonActive);
             ImGui::Checkbox(led.tag.data(), &led.state);
-            ImGui::PopStyleColor(3);
+            ImGui::PopStyleColor(1);
             ImGui::EndGroup();
             return led.state;
         }
