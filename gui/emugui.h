@@ -148,7 +148,7 @@ namespace emugui {
         void select_file(utils::File file) {
             spdlog::info("loading program from {} by user", file.display_name);
             try {
-                loader.load_program_from_file(file.path);
+                loader.load_program_from_file(file.path.string());
                 const auto dec = emu::Decompiler::get_decompiled(ram.data.get(), ram.size);
                 decompiled = dec;
             } catch (...) {
@@ -330,7 +330,7 @@ namespace emugui {
 
         [[nodiscard]] auto render(UserState previous_state) {
             static measure m = measure{};
-            m.template get_time(true);
+            m.template get_time<>(true);
             const auto frequency = tick_controller.frequency;
             const auto pc_val = regs.get_ref(0x0).get();
             const auto status = regs.get_ref(0x2).get();

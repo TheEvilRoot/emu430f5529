@@ -35,7 +35,7 @@ namespace utils {
 
 
         FileExplorer() {
-            set_current(std::filesystem::current_path());
+            set_current(std::filesystem::current_path().string());
         }
 
         static bool is_file_selectable(const std::filesystem::path &path) {

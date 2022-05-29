@@ -5,4 +5,5 @@ out/
 build/
 *.out
 *.swp
-
+.vs/
+CMakeSettings.json

@@ -8,9 +8,6 @@
 #include <utils/elffile.h>
 #include <utils/hex430parser.h>
 
-#include <unistd.h>
-#include <fcntl.h>
-
 //struct Program {
 //    const std::string file_name;
 //    const std::unique_ptr<unsigned char[]> data;

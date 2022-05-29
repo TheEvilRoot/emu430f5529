@@ -8,9 +8,6 @@
 #include <chrono>
 #include <thread>
 
-#include <unistd.h>
-
-
 // #define MEASURE_FREQ
 // #define MEASURE_CPU
 

@@ -7,6 +7,7 @@
 
 #define GL_SILENCE_DEPRECATION
 
+#include <filesystem>
 #include <cstdio>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -69,7 +70,10 @@ namespace emugui {
             ImGui::CreateContext();
             ImGuiIO &io = ImGui::GetIO();
             (void) io;
-            io.Fonts->AddFontFromFileTTF("../quicksand.ttf", 18.0f, NULL, NULL);
+            constexpr auto font_path = std::string_view{"../quicksand.ttf"};
+            if (std::filesystem::exists(std::filesystem::path{font_path})) {
+                io.Fonts->AddFontFromFileTTF(font_path.data(), 18.0f, NULL, NULL);
+            }
             io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
             ImGui::StyleColorsDark();
             ImGui_ImplGlfw_InitForOpenGL(window, true);

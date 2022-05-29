@@ -5,8 +5,6 @@
 #ifndef UNTITLED_EMULATOR_EMULATOR_H_
 #define UNTITLED_EMULATOR_EMULATOR_H_
 
-#include <dispatch/dispatch.h>
-
 #include <core/memoryView.h>
 #include <core/pipeline.h>
 #include <core/registerFile.h>
