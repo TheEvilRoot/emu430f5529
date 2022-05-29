@@ -49,6 +49,22 @@ if (APPLE)
     find_library(IOKIT_LIBRARY IOKit)
 endif()
 
+
+if (APPLE)
+	add_executable(untitled_bundle MACOSX_BUNDLE main.cpp ${COMMON_SRC} ${GUI_SRC})
+	target_compile_features(untitled_bundle PRIVATE cxx_std_20)
+	target_link_libraries(untitled_bundle PRIVATE spdlog glfw ${OPENGL_LIBRARIES} ${COCOA_LIBRARY} ${IOKIT_LIBRARY})
+
+	set_target_properties(untitled_bundle PROPERTIES
+		BUNDLE True
+		MACOSX_BUNDLE_GUI_IDENTIFIER theevilroot.emu430f5529.untitled
+		MACOSX_BUNDLE_BUNDLE_NAME Emu430F5529 
+		MACOSX_BUNDLE_BUNDLE_VERSION "1.0"
+		MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0"
+		MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist
+	)
+endif()
+
 add_executable(untitled main.cpp ${COMMON_SRC} ${GUI_SRC})
 target_compile_features(untitled PRIVATE cxx_std_20)
 target_link_libraries(untitled PRIVATE spdlog glfw ${OPENGL_LIBRARIES} ${COCOA_LIBRARY} ${IOKIT_LIBRARY})
