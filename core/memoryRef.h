@@ -8,7 +8,7 @@
 #include <cassert>
 #include <memory>
 
-typedef long long ssize_t;
+typedef long ssize_t;
 
 namespace core {
     enum class MemoryRefType {

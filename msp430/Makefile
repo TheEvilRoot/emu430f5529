@@ -8,10 +8,10 @@ WARNINGS=-Wall
 
 out/simple_1.o: simple_1.cc
 	mkdir -p out
-	${CC} ${WARNINGS} ${STDLIB_INC} ${STDLIB_LIB} ${MSP430_TARGET} -O0 -c -o out/simple_1.o simple_1.cc
+	${CC} ${WARNINGS} ${STDLIB_INC} ${STDLIB_LIB} ${MSP430_TARGET} -O3 -c -o out/simple_1.o simple_1.cc
 out/simple_1.out: out/simple_1.o
 	mkdir -p out
-	${CC} ${WARNINGS} ${STDLIB_INC} ${STDLIB_LIB} ${MSP430_TARGET} -Tmsp430f5529.ld -O0 -lgcc -lc -o out/simple_1.out out/simple_1.o
+	${CC} ${WARNINGS} ${STDLIB_INC} ${STDLIB_LIB} ${MSP430_TARGET} -Tmsp430f5529.ld -O3 -lgcc -lc -o out/simple_1.out out/simple_1.o
 out/simple_1.hex: out/simple_1.out
 	mkdir -p out
 	${HEX430} --ti_txt out/simple_1.out -o out/simple_1.hex --order LS

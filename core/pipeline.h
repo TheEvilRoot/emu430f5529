@@ -58,7 +58,8 @@ namespace core {
                     return msp::BinaryInstruction{
                             .opcode = opcode,
                             .source_addressing = msp::addressing::from_source(source_register_num, source_addressing_mode, byte_word_mode),
-                            .destination_addressing = msp::addressing::from_destination(destination_register_num, destination_addressing_mode, byte_word_mode)};
+                            .destination_addressing = msp::addressing::from_destination(destination_register_num, destination_addressing_mode, byte_word_mode),
+							.bw = byte_word_mode != 0};
                 }
                 case InstructionFormat::UNARY_OP: {
                     const auto register_num = instruction & 0xF;
@@ -71,7 +72,8 @@ namespace core {
                     }
                     return msp::UnaryInstruction{
                             .opcode = opcode,
-                            .source_addressing = msp::addressing::from_source(register_num, source_addressing_mode, byte_word_mode)};
+                            .source_addressing = msp::addressing::from_source(register_num, source_addressing_mode, byte_word_mode),
+							.bw = byte_word_mode != 0};
                 }
                 case InstructionFormat::UNIMPL_OP: {
                     spdlog::debug("unimplemented instruction {:04X} format {}", instruction, InstructionFormat::to_string(format));

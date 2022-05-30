@@ -31,7 +31,8 @@ namespace msp {
     struct UnaryInstruction {
         UnaryInstructionOpcode opcode;
         Addressing source_addressing;
-        static FlaggedResult calculate(UnaryInstructionOpcode opcode, std::uint16_t value, std::uint16_t status) {
+		bool bw;
+        static FlaggedResult calculate(UnaryInstructionOpcode opcode, std::uint16_t value, std::uint16_t status, bool bw) {
             switch (opcode.value) {
                 case UnaryInstructionOpcode::RRC: {
                     std::uint16_t result = value >> 1;
@@ -108,9 +109,9 @@ namespace msp {
                 case JumpInstructionOpcode::JN:
                     return (status & 0x4) != 0;
                 case JumpInstructionOpcode::JGE:
-                    return (status & 0x4) == (status & 0x80);
+                    return ((status & 0x4) != 0) == ((status & 0x80) != 0);
                 case JumpInstructionOpcode::JL:
-                    return (status & 0x4) != (status & 0x80);
+                    return ((status & 0x4) != 0) != ((status & 0x80) != 0);
                 case JumpInstructionOpcode::JMP:
                     return true;
             }
@@ -131,8 +132,9 @@ namespace msp {
         BinaryInstructionOpcode opcode;
         Addressing source_addressing;
         Addressing destination_addressing;
+		bool bw;
 
-        static FlaggedResult calculate(BinaryInstructionOpcode opcode, std::uint16_t source, std::uint16_t dest, std::uint16_t status) {
+        static FlaggedResult calculate(BinaryInstructionOpcode opcode, std::uint16_t source, std::uint16_t dest, std::uint16_t status, bool bw) {
             spdlog::debug("calculate {:X} {:s} {:X}", source, BinaryInstructionOpcode::to_string(opcode), dest);
             switch (opcode.value) {
                 case BinaryInstructionOpcode::ADD: {
@@ -225,10 +227,11 @@ namespace msp {
                 case BinaryInstructionOpcode::MOV:
                     return source;
                 case BinaryInstructionOpcode::CMP: {
+					const std::uint16_t mask = bw ? 0x80 : 0x8000;
                     const std::uint16_t result = dest - source;
-                    const bool sourceNegative = (source & 0x8000) != 0;
-                    const bool destNegative = (dest & 0x8000) != 0;
-                    const bool resultNegative = (result & 0x8000) != 0;
+                    const bool sourceNegative = (source & mask) != 0;
+                    const bool destNegative = (dest & mask) != 0;
+                    const bool resultNegative = (result & mask) != 0;
                     const bool v = (!destNegative && sourceNegative && resultNegative) || (destNegative && !sourceNegative && !resultNegative);
                     const bool n = resultNegative;
                     const bool z = result == 0;
@@ -242,8 +245,9 @@ namespace msp {
                 case BinaryInstructionOpcode::DADD:
                     return dest + source;
                 case BinaryInstructionOpcode::BIT: {
+					const std::uint16_t mask = bw ? 0x80 : 0x8000;
                     const std::uint16_t result = dest & source;
-                    const bool n = (result & 0x8000) != 0;
+                    const bool n = (result & mask) != 0;
                     const bool z = result == 0;
                     const bool c = result != 0;
                     const bool v = false;
@@ -312,7 +316,7 @@ namespace msp {
             auto source_ref = addressing::get_ref(ins.source_addressing, pc, regs, ram);
             auto status_value = status_ref.get();
             const auto source_value = source_ref.get();
-            const auto result = UnaryInstruction::calculate(ins.opcode, source_value, status_ref.get());
+            const auto result = UnaryInstruction::calculate(ins.opcode, source_value, status_ref.get(), ins.bw);
             const auto res_value = result.value;
             if (ins.opcode.value == UnaryInstructionOpcode::CALL) {
                 const auto dst = source_ref.get();
@@ -358,7 +362,7 @@ namespace msp {
             spdlog::debug("execute {:s} = {:X}, {:s} = {:X}", addressing::to_string(ins.source_addressing),
                           source_ref.get(), addressing::to_string(ins.destination_addressing), dst_ref.get());
             const auto status_value = status_ref.get();
-            const auto result = BinaryInstruction::calculate(ins.opcode, source_ref.get(), dst_ref.get(), status_value);
+            const auto result = BinaryInstruction::calculate(ins.opcode, source_ref.get(), dst_ref.get(), status_value, ins.bw);
             spdlog::debug("write-back {:X} => {:s}", result.value, addressing::to_string(ins.destination_addressing));
             dst_ref.set(result.value);
             const auto new_status = apply_status(status_value, result.set_flags, result.reset_flags);
