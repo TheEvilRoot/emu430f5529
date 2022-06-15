@@ -17,7 +17,7 @@ jobs:
       with:
         submodules: recursive
     - name: Apt install dependencies
-      run: sudo apt-get update && apt-get install libxrandr-dev
+      run: sudo apt-get update && sudo apt-get install libxrandr-dev
 
     - name: Submodules init
       run: git submodule update --init --recursive
